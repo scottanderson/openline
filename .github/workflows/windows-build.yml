@@ -33,7 +33,11 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build --parallel
+        # Cap parallelism: GitHub-hosted ubuntu-latest runners have 2 cores / 7GB RAM,
+        # and unrestrained `--parallel` (defaults to nproc) can spawn enough concurrent
+        # mingw-g++ instances compiling this codebase's larger translation units to
+        # exhaust runner memory, which shows up as the job getting SIGTERM'd mid-build.
+        run: cmake --build build --parallel 2
 
       - name: Verify hlclient.exe was produced
         run: file build/Apps/Client/hlclient.exe
