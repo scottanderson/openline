@@ -1,0 +1,39 @@
+# OS / Finder / file-manager cruft
+.DS_Store
+.FBCIndex
+.FBCLockFolder/
+Thumbs.db
+Desktop.ini
+
+# Editor/IDE cruft
+*.swp
+*~
+.vscode/
+.idea/
+
+# Build output (CodeWarrior / Metrowerks and Windows toolchains)
+build/
+Build/
+*.xMAP
+*.map
+*.obj
+*.o
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.res
+*.pch
+*.idb
+*.ncb
+*.suo
+*.aps
+*.plg
+*.opt.bak
+*.bak
+
+# Linker/debug output that isn't source
+*.sym
+*.xSYM
