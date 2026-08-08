@@ -1295,8 +1295,8 @@ CNZArticleList::CNZArticleList(Uint32 inCount)
 	
 	mPtr = BPTR(mData);
 	
-	*((Uint32*)mPtr)++ = 0;		// don't need the id, but add the field for backward compat.
-	*((Uint32*)mPtr)++ = 0;		// skip over the count for now (this will be set later)
+	*((Uint32*)mPtr) = 0; mPtr += sizeof(Uint32);		// don't need the id, but add the field for backward compat.
+	*((Uint32*)mPtr) = 0; mPtr += sizeof(Uint32);		// skip over the count for now (this will be set later)
 	*mPtr++ = 0;				// don't need name
 	*mPtr++ = 0;				// don't need desc
 	
@@ -1342,12 +1342,12 @@ void CNZArticleList::AddArticle(const _NZ_SNewsItemBlock &inArticBlock, Uint32 i
 	if (mDataSize - (mPtr - BPTR(mData)) < outSize)	// if we don't have enough room
 		Reallocate(outSize);
 	
-	*((Uint32*)mPtr)++ = inArticBlock.body.id;								// id
-	*((SDateTimeStamp*)mPtr)++ = inArticBlock.body.date;					// date
-	*((Uint32*)mPtr)++ = LookupID(inArticBlock.body.parentOffset);			// parent id
-	*((Uint32*)mPtr)++ = inArticBlock.body.flags;							// flags
+	*((Uint32*)mPtr) = inArticBlock.body.id; mPtr += sizeof(Uint32);								// id
+	*((SDateTimeStamp*)mPtr) = inArticBlock.body.date; mPtr += sizeof(SDateTimeStamp);					// date
+	*((Uint32*)mPtr) = LookupID(inArticBlock.body.parentOffset); mPtr += sizeof(Uint32);			// parent id
+	*((Uint32*)mPtr) = inArticBlock.body.flags; mPtr += sizeof(Uint32);							// flags
 
-	mCurrentFlavCountPtr = ((Uint16 *)mPtr)++;								// flav count
+	mCurrentFlavCountPtr = (Uint16 *)mPtr; mPtr += sizeof(Uint16);								// flav count
 	*mCurrentFlavCountPtr = 0;
 
 	*mPtr++ = titleSize;
@@ -1389,7 +1389,7 @@ void CNZArticleList::AddArticleFlavor(const _NZ_SGenericBlock &inFlavBlock)
 	mPtr+= UMemory::Copy(mPtr, inFlavBlock.type + 1, flavSize);
 	
 	// write the size of the data
-	*((Uint16*)mPtr)++ = TB((Uint16)(FB(inFlavBlock.size)));
+	*((Uint16*)mPtr) = TB((Uint16)(FB(inFlavBlock.size))); mPtr += sizeof(Uint16);
 	
 	*mCurrentFlavCountPtr = TB((Uint16)(FB(*mCurrentFlavCountPtr) + 1));
 }
@@ -1472,7 +1472,8 @@ void CNZArticleList::AddID(Uint32 inID, Uint32 inOffset)
 	if (!mIDOffCount || !mIDOffTable)
 		goto allocBlock;
 
-	Uint32 last = mIDOffCount;
+	Uint32 last;
+	last = mIDOffCount;
 	Uint32 middle;
 	
 	while (first != last)

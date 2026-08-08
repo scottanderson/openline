@@ -982,13 +982,13 @@ void CMyApplication::ProcessTran_GetUserNameList(SMyClient *inClient, TTransactS
 	#pragma unused(inClient, inData)
 
 	StFieldData data;
-	
-	struct {
-		SMyUserInfo obj;
-		Uint8 name[256];
-	} userData;
-	SMyUserInfo& ud = userData.obj;
-		
+
+	// Note: can't wrap SMyUserInfo (which ends in a flexible array member) in another
+	// struct as a non-final member -- g++ rejects that. Use a raw buffer and an
+	// SMyUserInfo& over it instead, same as ProcessTran_JoinChat() below does.
+	Uint8 buf[256 + sizeof(SMyUserInfo)];
+	SMyUserInfo& ud = *(SMyUserInfo *)buf;
+
 	SMyClient *client = (SMyClient *)mClientList.GetFirst();
 	while (client)
 	{
@@ -1050,7 +1050,8 @@ void CMyApplication::ProcessTran_Login(SMyClient *inClient, TTransactSession inT
 	Uint8 psUserName[33]; 
 	psUserName[0] = 0;
 	
-	Int16 nIconID = 0;
+	Int16 nIconID;
+	nIconID = 0;
 	inData->GetPString(myField_UserName, psUserName, sizeof(psUserName));
 	nIconID = inData->GetInteger(myField_UserIconID);
 //------------------------------------------------------------------------------------------
@@ -1131,7 +1132,8 @@ void CMyApplication::ProcessTran_Login(SMyClient *inClient, TTransactSession inT
 	inTsn->SendData(data);
 
 	// store account name
-	Uint16 nSize = FB(info.nameSize);
+	Uint16 nSize;
+	nSize = FB(info.nameSize);
 	if (nSize > 31) nSize = 31;
 	inClient->accountName[0] = UMemory::Copy(inClient->accountName + 1, info.nameData, nSize);
 

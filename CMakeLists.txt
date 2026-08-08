@@ -33,3 +33,4 @@ add_compile_options(-w -fpermissive -fno-strict-aliasing)
 
 add_subdirectory(AppWarrior)
 add_subdirectory(Apps/Client)
+add_subdirectory(Apps/Server)

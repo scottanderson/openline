@@ -45,7 +45,7 @@ extern Uint32 _gTransactMaxReceiveSize;
 
 CMyApplication *gApp = nil;
 
-void main()
+void AppMain()
 {
 	UOperatingSystem::Init();
 	
@@ -336,7 +336,7 @@ CMyApplication::~CMyApplication()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Application Functions ••
+#pragma mark Application Functions
 
 void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inData, Uint32 inDataSize)
 {
@@ -693,7 +693,7 @@ bool CMyApplication::DisplayDownloadClient()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• GUI Hits ••
+#pragma mark GUI Hits
 
 void CMyApplication::DoShowLog()
 {
@@ -1170,7 +1170,7 @@ void CMyApplication::DoMacMenuBar(Int16 inMenu, Int16 inItem)
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Utility Functions ••
+#pragma mark Utility Functions
 
 #if NETWORK_SERVER
 extern Uint8 ValidateBase36(Uint8 inData);
@@ -2439,7 +2439,7 @@ startAgain:
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Log Functions ••
+#pragma mark Log Functions
 
 #if !FACELESS
 void CMyApplication::Log(const Int8 inFormat[], ...)
@@ -2687,7 +2687,7 @@ void CMyApplication::LogAccountChange(SMyClient *inClient, const Uint8 *inAction
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• User Data File ••
+#pragma mark User Data File
 
 THdl CMyApplication::GetUserFolderList()
 {
@@ -3162,7 +3162,7 @@ bool CMyApplication::HasBundlePriv(const SMyClient *inClient, const Uint32 inPri
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Prefs File ••
+#pragma mark Prefs File
 
 TFSRefObj* CMyApplication::GetPrefsSpec()
 {
@@ -3277,9 +3277,15 @@ void CMyApplication::WritePrefs()
 
 void CMyApplication::ReadPrefs(SRect *outWinRects, Uint32 *outWinVis)
 {
-	Uint32 s;
+	Uint32 s = 0;
 	Uint8 buf[8192];
-	
+	// gnu++ (unlike the original Metrowerks compiler) doesn't allow a goto to jump
+	// over the initialization of unflat/vers below, so the two early-out failure
+	// paths (read failed / file too small) are expressed as a flag instead of a
+	// direct "goto invalid" -- everything from here still funnels into the shared
+	// "invalid:" label the same way the interior "goto invalid"s below do.
+	bool bValid = true;
+
 	// read prefs file data
 	try
 	{
@@ -3291,16 +3297,19 @@ void CMyApplication::ReadPrefs(SRect *outWinRects, Uint32 *outWinVis)
 	catch(...)
 	{
 		// don't throw, we'll use the defaults instead
-		goto invalid;
+		bValid = false;
 	}
-	
+
 	// prepare to extract prefs data
-	if (s < 96) goto invalid;
+	if (bValid && s < 96) bValid = false;
+
+	if (bValid)
+	{
 	CUnflatten unflat(buf, s);
 	Uint16 vers = unflat.ReadWord();
-	
+
 	if (vers != 4 && vers != kMyPrefsVersion) goto invalid;
-	
+
 	// extract prefs data
 	*outWinVis = unflat.ReadWord();
 	unflat.ReadShortRect(outWinRects[0]);
@@ -3365,13 +3374,14 @@ void CMyApplication::ReadPrefs(SRect *outWinRects, Uint32 *outWinVis)
 		mTrackInfo[s].addr.type = kInternetNameAddressType;
 		mTrackInfo[s].addr.port = UMemory::SearchByte(':', mTrackInfo[s].addr.name+1, mTrackInfo[s].addr.name[0]) ? 0 : 5499;
 	}
-	
+
 	// set sound on/off according to prefs
-	if (!mSoundDisabled) 
+	if (!mSoundDisabled)
 		USound::SetCanPlay((mOptions.nOpts & myOpt_PlaySounds) != 0);
-	
+	} // if (bValid)
+
 	// if the prefs are invalid, we'll use default settings instead
-	if (false)
+	if (!bValid)
 	{
 	invalid:
 		mOptions.stIPAddress.SetNull();
@@ -3437,7 +3447,7 @@ void CMyApplication::ReadPrefs(SRect *outWinRects, Uint32 *outWinVis)
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Ban File ••
+#pragma mark Ban File
 
 BanRecord::BanRecord()
 {
@@ -3835,7 +3845,7 @@ void CMyApplication::ClearPermBanList()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Process Server ••
+#pragma mark Process Server
 
 void CMyApplication::UpdateTracker()
 {
@@ -3846,11 +3856,11 @@ void CMyApplication::UpdateTracker()
 		Uint32 as, i;
 		
 		// build packet of info to send to trackers
-		*((Uint16 *)p)++ = TB((Uint16)1);
-		*((Uint16 *)p)++ = TB((Uint16)mOptions.nCurPortNum);
-		*((Uint16 *)p)++ = TB((Uint16)mStats.connCount);
-		*((Uint16 *)p)++ = 0;
-		*((Uint32 *)p)++ = mTrackerPassID;
+		*((Uint16 *)p) = TB((Uint16)1); p += sizeof(Uint16);
+		*((Uint16 *)p) = TB((Uint16)mOptions.nCurPortNum); p += sizeof(Uint16);
+		*((Uint16 *)p) = TB((Uint16)mStats.connCount); p += sizeof(Uint16);
+		*((Uint16 *)p) = 0; p += sizeof(Uint16);
+		*((Uint32 *)p) = mTrackerPassID; p += sizeof(Uint32);
 		p += UMemory::Copy(p, mServerName, mServerName[0]+1);
 		p += UMemory::Copy(p, mServerDesc, mServerDesc[0]+1);
 		
@@ -4869,9 +4879,9 @@ goNextFile:
 						Uint32 s = path + sizeof(path) - startPtr + 4;
 							
 						// send that data:
-						*--((Uint16 *)startPtr) = TB((Uint16)pathCount);
-						*--((Uint16 *)startPtr) = TB((Uint16)(folder ? 1 : 0));
-						*--((Uint16 *)startPtr) = TB((Uint16)s);
+						startPtr -= sizeof(Uint16); *((Uint16 *)startPtr) = TB((Uint16)pathCount);
+						startPtr -= sizeof(Uint16); *((Uint16 *)startPtr) = TB((Uint16)(folder ? 1 : 0));
+						startPtr -= sizeof(Uint16); *((Uint16 *)startPtr) = TB((Uint16)s);
 							
 						tpt->Send(startPtr, s + 2);	
 						df->state = folder ? 0 : 1;
@@ -5431,7 +5441,7 @@ switchAgain:
 					tpt->Receive(header, uf->headerSize);
 
 					Uint8 *p = BPTR(header);
-					Uint16 type = FB(*((Uint16 *)p)++);
+					Uint16 type = FB(*((Uint16 *)p)); p += sizeof(Uint16);
 					Uint32 nPathSize = 0;
 					uf->file = nil;
 

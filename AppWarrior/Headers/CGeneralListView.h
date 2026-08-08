@@ -355,7 +355,7 @@ template<class T> Uint32 CGeneralCheckListView<T>::GetActiveCount()
 
 	for (Uint32 i = 1; i<=nItemCount; i++)
 	{
-		T *pItem = GetItem(i);
+		T *pItem = this->GetItem(i);
 			
 		if (pItem && pItem->nActive == 1)
 			nActiveCount++;
@@ -366,7 +366,7 @@ template<class T> Uint32 CGeneralCheckListView<T>::GetActiveCount()
 
 template<class T> void CGeneralCheckListView<T>::MouseDown(const SMouseMsgData& inInfo)
 {
-	if (!PointToItem(inInfo.loc)) 
+	if (!this->PointToItem(inInfo.loc)) 
 		return;
 	
 	if ((inInfo.mods & modKey_Option) && CheckAll(inInfo.loc))
@@ -386,7 +386,7 @@ template<class T> bool CGeneralCheckListView<T>::KeyDown(const SKeyMsgData& inIn
 	if (inInfo.keyCode == key_Space)
 	{
 		bRet1 = true;
-		Uint32 nSelectedItem = GetFirstSelectedItem();
+		Uint32 nSelectedItem = this->GetFirstSelectedItem();
 
 		if (nSelectedItem)
 			MarkSelected(nSelectedItem);
@@ -407,7 +407,7 @@ template<class T> void CGeneralCheckListView<T>::ItemDraw(Uint32 inItem, TImage 
 	
 	CGeneralListView<T>::ItemDraw(inItem, inImage, inBounds, inUpdateRect, inOptions);
 	
-	T *pItem = GetItem(inItem);
+	T *pItem = this->GetItem(inItem);
 	if(!pItem)
 		return;
 	
@@ -428,11 +428,11 @@ template<class T> bool CGeneralCheckListView<T>::CheckAll(SPoint inPosition)
 	if (inPosition.x >= 20)
 		return false;
 
-	Uint32 nSelectedItem = GetFirstSelectedItem();
+	Uint32 nSelectedItem = this->GetFirstSelectedItem();
 	if (!nSelectedItem)
 		return false;
 
-	T *pItem = GetItem(nSelectedItem);
+	T *pItem = this->GetItem(nSelectedItem);
 	if (!pItem)
 		return false;
 		
@@ -441,13 +441,13 @@ template<class T> bool CGeneralCheckListView<T>::CheckAll(SPoint inPosition)
 
 	for (Uint32 i = 1; i<=nItemCount; i++)
 	{
-		pItem = GetItem(i);
+		pItem = this->GetItem(i);
 			
 		if (pItem)
 		{	
 			pItem->nActive = nDecision;
 
-			RefreshItem(i);			
+			this->RefreshItem(i);			
 			CheckChanged(i, pItem->nActive);
 		}
 	}
@@ -460,7 +460,7 @@ template<class T> bool CGeneralCheckListView<T>::CheckSelected(SPoint inPosition
 	if (inPosition.x >= 20)
 		return false;
 
-	Uint32 nSelectedItem = GetFirstSelectedItem();
+	Uint32 nSelectedItem = this->GetFirstSelectedItem();
 	if (!nSelectedItem)
 		return false;
 
@@ -471,7 +471,7 @@ template<class T> bool CGeneralCheckListView<T>::CheckSelected(SPoint inPosition
 	}
 		
 	SRect theRect;
-	GetSelectedItemsRect(theRect);
+	this->GetSelectedItemsRect(theRect);
 			
 	if(theRect.Contains(inPosition))
 	{
@@ -484,7 +484,7 @@ template<class T> bool CGeneralCheckListView<T>::CheckSelected(SPoint inPosition
 
 template<class T> void CGeneralCheckListView<T>::MarkSelected(Uint32 inSelectedItem)
 {
-	T *pItem = GetItem(inSelectedItem);
+	T *pItem = this->GetItem(inSelectedItem);
 	if(!pItem)
 		return;
 	
@@ -493,7 +493,7 @@ template<class T> void CGeneralCheckListView<T>::MarkSelected(Uint32 inSelectedI
 	else
 		pItem->nActive = 1;
 		
-	RefreshItem(inSelectedItem);
+	this->RefreshItem(inSelectedItem);
 	CheckChanged(inSelectedItem, pItem->nActive);
 }
 

@@ -23,7 +23,7 @@
 	#define LIST_BACKGROUND_OPTION		scrollerOption_NoBkgnd
 #endif
 
-#pragma mark •• Constants ••
+#pragma mark Constants
 
 #pragma mark View IDs
 enum 
@@ -75,7 +75,7 @@ enum
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Structures ••
+#pragma mark Structures
 
 // SMyOptions
 #pragma mark SMyOptions
@@ -236,7 +236,7 @@ public:
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Views ••
+#pragma mark Views
 
 #if SHOW_SERVER_INFO_IN_TOOLBAR
 #pragma mark CMyClickLabelView
@@ -309,7 +309,7 @@ class CMyAccountListView : public CListView
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Windows ••
+#pragma mark Windows
 
 #pragma mark CMyOptionsWin
 class CMyOptionsWin : public CWindow
@@ -594,7 +594,7 @@ class CMyQuitWin : public CWindow
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Application ••
+#pragma mark Application
 
 #pragma mark SMyConnect
 struct SMyConnect
