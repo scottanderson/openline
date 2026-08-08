@@ -42,7 +42,7 @@ class CTabbedTreeView : public CTreeView<T>, public CTabbedItemsView
 
 
 template<class T> CTabbedTreeView<T>::CTabbedTreeView(CViewHandler *inHandler, const SRect& inBounds, Uint32 inCollapseID, Uint32 inDiscloseID, bool inShowTabLine)
-	: CTreeView(inHandler, inBounds, inCollapseID, inDiscloseID), CTabbedItemsView(inShowTabLine)
+	: CTreeView<T>(inHandler, inBounds, inCollapseID, inDiscloseID), CTabbedItemsView(inShowTabLine)
 {
 }
 
@@ -51,7 +51,7 @@ template<class T> CTabbedTreeView<T>::CTabbedTreeView(CViewHandler *inHandler, c
 
 template<class T> bool CTabbedTreeView<T>::SetBounds(const SRect& inBounds)
 {
-	if (!CTreeView::SetBounds(inBounds))
+	if (!CTreeView<T>::SetBounds(inBounds))
 		return false;
 
 	SetTabRectList();
@@ -65,31 +65,31 @@ template<class T> bool CTabbedTreeView<T>::SetBounds(const SRect& inBounds)
 template<class T> void CTabbedTreeView<T>::MouseDown(const SMouseMsgData& inInfo)
 {
 	CTabbedItemsView::TabMouseDown(inInfo);
-	CTreeView::MouseDown(inInfo);
+	CTreeView<T>::MouseDown(inInfo);
 
-	if (mMoveTabIndex && !mHasMouseCapture)
+	if (this->mMoveTabIndex && !this->mHasMouseCapture)
 		CaptureMouse();
 }
 
 template<class T> void CTabbedTreeView<T>::MouseUp(const SMouseMsgData& inInfo)
 {
 	CTabbedItemsView::TabMouseUp(inInfo);
-	CTreeView::MouseUp(inInfo);
+	CTreeView<T>::MouseUp(inInfo);
 
-	if (!mMoveTabIndex && mHasMouseCapture)
+	if (!this->mMoveTabIndex && this->mHasMouseCapture)
 		ReleaseMouse();
 }
 
 template<class T> void CTabbedTreeView<T>::MouseMove(const SMouseMsgData& inInfo)
 {
 	CTabbedItemsView::TabMouseMove(inInfo);
-	CTreeView::MouseMove(inInfo);
+	CTreeView<T>::MouseMove(inInfo);
 }
 
 template<class T> void CTabbedTreeView<T>::MouseLeave(const SMouseMsgData& inInfo)
 {
 	CTabbedItemsView::TabMouseLeave(inInfo);
-	CTreeView::MouseLeave(inInfo);
+	CTreeView<T>::MouseLeave(inInfo);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -157,7 +157,7 @@ template<class T> void CTabbedTreeView<T>::ItemMouseDown(Uint32 inListIndex, con
 	if (mMoveTabIndex || IsMouseOnTab(inInfo.loc))
 		return;
 			
-	CTreeView::ItemMouseDown(inListIndex, inInfo);
+	CTreeView<T>::ItemMouseDown(inListIndex, inInfo);
 }
 
 template<class T> void CTabbedTreeView<T>::ItemMouseUp(Uint32 inListIndex, const SMouseMsgData& inInfo)
@@ -165,7 +165,7 @@ template<class T> void CTabbedTreeView<T>::ItemMouseUp(Uint32 inListIndex, const
 	if (mMoveTabIndex || IsMouseOnTab(inInfo.loc))
 		return;
 		
-	CTreeView::ItemMouseUp(inListIndex, inInfo);
+	CTreeView<T>::ItemMouseUp(inListIndex, inInfo);
 }
 
 template<class T> void CTabbedTreeView<T>::ItemMouseEnter(Uint32 inListIndex, const SMouseMsgData& inInfo)
@@ -173,7 +173,7 @@ template<class T> void CTabbedTreeView<T>::ItemMouseEnter(Uint32 inListIndex, co
 	if (mMoveTabIndex || IsMouseOnTab(inInfo.loc))
 		return;
 	
-	CTreeView::ItemMouseEnter(inListIndex, inInfo);
+	CTreeView<T>::ItemMouseEnter(inListIndex, inInfo);
 }
 
 template<class T> void CTabbedTreeView<T>::ItemMouseMove(Uint32 inListIndex, const SMouseMsgData& inInfo)
@@ -181,7 +181,7 @@ template<class T> void CTabbedTreeView<T>::ItemMouseMove(Uint32 inListIndex, con
 	if (mMoveTabIndex || IsMouseOnTab(inInfo.loc))
 		return;
 	
-	CTreeView::ItemMouseMove(inListIndex, inInfo);
+	CTreeView<T>::ItemMouseMove(inListIndex, inInfo);
 }
 
 template<class T> void CTabbedTreeView<T>::ItemMouseLeave(Uint32 inListIndex, const SMouseMsgData& inInfo)
@@ -189,7 +189,7 @@ template<class T> void CTabbedTreeView<T>::ItemMouseLeave(Uint32 inListIndex, co
 	if (mMoveTabIndex || IsMouseOnTab(inInfo.loc))
 		return;
 	
-	CTreeView::ItemMouseLeave(inListIndex, inInfo);
+	CTreeView<T>::ItemMouseLeave(inListIndex, inInfo);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -197,12 +197,12 @@ template<class T> void CTabbedTreeView<T>::ItemMouseLeave(Uint32 inListIndex, co
 
 template<class T> void CTabbedTreeView<T>::RefreshTabView()
 {
-	Refresh(mBounds);
+	this->Refresh(this->mBounds);
 }
 
 template<class T> void CTabbedTreeView<T>::GetTabViewBounds(SRect& outBounds)
 {
-	outBounds = mBounds;
+	outBounds = this->mBounds;
 }
 
 template<class T> void CTabbedTreeView<T>::GetTabViewScrollPos(Uint32& outHorizPos, Uint32& outVertPos)
@@ -210,12 +210,12 @@ template<class T> void CTabbedTreeView<T>::GetTabViewScrollPos(Uint32& outHorizP
 	outHorizPos = 0;
 	outVertPos = 0;
 	 
-	if (dynamic_cast<CScrollerView *>(mHandler))
-		(dynamic_cast<CScrollerView *>(mHandler))->GetScroll(outHorizPos, outVertPos);
+	if (dynamic_cast<CScrollerView *>(this->mHandler))
+		(dynamic_cast<CScrollerView *>(this->mHandler))->GetScroll(outHorizPos, outVertPos);
 }
 
 template<class T> Uint32 CTabbedTreeView<T>::GetTabHeight() const
 {
-	return mTabHeight;
+	return this->mTabHeight;
 }
 

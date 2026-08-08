@@ -12,7 +12,7 @@
 #include "UFileSys.h"
 #include "UMemory.h"
 
-#include <SHLOBJ.H>
+#include <shlobj.h>
 
 struct SFileSysRef {
 	HANDLE h;
@@ -2026,28 +2026,28 @@ Uint32 UFileSys::GetApplicationPath(void *outAppPath, Uint32 inMaxPathSize)
 	return nPathSize;
 }
 
-Uint32 UFileSys::GetApplicationURL(UInt8 *url, Uint32 urlZ)
+Uint32 UFileSys::GetApplicationURL(Uint8 *url, Uint32 urlZ)
 {
 	Require(url);
 	
-	UInt32 size = 8;
+	Uint32 size = 8;
 	{   // prepend file:///
 		if (urlZ < size)
 			return 0;
-		for( UInt8 *b = (UInt8*)"file:///"; *b!=0; ++b)
+		for( Uint8 *b = (Uint8*)"file:///"; *b!=0; ++b)
 			*url++ = *b;
 	}
 
 	Uint32 z = ::GetModuleFileName(NULL, (Int8 *)url, urlZ-size);
 	{   // lose the app filename
-		for( UInt8 *e=url+z-1; z>0 && *e != '\\'; --e, --z){}
+		for( Uint8 *e=url+z-1; z>0 && *e != '\\'; --e, --z){}
 		if (z > 0) --z; // skip the \ at end of path 
 	}
 
 	{ // convert dos to url chars	
 	    if (z >= 2 && url[1] == ':')
 	    	url[1] = '|';
-		for( UInt8 *b = url, *e = b+z; b!=e; ++b)
+		for( Uint8 *b = url, *e = b+z; b!=e; ++b)
 			if (*b=='\\') *b='/';
 		size += z;
 	}
@@ -2205,7 +2205,13 @@ struct SFlatFileInfoFork {
 	SDateTimeStamp modifyDate;
 	Uint16 nameScript;
 	Uint16 nameSize;
-	Uint8 nameData[];
+	// GCC (unlike Metrowerks) rejects a flexible array member ("Uint8 nameData[]") in a
+	// struct that's embedded as a non-final member of another struct (SFileFlatten::info,
+	// SFileUnflatten::info, both followed by an infoNameBuf[] field that nameData's writes
+	// actually land in -- packed layout means nameData[0] is at the same address either
+	// way). Sized [1] instead; every sizeof(SFlatFileInfoFork) use below is adjusted by
+	// -1 to keep byte counts identical to the true-flexible-array version.
+	Uint8 nameData[1];
 	// Uint16 commentSize;
 	// Uint8 commentData[];
 };
@@ -2248,7 +2254,7 @@ static Uint32 _FSCreateFlatFileInfo(TFSRefObj* inRef, SFlatFileInfoFork& outInfo
 	p = outInfo.nameData + s;
 	*(Uint16 *)p = 0;	// zero-length comment
 		
-	return sizeof(SFlatFileInfoFork) + s + sizeof(Uint16);
+	return sizeof(SFlatFileInfoFork) - 1 + s + sizeof(Uint16);
 }
 
 static void _FSSetFlatFileInfo(TFSRefObj* /*inRef*/, const SFlatFileInfoFork& /*inInfo*/, Uint32 /*inSize*/)
@@ -2610,8 +2616,8 @@ determineAction:
 			switch (finfo->forkHdr.forkType)
 			{
 				case 0x494E464F:	// 'INFO'
-					if (totalSize > sizeof(SFlatFileInfoFork) + sizeof(finfo->infoNameBuf))
-						totalSize = sizeof(SFlatFileInfoFork) + sizeof(finfo->infoNameBuf);
+					if (totalSize > sizeof(SFlatFileInfoFork) - 1 + sizeof(finfo->infoNameBuf))
+						totalSize = sizeof(SFlatFileInfoFork) - 1 + sizeof(finfo->infoNameBuf);
 					finfo->gotInfoData = true;
 					finfo->infoSize = totalSize;
 					p = &finfo->info;
@@ -3794,11 +3800,16 @@ Uint32 _GetWinPath(TFSRefObj* inRef, void *outAppPath, Uint32 inMaxPathSize)
 	return UMemory::Copy(outAppPath, ((SFileSysRef *)inRef)->path, ((SFileSysRef *)inRef)->pathSize > inMaxPathSize ? inMaxPathSize : ((SFileSysRef *)inRef)->pathSize);
 }
 
+// HL_NO_QUICKTIME: only used by the real (non-stub) CQuickTimeView.cp, which needs the
+// QuickTime SDK's FSSpec type and NativePathNameToFSSpec() -- both removed along with
+// that SDK. See CQuickTimeView(NoQT).cp.
+#ifndef HL_NO_QUICKTIME
 void _GetQuickTimeFSSpec(TFSRefObj* inRef, FSSpec& outSpec)
 {
 	Require(inRef);
-	
+
 	::NativePathNameToFSSpec(((SFileSysRef *)inRef)->path, &outSpec, 0);
 }
+#endif
 
 #endif /* WIN32 */

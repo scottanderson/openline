@@ -121,7 +121,7 @@ class UTransport
 		static bool RegisterProtocol(const Uint8 inProtocol[]);
 
 		static bool LaunchURL(const void *inText, Uint32 inTextSize, Uint32 *ioSelStart = nil, Uint32 *ioSelEnd = nil);
-		static bool LaunchURL(UInt8* pString) { return LaunchURL(1+pString, pString[0]); };
+		static bool LaunchURL(Uint8* pString) { return LaunchURL(1+pString, pString[0]); };
 };
 
 /*

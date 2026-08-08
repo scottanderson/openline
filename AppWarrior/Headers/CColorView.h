@@ -7,6 +7,9 @@
 class CColorView : public CView
 {
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		// construction
 		CColorView(CViewHandler *inHandler, const SRect& inBounds);
 		CColorView(CViewHandler *inHandler, const SRect& inBounds, const SColor& inColor);

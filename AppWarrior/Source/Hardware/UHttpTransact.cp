@@ -1862,7 +1862,7 @@ bool CCookieList::AddCookie(SHttpCookie *inHttpCookie)
 			if (!pNameEnd)
 				continue;
 			
-			if (!UText::CompareInsensitive(inHttpCookie->pData, inNameEnd - inHttpCookie->pData, pHttpCookie->pData, pNameEnd - pHttpCookie->pData))
+			if (!UText::CompareInsensitive(inHttpCookie->pData, inNameEnd - (const Uint8 *)inHttpCookie->pData, pHttpCookie->pData, pNameEnd - (const Uint8 *)pHttpCookie->pData))
 			{
 				// invert data size
 				Uint32 nDataSize = pHttpCookie->nDataSize;

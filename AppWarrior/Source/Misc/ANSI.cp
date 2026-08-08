@@ -13,8 +13,10 @@ void __move_mem(void * dst, const void * src, unsigned long n);
 
 #if MACINTOSH
 #pragma overload int errno;
-#endif
 int errno = 0;
+#endif
+// On Windows, errno is provided by the CRT (a macro expanding to a function call via
+// _errno()), so this global would conflict with it -- it's Mac-only.
 
 #define MALLOC_WIN32_NO_UMEM	0
 

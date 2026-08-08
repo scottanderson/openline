@@ -4,7 +4,7 @@
 
 #include "URegularTransport.h"
 #include "UOleAutomation.h"
-#include <WININET.H>
+#include <wininet.h>
 
 /*
  * Structures and Types
@@ -1594,7 +1594,7 @@ bool URegularTransport::LaunchURL(const void *inText, Uint32 inTextSize,
 //	}
     // make local copy
 	Uint8 url[512];
-	UInt32 z = UMemory::Copy(url, start, min((Uint32)(end - start), (Uint32)(sizeof(url) - 1)));
+	Uint32 z = UMemory::Copy(url, start, min((Uint32)(end - start), (Uint32)(sizeof(url) - 1)));
 	url[z] = 0; // ASCIIZ at end of string
 //UDebug::LogToDebugFile("LaunchURL='%s'",url);
 	
@@ -1604,7 +1604,7 @@ bool URegularTransport::LaunchURL(const void *inText, Uint32 inTextSize,
 	if (UMemory::Equal(url, "file:///", 8) && (url[9] == '|'))
 	{
 		url[9] = ':';
-		for(UInt32 k=10; k<z; ++k)
+		for(Uint32 k=10; k<z; ++k)
 			if (url[k] == '/')
 				url[k] = '\\';
 		localURL = true;
@@ -1908,6 +1908,7 @@ static LRESULT CALLBACK _TRSockProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPA
 					break;
 					
 				case FD_CONNECT:
+				{
 					int err = WSAGETSELECTERROR(inLParam);
 
 					if (err == 0)	// if no error
@@ -1965,6 +1966,7 @@ static LRESULT CALLBACK _TRSockProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPA
 						URegularTransport::PostMessage((TRegularTransport)tpt, msg_ConnectionRefused, nil, 0, priority_Normal);
 					}
 					break;
+				}
 					
 				case FD_ACCEPT:
 					URegularTransport::PostMessage((TRegularTransport)tpt, msg_ConnectionRequest, nil, 0, priority_Normal);

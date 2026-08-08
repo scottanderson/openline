@@ -1021,7 +1021,7 @@ static bool _FDManualGetFieldOffsetByIndex(TFieldData inRef, Uint16 inIndex, Uin
 				
 				p += REF->headerSize;
 				if (p+2 > ep) return false;
-				c = FB( *((Uint16 *)p)++ );
+				c = FB( *(*(Uint16 **)&p)++ );
 				
 				if (inIndex <= c)
 				{
@@ -1078,7 +1078,7 @@ static bool _FDManualGetFieldOffset(TFieldData inRef, Uint16 inID, Uint32& outOf
 				
 				p += REF->headerSize;
 				if (p+2 > ep) return false;
-				c = FB( *((Uint16 *)p)++ );
+				c = FB( *(*(Uint16 **)&p)++ );
 				
 				inID = TB(inID);
 				while (c--)

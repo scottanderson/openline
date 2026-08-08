@@ -15,7 +15,7 @@ typedef unsigned long size_t;
 
 
 #ifndef OFFSET_OF
-#define OFFSET_OF(T, member)		((UInt32)&(((T*)0)->member))
+#define OFFSET_OF(T, member)		((Uint32)&(((T*)0)->member))
 #endif
 
 

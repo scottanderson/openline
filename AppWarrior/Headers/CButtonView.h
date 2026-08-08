@@ -31,6 +31,9 @@ enum {
 class CButtonView : public CView
 {
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		// construction
 		CButtonView(CViewHandler *inHandler, const SRect& inBounds);
 		CButtonView(CViewHandler *inHandler, const SRect& inBounds, Uint32 inCmdID, const Uint8 *inTitle, Uint32 inDefault = false, TFontDesc inFont = nil);

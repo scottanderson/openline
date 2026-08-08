@@ -1131,7 +1131,7 @@ Uint32 UMemory::PackIntegers(const Uint32 *inIntList, Uint32 inIntCount, void *o
 	// get ptrs to start of data areas
 	intp = inIntList;
 	sp = (Uint8 *)outData;
-	*((Uint32 *)sp)++ = inIntCount;
+	*(*(Uint32 **)&sp)++ = inIntCount;
 	dp = sp + sizeBytes;
 	ss = 6;
 	
@@ -1146,17 +1146,17 @@ Uint32 UMemory::PackIntegers(const Uint32 *inIntList, Uint32 inIntCount, void *o
 		if (n & 0xFFFF0000)			// if needs 3 or 4 bytes
 		{
 			sc = 3;
-			*((Uint32 *)dp)++ = n;
+			*(*(Uint32 **)&dp)++ = n;
 		}
 		else if (n & 0x0000FF00)	// if needs 2 bytes
 		{
 			sc = 2;
-			*((Uint16 *)dp)++ = n;
+			*(*(Uint16 **)&dp)++ = n;
 		}
 		else if (n)					// if needs 1 byte
 		{
 			sc = 1;
-			*((Uint8 *)dp)++ = n;
+			*(*(Uint8 **)&dp)++ = n;
 		}
 		else						// needs 0 bytes
 		{
@@ -1230,13 +1230,13 @@ Uint32 UMemory::UnpackIntegers(const void *inData, Uint32 inDataSize, Uint32 *ou
 		switch (sc)
 		{
 			case 1:
-				*intp = *((Uint8 *)dp)++;
+				*intp = *(*(Uint8 **)&dp)++;
 				break;
 			case 2:
-				*intp = *((Uint16 *)dp)++;
+				*intp = *(*(Uint16 **)&dp)++;
 				break;
 			case 3:
-				*intp = *((Uint32 *)dp)++;
+				*intp = *(*(Uint32 **)&dp)++;
 				break;
 			default:
 				*intp = 0;

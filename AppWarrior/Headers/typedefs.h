@@ -19,6 +19,10 @@ typedef unsigned long long	Uint64;
 typedef unsigned char		Char8;
 typedef unsigned short		Char16;
 
+// classic Mac Toolbox "Pascal string" type (length byte + up to 255 chars). Normally
+// came from the Mac headers / QuickTime SDK; defined here since that SDK was removed.
+typedef Uint8 Str255[256];
+
 //typedef Uint16				bool;
 
 typedef float				Float32;
@@ -28,7 +32,7 @@ typedef float				Float32;
 	typedef double fast_float;
 #elif __MC68K__	// on 68K, long double (a.k.a. extended) is always the fastest (80 or 96-bits)
 	typedef long double fast_float;
-#elif __INTEL__
+#elif __INTEL__ || defined(__i386__) || defined(_M_IX86)
 	typedef double fast_float;
 #else
 	typedef float fast_float;
@@ -175,7 +179,7 @@ inline Int8 TB(Int8 n)		{	return n;	}
 inline Uint8 FB(Uint8 n)	{	return n;	}
 inline Int8 FB(Int8 n)		{	return n;	}
 
-#if __INTEL__
+#if __INTEL__ || defined(__i386__) || defined(_M_IX86)
 
 	#define CONVERT_INTS	1
 	inline Uint16 TB(Uint16 n)	{	return swap_int(n);			}
@@ -206,6 +210,14 @@ inline Int8 FB(Int8 n)		{	return n;	}
 	#error "unknown processor"
 
 #endif
+
+// Four-char-code literals like 'APPL' are plain "int" in C++ (not Uint32/Int32), which
+// makes calls like TB('APPL') ambiguous between the Uint32/Int32 overloads above (both
+// are equally-good standard conversions from int). Metrowerks apparently picked one
+// silently; GCC doesn't. Codebase always uses these for Uint32 type/creator codes, so
+// resolve the ambiguity that way explicitly.
+inline Uint32 TB(int n)	{	return TB((Uint32)n);	}
+inline Uint32 FB(int n)	{	return FB((Uint32)n);	}
 
 template <class T>
 class scopekiller

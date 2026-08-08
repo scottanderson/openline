@@ -3838,7 +3838,7 @@ void CMyApplication::DoSendPrivMsg(Uint32 inUserID, const Uint8 *inUserName)
 					void *pMsg;
 					StHandleLocker locker(hMsg, pMsg);
 					
-					mChatLog.AppendLog("\pPrivMsg", inUserName, (UInt8*)pMsg,nMsgSize);
+					mChatLog.AppendLog("\pPrivMsg", inUserName, (Uint8*)pMsg,nMsgSize);
 					
 					new CMySendPrivMsgTask(inUserID, pMsg, nMsgSize, myOpt_UserMessage);
 				}
@@ -4167,7 +4167,7 @@ void CMyApplication::DoShowMessage(TFieldData inData)
 		}
 		
 		// log this message if logging enabled
-		mChatLog.AppendLog("\pPrivMsg", userName, (UInt8*)pMsg,nMsgSize);
+		mChatLog.AppendLog("\pPrivMsg", userName, (Uint8*)pMsg,nMsgSize);
 		
 		// create window
 		win = new CMyPrivMsgWin(mAuxParentWin, bIsAutomaticResponse);  // if is an automatic response don't show Reply button
@@ -8409,7 +8409,7 @@ void CMyApplication::ProcessTran_ChatMsg(TFieldData inData)
 			
 			inData->GetField(myField_Data, p, s);
 			
-			mChatLog.AppendLog("\pPrivChat", "\p", (UInt8*)p,s);
+			mChatLog.AppendLog("\pPrivChat", "\p", (Uint8*)p,s);
 			AddChatText(chatWin, p, s, true);			
 		}
 		
@@ -8446,7 +8446,7 @@ void CMyApplication::ProcessTran_ChatMsg(TFieldData inData)
 			if (s == 0) return;
 		}
 		
-		mChatLog.AppendLog("\pChat", "\p", (UInt8*)p,s);
+		mChatLog.AppendLog("\pChat", "\p", (Uint8*)p,s);
 		v->InsertText(max_Uint32, p, s);
 		v->SetFullHeight();
 		
@@ -8913,13 +8913,13 @@ void CMyApplication::ProcessTran_DownloadInfo(TFieldData inData)
 void CMyApplication::DoOpenDloadFolder()
 {
     UFileSys::Dispose(GetDownloadFolder()); // make sure the folder exists
-    UInt8 name[400];
-    UInt32 z = UFileSys::GetApplicationURL(name,400);
+    Uint8 name[400];
+    Uint32 z = UFileSys::GetApplicationURL(name,400);
     if (z>0)
     {
-    	const UInt8 str[] = "\p/Downloads";
-    	z += UMemory::Copy(name+z, str+1, min((UInt32)str[0],400-z));
-// 		for (UInt8* b= (UInt8*)"/Downloads"; *b!=0; ++b)
+    	const Uint8 str[] = "\p/Downloads";
+    	z += UMemory::Copy(name+z, str+1, min((Uint32)str[0],400-z));
+// 		for (Uint8* b= (Uint8*)"/Downloads"; *b!=0; ++b)
 // 			name[z++] = *b;
   		name[z] = 0;
 //		UDebug::LogToDebugFile("Open Download URL: %s\n", name);
@@ -8927,16 +8927,16 @@ void CMyApplication::DoOpenDloadFolder()
 	}
 }
 
-void CMyApplication::DoViewDloadFile(UInt8* fName)
+void CMyApplication::DoViewDloadFile(Uint8* fName)
 {
     UFileSys::Dispose(GetDownloadFolder()); // make sure the folder exists
-    UInt8 name[400];
-    UInt32 z = UFileSys::GetApplicationURL(name,400);
+    Uint8 name[400];
+    Uint32 z = UFileSys::GetApplicationURL(name,400);
     if (z>0)
     {
-    	const UInt8 str[] = "\p/Downloads/";
-    	z += UMemory::Copy(name+z, str+1, min((UInt32)str[0],400-z));
-    	z += UMemory::Copy(name+z, fName+1, min((UInt32)fName[0],400-z));
+    	const Uint8 str[] = "\p/Downloads/";
+    	z += UMemory::Copy(name+z, str+1, min((Uint32)str[0],400-z));
+    	z += UMemory::Copy(name+z, fName+1, min((Uint32)fName[0],400-z));
   		name[z] = 0;
 //		UDebug::LogToDebugFile("Open Download URL: %s\n", name);
 		UTransport::LaunchURL(name, z);
@@ -8948,7 +8948,7 @@ void CMyApplication::DoLaunchSecuriphone()
 #if WIN32
 	// on windows we try to launch the app itself, if we can find it
 	char sphone[256];
-	UInt32 z = sizeof(sphone)-1;
+	Uint32 z = sizeof(sphone)-1;
 	sphone[z] = 0;
 	if (!UExternalApp::ReadSystemRegistry("HKCU\\Software\\EarthSpeak International\\SecuriPhone\\CurrentVersion"
 		, "path", sphone, z)) 

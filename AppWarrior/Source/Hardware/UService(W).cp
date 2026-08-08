@@ -232,7 +232,7 @@ void UService::DisplayMessage(Uint8 *inMessage)
 
 #pragma mark -
 
-void main();
+void AppMain();
 
 void WINAPI _ServiceMain(Uint32 /*inArgc*/, Int8 **/*inArgv*/)
 {
@@ -245,7 +245,7 @@ void WINAPI _ServiceMain(Uint32 /*inArgc*/, Int8 **/*inArgv*/)
 	UService::SetStatus(SERVICE_RUNNING, S_OK, 0, 0);
   
 	try {
-		main();
+		AppMain();
 	} catch(...) {}
 
     UService::SetStatus(SERVICE_STOPPED, S_OK, 0, 0);

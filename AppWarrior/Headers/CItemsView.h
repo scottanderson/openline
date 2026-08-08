@@ -10,6 +10,9 @@
 class CItemsView : public CView
 {
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		// construction
 		CItemsView(CViewHandler *inHandler, const SRect& inBounds);
 		

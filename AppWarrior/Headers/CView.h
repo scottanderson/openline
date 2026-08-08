@@ -84,7 +84,12 @@ struct SHitMsgData {
 	Uint32 part;
 	Uint32 param;
 	Uint16 dataSize;
-	Uint8 data[];
+	// GCC (unlike Metrowerks) rejects a flexible array member in a struct embedded as a
+	// non-final member of another struct (see CView::Hit()'s local "info" struct, which
+	// places a fixed 256-byte buffer right after an SHitMsgData for data[] to overlay).
+	// Sized [1] instead; every sizeof(SHitMsgData) use is adjusted by -1 elsewhere to
+	// keep byte counts identical to the true-flexible-array version.
+	Uint8 data[1];
 };
 #pragma options align=reset
 

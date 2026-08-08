@@ -174,7 +174,7 @@ void *UDigest::UU_Encode(const void *inData, Uint32 inDataSize, Uint32& outDataS
 
   	while(true)
     {
-  		Int32 nEnc = pData - inData;
+  		Int32 nEnc = pData - (const Uint8 *)inData;
   		if (nEnc >= inDataSize)
   			break;
   		
@@ -185,7 +185,7 @@ void *UDigest::UU_Encode(const void *inData, Uint32 inDataSize, Uint32& outDataS
         
         for (; nEnc > 0; nEnc -= 3, pData += 3)
         {
-	        if (pData - inData >= inDataSize)
+	        if (pData - (const Uint8 *)inData >= inDataSize)
     	    	break;        
 
         	ch = *pData >> 2;
@@ -238,7 +238,7 @@ void *UDigest::UU_Decode(const void *inData, Uint32 inDataSize, Uint32& outDataS
         
       	for (++pData; nDec > 0; pData += 4, nDec -= 3)
         {
-	        if (pData - inData >= inDataSize)
+	        if (pData - (const Uint8 *)inData >= inDataSize)
     	    	break;        
 
         	if (nDec >= 3)
@@ -270,7 +270,7 @@ void *UDigest::UU_Decode(const void *inData, Uint32 inDataSize, Uint32& outDataS
         	break;
         	
         pData += 2;
-        if (pData - inData >= inDataSize)
+        if (pData - (const Uint8 *)inData >= inDataSize)
         	break;        
     }
 	
@@ -322,7 +322,11 @@ class _MD5Digest
 
 	   	friend bool operator==(const _MD5Digest &inLhs, const _MD5Digest &inRhs);
 	   	friend bool operator!=(const _MD5Digest &inLhs, const _MD5Digest &inRhs);
-	   	friend void _MD5::Encode(_MD5Digest &outDigest);
+	   	// Naming a specific protected overload here (as the original
+	   	// "friend void _MD5::Encode(_MD5Digest&);" did) requires looking it up from a
+	   	// non-friend context first, which GCC (unlike Metrowerks) rejects. Befriending
+	   	// the whole class sidesteps that and grants the same access this actually needs.
+	   	friend class _MD5;
 };
 
 // outDataSize = 16 bytes

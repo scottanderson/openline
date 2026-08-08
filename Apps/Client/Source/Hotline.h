@@ -3786,13 +3786,13 @@ class CChatLog
 {
     TFSRefObj* mRef;
     bool mEnabled;
-    UInt32 mPos;
+    Uint32 mPos;
 public:
 	CChatLog();
 	~CChatLog();
 
 	void Enable(bool on);
-	void AppendLog(const UInt8* type, const UInt8* user, const UInt8 *msg, UInt32 msgZ);
+	void AppendLog(const Uint8* type, const Uint8* user, const Uint8 *msg, Uint32 msgZ);
 
 private:
 	void OpenLog();
@@ -4192,7 +4192,7 @@ protected:
 		void WriteCookies();
 		void ReadCookies();
 		void DoOpenDloadFolder();
-		void DoViewDloadFile(UInt8* fName);
+		void DoViewDloadFile(Uint8* fName);
 		
 		// tasks and transport
 		void AddTask(CMyTask *inTask, const Uint8 inDesc[]);

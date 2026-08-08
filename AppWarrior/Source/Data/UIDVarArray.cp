@@ -396,21 +396,27 @@ TIDVarArray UIDVarArray::Unflatten(const void *inData, Uint32 inDataSize)
 	
 	// immediately fail if less data than the minimum required
 	if (inDataSize < minDataSize) goto corrupt;
-	
+
+	// Wrapped in a nested block: GCC (unlike Metrowerks) rejects a goto that jumps over
+	// the initialization of a local variable while remaining in its scope, and all of
+	// "corrupt:"'s gotos below jump over one or more of these. None of them are needed
+	// at the "corrupt" label (only dataHdl/offsetTab/ref, declared above, are), so
+	// scoping them to this block sidesteps the issue without changing behavior.
+	{
 	// check format tag
 	Uint32 *lp = (Uint32 *)inData;
 	if (lp[0] != TB((Uint32)'IVA1')) Fail(errorType_Misc, error_FormatUnknown);
-	
+
 	// immediately fail on ridiculous item counts to avoid overflow
 	Uint32 itemCount = FB(lp[3]);
 	if (itemCount & 0xFF000000) goto corrupt;
-	
+
 	// check that got enough data for the entire offset table
 	Uint32 offsetTabSize = (itemCount + 1) * tabEntrySize;
 	Uint32 arrayDataOffset = headerSize + offsetTabSize;
 	if (inDataSize < arrayDataOffset) goto corrupt;
 	Uint32 arrayDataSize = inDataSize - arrayDataOffset;
-	
+
 	// allocate offset table, data handle, and ref
 	try
 	{
@@ -426,9 +432,9 @@ TIDVarArray UIDVarArray::Unflatten(const void *inData, Uint32 inDataSize)
 		UMemory::Dispose((TPtr)ref);
 		throw;
 	}
-	
+
 	// prepare to extract and validate the offset table
-	(Uint8 *)lp += headerSize;
+	*(Uint8 **)&lp += headerSize;
 	Uint32 *dp = (Uint32 *)offsetTab;
 	Uint32 prevID = 0;
 	Uint32 prevOffset = 0;
@@ -441,11 +447,11 @@ TIDVarArray UIDVarArray::Unflatten(const void *inData, Uint32 inDataSize)
 		*dp = FB(*lp);
 		if (*dp <= prevID) goto corrupt;
 		prevID = *dp;
-		
+
 		// extract offset and check that in range
 		dp[1] = FB(lp[1]);
 		if (dp[1] < prevOffset || dp[1] > arrayDataSize) goto corrupt;
-		
+
 		// next entry
 		dp += 2;
 		lp += 2;
@@ -465,6 +471,7 @@ TIDVarArray UIDVarArray::Unflatten(const void *inData, Uint32 inDataSize)
 
 	// all done!
 	return (TIDVarArray)ref;
+	} // end nested block
 
 	// corrupt exit point
 corrupt:
@@ -483,30 +490,42 @@ Uint32 UIDVarArray::GetItem(const void *inData, Uint32 inDataSize, Uint32 inID, 
 		headerSize		= sizeof(Uint32) * 4,
 		minDataSize		= headerSize + tabEntrySize
 	};
-		
+
+	// All locals hoisted to the top and declared without initializers: GCC (unlike
+	// Metrowerks) rejects a goto that jumps over the initialization of a local variable
+	// while remaining in its scope, and both "notFound:" and "found:" below are targets
+	// of gotos that occur both before and after these were originally declared/inited.
+	Uint32 itemCount;
+	Uint32 arrayDataOffset;
+	Uint32 arrayDataSize;
+	SIVAOffsetTabEntry *offsetTab;
+	Uint32 i;
+	Uint32 id;
+	Uint32 l;
+	Uint32 r;
+
 	// immediately fail if less data than the minimum required or if format tag is wrong
 	if (!inID || (inDataSize < minDataSize) || (*(Uint32 *)inData != TB((Uint32)'IVA1')))
 		goto notFound;
-	
+
 	// immediately fail on ridiculous item counts to avoid overflow
-	Uint32 itemCount = FB( ((Uint32 *)inData)[3] );
+	itemCount = FB( ((Uint32 *)inData)[3] );
 	if (!itemCount || (itemCount & 0xFF000000)) goto notFound;
-	
+
 	// check that got enough data for the entire offset table
-	Uint32 arrayDataOffset = headerSize + ((itemCount + 1) * tabEntrySize);
+	arrayDataOffset = headerSize + ((itemCount + 1) * tabEntrySize);
 	if (inDataSize < arrayDataOffset) goto notFound;
-	Uint32 arrayDataSize = inDataSize - arrayDataOffset;
-	
+	arrayDataSize = inDataSize - arrayDataOffset;
+
 	/*
-	 * To test how well the binary search handles corruption, I ran it on an array of 
-	 * random numbers hundreds of thousands of times and it didn't crash or get stuck 
+	 * To test how well the binary search handles corruption, I ran it on an array of
+	 * random numbers hundreds of thousands of times and it didn't crash or get stuck
 	 * in a infinite loop so I presume it's okay.
 	 */
 
-	SIVAOffsetTabEntry *offsetTab = (SIVAOffsetTabEntry *)( BPTR(inData) + headerSize );
-	
-	Uint32 i;
-	Uint32 id = FB(offsetTab[0].id);
+	offsetTab = (SIVAOffsetTabEntry *)( BPTR(inData) + headerSize );
+
+	id = FB(offsetTab[0].id);
 	if (inID == id)
 	{
 		i = 0;
@@ -514,10 +533,10 @@ Uint32 UIDVarArray::GetItem(const void *inData, Uint32 inDataSize, Uint32 inID, 
 	}
 	else if (inID < id)
 		goto notFound;
-	
-	Uint32 l = 1;
-	Uint32 r = itemCount - 1;
-	
+
+	l = 1;
+	r = itemCount - 1;
+
 	while (l <= r)
 	{
 		i = (l + r) >> 1;

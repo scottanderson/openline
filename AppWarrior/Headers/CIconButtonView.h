@@ -9,6 +9,9 @@
 class CIconButtonView : public CView
 {	
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		// construction
 		CIconButtonView(CViewHandler *inHandler, const SRect& inBounds);
 		CIconButtonView(CViewHandler *inHandler, const SRect& inBounds, Uint32 inCmdID, const Uint8 *inTitle, Int32 inIconID, Uint32 inOptions, TFontDesc inFont = nil);

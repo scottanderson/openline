@@ -78,7 +78,7 @@ void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSi
 		if (h == NULL) Fail(errorType_Memory, memError_NotEnough);
 		
 		p = (Uint8 *)::GlobalLock(h);
-		*((Uint32 *)p)++ = inDataSize+1;
+		*(*(Uint32 **)&p)++ = inDataSize+1;
 		::CopyMemory(p, inData, inDataSize);
 		p[inDataSize] = 0;		// must be null-terminated
 		::GlobalUnlock(h);

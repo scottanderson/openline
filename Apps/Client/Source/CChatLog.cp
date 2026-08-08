@@ -70,7 +70,7 @@ void CChatLog::CloseLog()
 	mRef = 0;
 }
 
-void CChatLog::AppendLog(const UInt8* type, const UInt8* user, const UInt8 *msg, UInt32 msgZ)
+void CChatLog::AppendLog(const Uint8* type, const Uint8* user, const Uint8 *msg, Uint32 msgZ)
 {
 	if (mRef == 0)
 		return;
@@ -82,10 +82,10 @@ void CChatLog::AppendLog(const UInt8* type, const UInt8* user, const UInt8 *msg,
 	while(msgZ>0 &&(*msg==' '||*msg=='\r'||*msg=='\n')) 
 		++msg,--msgZ;
 	// if we don't have user name try to grab one from the message
-	UInt8 usrNameBuf[64];
+	Uint8 usrNameBuf[64];
 	if (user == 0 || user[0] == 0)
 	{
-	    UInt8 *p = (UInt8*)msg, *pe = p+min(msgZ,64UL), *u = usrNameBuf+1;
+	    Uint8 *p = (Uint8*)msg, *pe = p+min(msgZ,64UL), *u = usrNameBuf+1;
 	    for(; p<pe && *p != ':'; ++p) { *u++ = *p; }
 	    if (msgZ > 0 && *p == ':' && p > msg)
 	    {
@@ -107,8 +107,8 @@ void CChatLog::AppendLog(const UInt8* type, const UInt8* user, const UInt8 *msg,
 	const Uint8 BR[] = "<BR/>\r\n";
 	#endif
 
-    UInt8 msgbuf[1024]; // we hope for no overflow , but we don't crash if we get one
-    for(UInt8 *b=(UInt8*)msg, *e=b+msgZ, *d=msgbuf, *f=d+sizeof(msgbuf)-64; b<e && d<f; ++b)
+    Uint8 msgbuf[1024]; // we hope for no overflow , but we don't crash if we get one
+    for(Uint8 *b=(Uint8*)msg, *e=b+msgZ, *d=msgbuf, *f=d+sizeof(msgbuf)-64; b<e && d<f; ++b)
     {
     	switch(*b)
     	{
@@ -131,8 +131,8 @@ void CChatLog::AppendLog(const UInt8* type, const UInt8* user, const UInt8 *msg,
 	const char fmt[] = "<%#s at='%#s' from='%#s'>\r\n%s\r\n</%#s>\r\n\r\n</ChatLog>";
 	#endif
 
-    UInt8 text[1024]; // we hope for no overflow , but we don't crash if we get one
-	UInt32 textZ = UText::Format(text, sizeof(text), fmt, 
+    Uint8 text[1024]; // we hope for no overflow , but we don't crash if we get one
+	Uint32 textZ = UText::Format(text, sizeof(text), fmt, 
 						type, timeStamp, user, msgbuf, type );
 	mPos+= mRef->Write(mPos, text, textZ);
     mPos-= 10; // we overwrite </ChatLog> every time we append to the file

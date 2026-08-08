@@ -460,8 +460,11 @@ bool CDecompressPict::PixPat()
        		break;
         		
       	case 1:
+      		// Braced (GCC, unlike Metrowerks, rejects "default:" below jumping over
+      		// these locals' initialization while staying in scope).
+      		{
 	   		mOffset += 8;
-	        
+
 	        Uint16 rowBytes;
 	        if(!ReadWord(rowBytes))
 	        {
@@ -492,7 +495,8 @@ bool CDecompressPict::PixPat()
 		        return false;
    	    	}
 	        break;
-      
+      		}
+
       	default:
 			Fail(errorType_Image, imgError_UnknownPatternType);
     };

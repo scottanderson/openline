@@ -21,12 +21,10 @@ IID IID_AW_DDDataObject = { /* 8ec8e0c0-afb0-11d2-a7b7-00050281476a */
     {0xa7, 0xb7, 0x00, 0x05, 0x02, 0x81, 0x47, 0x6a}
   };
 
-typedef struct _DROPFILES { 
-    DWORD pFiles; // offset of file list 
-    POINT pt;     // drop point (coordinates depend on fNC) 
-    BOOL fNC;     // nonclient area flag. If this member is TRUE, pt specifies the screen coordinates of a point in a window’s nonclient area. If it is FALSE, pt specifies the client coordinates of a point in the client area.
-    BOOL fWide;   // TRUE if file contains wide characters, FALSE otherwise 
-} DROPFILES, FAR * LPDROPFILES;
+// DROPFILES/LPDROPFILES: this used to be hand-declared here (presumably missing from
+// old Platform SDK headers at the time), but MinGW-w64's real <shlobj.h> (included via
+// the prefix header) already defines it identically -- redeclaring it is now a
+// redefinition error, so just rely on the real one.
 
 
 struct SDDFlav

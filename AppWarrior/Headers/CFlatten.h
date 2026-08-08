@@ -14,9 +14,9 @@ class CFlatten
 		
 		void Write(const void *inData, Uint32 inDataSize)			{	UMemory::Copy(mPtr, inData, inDataSize); mPtr += inDataSize;	}
 		
-		void WriteByte(Uint8 inByte)								{	*((Uint8 *)mPtr)++ = inByte;									}
-		void WriteWord(Uint16 inWord)								{	*((Uint16 *)mPtr)++ = TB(inWord);								}
-		void WriteLong(Uint32 inLong)								{	*((Uint32 *)mPtr)++ = TB(inLong);								}
+		void WriteByte(Uint8 inByte)								{	*(Uint8 *)mPtr = inByte; mPtr += sizeof(Uint8);				}
+		void WriteWord(Uint16 inWord)								{	*(Uint16 *)mPtr = TB(inWord); mPtr += sizeof(Uint16);			}
+		void WriteLong(Uint32 inLong)								{	*(Uint32 *)mPtr = TB(inLong); mPtr += sizeof(Uint32);			}
 		
 		void WritePString(const Uint8 *inStr)						{	mPtr += UMemory::Copy(mPtr, inStr, inStr[0]+1);					}
 		void WritePString(const void *inData, Uint32 inDataSize);
@@ -32,10 +32,10 @@ class CFlatten
 		void Advance(Uint32 inSize)									{	mPtr += inSize;													}
 		
 		void Reserve(Uint32 inSize)									{	while (inSize--) *mPtr++ = 0;									}
-		void ReserveByte()											{	*((Uint8 *)mPtr)++ = 0;											}
-		void ReserveWord()											{	*((Uint16 *)mPtr)++ = 0;										}
-		void ReserveLong()											{	*((Uint32 *)mPtr)++ = 0;										}
-		void ReservePString()										{	*((Uint8 *)mPtr)++ = 0;											}
+		void ReserveByte()											{	*(Uint8 *)mPtr = 0; mPtr += sizeof(Uint8);						}
+		void ReserveWord()											{	*(Uint16 *)mPtr = 0; mPtr += sizeof(Uint16);					}
+		void ReserveLong()											{	*(Uint32 *)mPtr = 0; mPtr += sizeof(Uint32);					}
+		void ReservePString()										{	*(Uint8 *)mPtr = 0; mPtr += sizeof(Uint8);						}
 		
 		void Align2()												{	if (RoundUp2(mPtr-mBuf) != (mPtr-mBuf)) *mPtr++ = 0;			}
 		void Align4()												{	Reserve(RoundUp4(mPtr-mBuf) - (mPtr-mBuf));						}
@@ -58,9 +58,9 @@ class CUnflatten
 		void SkipWord()												{	mPtr += sizeof(Uint16);											}
 		void SkipLong()												{	mPtr += sizeof(Uint32);											}
 
-		Uint8 ReadByte()											{	return *((Uint8 *)mPtr)++;										}
-		Uint16 ReadWord()											{	return FB( *((Uint16 *)mPtr)++ );								}
-		Uint32 ReadLong()											{	return FB( *((Uint32 *)mPtr)++ );								}
+		Uint8 ReadByte()											{	Uint8 v = *(const Uint8 *)mPtr; mPtr += sizeof(Uint8); return v;	}
+		Uint16 ReadWord()											{	Uint16 v = FB(*(const Uint16 *)mPtr); mPtr += sizeof(Uint16); return v;	}
+		Uint32 ReadLong()											{	Uint32 v = FB(*(const Uint32 *)mPtr); mPtr += sizeof(Uint32); return v;	}
 
 		bool ReadPString(Uint8 *outStr);
 		bool ReadPString(Uint8 *outStr, Uint32 inBufSize);
@@ -119,7 +119,7 @@ inline const CUnflatten& operator>> (CUnflatten& s, Uint32& v)
 inline void CFlatten::WritePString(const void *inData, Uint32 inDataSize)
 {
 	if (inDataSize > max_Uint8) inDataSize = max_Uint8;
-	*((Uint8 *)mPtr)++ = inDataSize;
+	*(Uint8 *)mPtr = inDataSize; mPtr += sizeof(Uint8);
 	UMemory::Copy(mPtr, inData, inDataSize);
 	mPtr += inDataSize;
 }
@@ -127,14 +127,14 @@ inline void CFlatten::WritePString(const void *inData, Uint32 inDataSize)
 inline void CFlatten::WriteWString(const void *inData, Uint32 inDataSize)
 {
 	if (inDataSize > max_Uint16) inDataSize = max_Uint16;
-	*((Uint16 *)mPtr)++ = TB((Uint16)inDataSize);
+	*(Uint16 *)mPtr = TB((Uint16)inDataSize); mPtr += sizeof(Uint16);
 	UMemory::Copy(mPtr, inData, inDataSize);
 	mPtr += inDataSize;
 }
 
 inline void CFlatten::WriteLString(const void *inData, Uint32 inDataSize)
 {
-	*((Uint32 *)mPtr)++ = TB(inDataSize);
+	*(Uint32 *)mPtr = TB(inDataSize); mPtr += sizeof(Uint32);
 	UMemory::Copy(mPtr, inData, inDataSize);
 	mPtr += inDataSize;
 }

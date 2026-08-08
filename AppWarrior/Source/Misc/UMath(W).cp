@@ -12,7 +12,10 @@
 #undef atan
 #undef sqrt
 
-const double pi = 3.14159265358979323846;
+// UMath.h declares this "extern const fast_float pi;" -- a const at namespace scope
+// has internal linkage by default in C++ unless marked extern too, so without it this
+// silently created a second, unrelated "pi" instead of defining the declared one.
+extern const double pi = 3.14159265358979323846;
 
 /* -------------------------------------------------------------------------- */
 

@@ -132,9 +132,12 @@ all over again. Coooool!
 	SPMFlatHdr *hdr;
 	StHandleLocker lock(inHdl, (void*&)hdr);
 	
+	// Braced (GCC, unlike Metrowerks, rejects "goto invalid" jumping over the locals
+	// below while staying in their scope; "invalid:" itself needs none of them).
+	{
 	// check format and version specifiers
 	if (hdr->format != TB((Uint32)'AWPX') || FB(hdr->version) != 1) goto invalid;
-	
+
 	// check got enough layer headers
 	Uint32 layerCount = FB(hdr->layerCount);
 	Uint32 totalHdrSize = sizeof(SPMFlatHdr) + (layerCount * sizeof(SPMFlatLayerHdr));
@@ -206,6 +209,7 @@ all over again. Coooool!
 	
 	// exit points
 	return true;
+	}
 invalid:
 	return false;
 }
@@ -213,7 +217,7 @@ invalid:
 Uint32 UPixmap::GetLayerCount(THdl inHdl)
 {
 	Require(inHdl);
-	return FB(UMemory::ReadWord(inHdl, (UInt32)&(((SPMFlatHdr*)0)->layerCount) ));
+	return FB(UMemory::ReadWord(inHdl, (Uint32)&(((SPMFlatHdr*)0)->layerCount) ));
 }
 
 // inIndex is 1-based
@@ -1043,8 +1047,8 @@ void _GRCopy32To32(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 
 		for (Uint32 i=0; i!=inWid; i++)
 			dp[i] = sp[i];
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1059,8 +1063,8 @@ void _GRCopy32To16(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 
 		for (Uint32 i=0; i!=inWid; i++)
 			dp[i] = (((sp[i] >> 17) & 0x7C00) | ((sp[i] >> 14) & 0x03E0) | ((sp[i] >> 11) & 0x001F));		
 
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1081,7 +1085,7 @@ void _GRCopy24To16(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 
 		}
 
 		sp += srcEnd;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1114,8 +1118,8 @@ void _GRCopy32To8(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 i
 			nextPix:;
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1130,8 +1134,8 @@ void _GRCopy16To32(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 
 		for (Uint32 i=0; i!=inWid; i++)
 			dp[i] = _gConv5to8TabR[(sp[i] >> 10) & 0x1F] | _gConv5to8TabG[(sp[i] >> 5) & 0x1F] | _gConv5to8TabB[sp[i] & 0x1F];
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1143,8 +1147,8 @@ void _GRCopy16To16(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 
 		for (Uint32 i=0; i!=inWid; i++)
 			((Uint16 *)inDst)[i] = ((Uint16 *)inSrc)[i];
 		
-		(Uint8 *)inSrc += inSrcRowBytes;
-		(Uint8 *)inDst += inDstRowBytes;
+		*(Uint8 **)&inSrc += inSrcRowBytes;
+		*(Uint8 **)&inDst += inDstRowBytes;
 	}
 }
 
@@ -1176,8 +1180,8 @@ void _GRCopy16To8(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 i
 			nextPix:;
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1214,8 +1218,8 @@ void _GRCopy8To32(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 i
 		for (i=0; i!=inWid; i++)
 			dp[i] = colorTab[sp[i]];
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1240,8 +1244,8 @@ void _GRCopy8To16(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 i
 		for (i=0; i!=inWid; i++)
 			dp[i] = colorTab[sp[i]];
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1261,8 +1265,8 @@ void _GRCopy8To8(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 in
 			for (i=0; i!=inWid; i++)
 				dp[i] = sp[i];
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 	else
@@ -1277,8 +1281,8 @@ void _GRCopy8To8(void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 in
 			for (i=0; i!=inWid; i++)
 				dp[i] = xlat[sp[i]];
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 }
@@ -1296,8 +1300,8 @@ void _GRTransCopy32To32(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, co
 				dp[i] = sp[i];
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1315,8 +1319,8 @@ void _GRTransCopy32To16(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, co
 				dp[i] = (((sp[i] >> 17) & 0x7C00) | ((sp[i] >> 14) & 0x03E0) | ((sp[i] >> 11) & 0x001F));
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1351,8 +1355,8 @@ void _GRTransCopy32To8(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, con
 			nextPix:;
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1372,9 +1376,9 @@ void _GRTransCopy16To32(const void *inMask, void *inDst, Uint32 inDstRowBytes, c
 				dp[i] = _gConv5to8TabR[(sp[i] >> 10) & 0x1F] | _gConv5to8TabG[(sp[i] >> 5) & 0x1F] | _gConv5to8TabB[sp[i] & 0x1F];
 		}
 
-		(Uint8 *)mask += inSrcRowBytes;
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&mask += inSrcRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1394,8 +1398,8 @@ void _GRTransCopy16To32(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, co
 				dp[i] = _gConv5to8TabR[(sp[i] >> 10) & 0x1F] | _gConv5to8TabG[(sp[i] >> 5) & 0x1F] | _gConv5to8TabB[sp[i] & 0x1F];
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1416,9 +1420,9 @@ void _GRTransCopy16To16(const void *inMask, void *inDst, Uint32 inDstRowBytes, c
 				dp[i] = sp[i];
 		}
 
-		(Uint8 *)mask += inSrcRowBytes;
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&mask += inSrcRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1439,8 +1443,8 @@ void _GRTransCopy16To16(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, co
 				dp[i] = sp[i];
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1477,8 +1481,8 @@ void _GRTransCopy16To8(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, con
 			nextPix:;
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1521,8 +1525,8 @@ void _GRTransCopy8To32(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, con
 					dp[i] = colorTab[sp[i]];
 			}
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 	else
@@ -1532,8 +1536,8 @@ void _GRTransCopy8To32(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, con
 			for (i=0; i!=inWid; i++)
 				dp[i] = colorTab[sp[i]];
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 }
@@ -1566,8 +1570,8 @@ void _GRTransCopy8To16(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, con
 					dp[i] = colorTab[sp[i]];
 			}
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 	else
@@ -1577,8 +1581,8 @@ void _GRTransCopy8To16(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, con
 			for (i=0; i!=inWid; i++)
 				dp[i] = colorTab[sp[i]];
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 }
@@ -1607,8 +1611,8 @@ void _GRTransCopy8To8(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, cons
 						dp[i] = sp[i];
 				}
 				
-				(Uint8 *)sp += inSrcRowBytes;
-				(Uint8 *)dp += inDstRowBytes;
+				*(Uint8 **)&sp += inSrcRowBytes;
+				*(Uint8 **)&dp += inDstRowBytes;
 			}
 		}
 		else
@@ -1618,8 +1622,8 @@ void _GRTransCopy8To8(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, cons
 				for (i=0; i!=inWid; i++)
 					dp[i] = sp[i];
 				
-				(Uint8 *)sp += inSrcRowBytes;
-				(Uint8 *)dp += inDstRowBytes;
+				*(Uint8 **)&sp += inSrcRowBytes;
+				*(Uint8 **)&dp += inDstRowBytes;
 			}
 		}
 	}
@@ -1642,8 +1646,8 @@ void _GRTransCopy8To8(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, cons
 						dp[i] = xlat[sp[i]];
 				}
 				
-				(Uint8 *)sp += inSrcRowBytes;
-				(Uint8 *)dp += inDstRowBytes;
+				*(Uint8 **)&sp += inSrcRowBytes;
+				*(Uint8 **)&dp += inDstRowBytes;
 			}
 		}
 		else
@@ -1653,8 +1657,8 @@ void _GRTransCopy8To8(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, cons
 				for (i=0; i!=inWid; i++)
 					dp[i] = xlat[sp[i]];
 				
-				(Uint8 *)sp += inSrcRowBytes;
-				(Uint8 *)dp += inDstRowBytes;
+				*(Uint8 **)&sp += inSrcRowBytes;
+				*(Uint8 **)&dp += inDstRowBytes;
 			}
 		}
 	}
@@ -1675,8 +1679,8 @@ void _GRTrans32ToMask(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, cons
 				SetBit(dp, i);
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1697,8 +1701,8 @@ void _GRTrans16ToMask(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, cons
 				SetBit(dp, i);
 		}
 		
-		(Uint8 *)sp += inSrcRowBytes;
-		(Uint8 *)dp += inDstRowBytes;
+		*(Uint8 **)&sp += inSrcRowBytes;
+		*(Uint8 **)&dp += inDstRowBytes;
 	}
 }
 
@@ -1722,8 +1726,8 @@ void _GRTrans8ToMask(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, const
 					SetBit(dp, i);
 			}
 			
-			(Uint8 *)sp += inSrcRowBytes;
-			(Uint8 *)dp += inDstRowBytes;
+			*(Uint8 **)&sp += inSrcRowBytes;
+			*(Uint8 **)&dp += inDstRowBytes;
 		}
 	}
 	else

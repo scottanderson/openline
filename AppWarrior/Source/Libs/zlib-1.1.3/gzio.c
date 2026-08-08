@@ -10,9 +10,8 @@
 
 #include "zutil.h"
 
-#ifndef AWZLIB
-# include <stdio.h>
-#endif
+/* Always need real stdio.h for FILE/NULL/EOF -- see the AWZLIB comment in zutil.h. */
+#include <stdio.h>
 struct internal_state {int dummy;}; /* for buggy compilers */
 
 #ifndef Z_BUFSIZE

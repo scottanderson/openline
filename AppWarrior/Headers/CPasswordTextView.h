@@ -8,6 +8,9 @@
 class CPasswordTextView : public CView
 {
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		// construction
 		CPasswordTextView(CViewHandler *inHandler, const SRect& inBounds);
 		virtual ~CPasswordTextView();

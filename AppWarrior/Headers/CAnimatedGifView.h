@@ -8,6 +8,9 @@
 class CAnimatedGifView : public CImageView
 {
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CImageView inherited;
+
 		// construction
 		CAnimatedGifView(CViewHandler *inHandler, const SRect& inBounds, CDecompressGif *inDecompressGif);
 		virtual ~CAnimatedGifView();

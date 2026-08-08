@@ -1,6 +1,6 @@
 /* (c)2003 Hotsprings Inc. Licensed under GPL - see LICENSE in HotlineSources diresctory */
 
-#include "UZLibCompress.h"
+#include "UZlibCompress.h"
 #include "zlib.h"
 
 struct SZLibObj

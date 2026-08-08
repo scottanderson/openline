@@ -1761,7 +1761,7 @@ static bool _ReceiveHttpHeader(SConnectionInfo *inConnectionInfo)
 			}
 			
 			Uint8 *pGuid = UMemory::Search("HTTP/1.0", 8, pBuffer, nReceiveSize);
-			if (!pGuid || pGuid - pBuffer < 37)
+			if (!pGuid || pGuid - (Uint8 *)pBuffer < 37)
 			{
 				UMemory::Dispose((TPtr)pBuffer);
 				return false;

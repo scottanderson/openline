@@ -5,7 +5,7 @@
 
 #define PLATFORM_WIN32_ALL		1
 
-#include <tlHelp32.h>
+#include <tlhelp32.h>
 #if !PLATFORM_WIN32_ALL
 #include <psapi.h>
 #endif

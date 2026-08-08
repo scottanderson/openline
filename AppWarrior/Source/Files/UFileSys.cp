@@ -132,14 +132,14 @@ Uint32 UFileSys::ValidateFilePath(void *ioPath, Uint32 inPathSize)
 	
 	Uint16 count = FB(*((Uint16 *)p));
 	
-	*((Uint16 *)op)++ = *((Uint16 *)p)++;
+	*(*(Uint16 **)&op)++ = *(*(Uint16 **)&p)++;
 	
 	if (ep - p < count * (sizeof(Uint16) + 2 * sizeof(Uint8)))
 		return inPathSize;
 	
 	while(count--)
 	{
-		*((Uint16 *)op)++ = *((Uint16 *)p)++;
+		*(*(Uint16 **)&op)++ = *(*(Uint16 **)&p)++;
 		
 		pstrcpy(op, p);
 
@@ -263,11 +263,11 @@ Uint32 UFileSys::AppendToPath(void *ioPath, Uint32 inPathSize, const Uint8 *inNa
 	}
 	else
 	{
-		*((Uint16 *)p)++ = TB((Uint16)1);
+		*(*(Uint16 **)&p)++ = TB((Uint16)1);
 	}
 		
 	// write the encoding
-	*((Uint16 *)p)++ = TB((Uint16)inNameEncoding);
+	*(*(Uint16 **)&p)++ = TB((Uint16)inNameEncoding);
 	
 	// write the name;
 	*p = UMemory::Copy(p + 1, inName, (Uint8)inNameSize);
@@ -839,11 +839,11 @@ inline void CEncodedTempFile::EncodeBuffer(const void *inBuffer, Uint32 inBuffer
 	
 	for (Uint8 i=0; i<25; i++)
 	{	
-		if(i*2 + pBuffer - inBuffer < inBufferSize)
+		if(i*2 + pBuffer - (Uint8 *)inBuffer < inBufferSize)
 			if (i%2) pBuffer[i*2] += (i + 2)*4;
 			else	 pBuffer[i*2] -= (i + 4)*6; 
 		
-		mEncodingOffset[i] = UMath::GetRandom(0, inBufferSize - (pBuffer - inBuffer) - 1);
+		mEncodingOffset[i] = UMath::GetRandom(0, inBufferSize - (pBuffer - (Uint8 *)inBuffer) - 1);
 		Uint8 *pEncodingByte = pBuffer + mEncodingOffset[i];
 		
 		if (i%3) *pEncodingByte += (i + 3)*5;
@@ -862,7 +862,7 @@ inline void CEncodedTempFile::DecodeBuffer(const void *inBuffer, Uint32 inBuffer
 	{
 		Uint8 j = 24 - i;
 		
-		if (j*2 + pBuffer - inBuffer < inBufferSize)
+		if (j*2 + pBuffer - (Uint8 *)inBuffer < inBufferSize)
 			if (j%2) pBuffer[j*2] -= (j + 2)*4;
 			else	 pBuffer[j*2] += (j + 4)*6; 
 		

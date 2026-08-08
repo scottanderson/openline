@@ -33,12 +33,10 @@
 
 #define AWZLIB
 
-#ifdef AWZLIB
-#define printf
-#define puts
-#define putchar
-#endif
-
+/* AppWarrior originally #define'd printf/puts/putchar away to nothing here (to strip
+ * debug output), but that only matters for maketree.c/example.c, neither of which are
+ * built as part of this library -- and defining them away breaks <stdio.h>'s own
+ * declarations once it's included for real (see zutil.h/gzio.c). Dropped. */
 
 #include "zconf.h"
 

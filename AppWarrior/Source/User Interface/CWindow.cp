@@ -257,12 +257,12 @@ void CWindow::Hit(const SHitMsgData& inInfo)
 {
 	if (mIsModal)
 	{
-		Uint8 *p = (Uint8 *)UMemory::New(sizeof(CLink) + sizeof(SHitMsgData) + inInfo.dataSize);
-		UMemory::Copy(p + sizeof(CLink), &inInfo, sizeof(SHitMsgData) + inInfo.dataSize);
+		Uint8 *p = (Uint8 *)UMemory::New(sizeof(CLink) + (sizeof(SHitMsgData) - 1) + inInfo.dataSize);
+		UMemory::Copy(p + sizeof(CLink), &inInfo, (sizeof(SHitMsgData) - 1) + inInfo.dataSize);
 		mHitQueue.AddLast((CLink *)p);
 	}
 	else
-		UApplication::PostMessage(msg_WindowHit, &inInfo, sizeof(SHitMsgData) + inInfo.dataSize, priority_High, CApplication::WindowHitHandler, this);
+		UApplication::PostMessage(msg_WindowHit, &inInfo, (sizeof(SHitMsgData) - 1) + inInfo.dataSize, priority_High, CApplication::WindowHitHandler, this);
 }
 
 // does not return until there is a hit for this window
@@ -408,7 +408,7 @@ bool CWindow::GetHit(SHitMsgData& outInfo, Uint32 inMaxDataSize)
 	s = hit->dataSize;
 	if (s > inMaxDataSize) s = inMaxDataSize;
 	
-	UMemory::Copy(&outInfo, hit, sizeof(SHitMsgData) + s);
+	UMemory::Copy(&outInfo, hit, (sizeof(SHitMsgData) - 1) + s);
 	outInfo.dataSize = s;
 	
 	UMemory::Dispose(p);
@@ -647,7 +647,7 @@ void CWindow::HandleRefresh(CView */* inView */, const SRect& inUpdateRect)
 
 void CWindow::HandleHit(CView */* inView */, const SHitMsgData& inInfo)
 {
-	UWindow::PostMessage(mWindow, msg_Hit, &inInfo, sizeof(SHitMsgData) + inInfo.dataSize, priority_High);
+	UWindow::PostMessage(mWindow, msg_Hit, &inInfo, (sizeof(SHitMsgData) - 1) + inInfo.dataSize, priority_High);
 }
 
 void CWindow::HandleGetScreenDelta(CView */* inView */, Int32& outHoriz, Int32& outVert)

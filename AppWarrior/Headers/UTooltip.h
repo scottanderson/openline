@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "graftypes.h"
+#include "GrafTypes.h"
 #include "typedefs.h"
 
 

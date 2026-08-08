@@ -2,7 +2,7 @@
  
 #include "UHttpTransact.h"
 
-#include <Wininet.h>
+#include <wininet.h>
 
 
 static bool _IsDefaultBrowser_InternetExplorer();
@@ -289,10 +289,10 @@ bool _AddExternalCookie_NetscapeNavigator(const Uint8 *inHost, const Uint8 *inDo
 	nOffset += pCookiesRef->Write(nOffset, "\tFALSE\t", 7);							// write isSecure flag
 	nOffset += pCookiesRef->Write(nOffset, psExpiredDate + 1, psExpiredDate[0]);	// write expiresDate
 	nOffset += pCookiesRef->Write(nOffset, "\t", 1);								// write tab
-	nOffset += pCookiesRef->Write(nOffset, inData, pValue - inData);				// write cookie name
+	nOffset += pCookiesRef->Write(nOffset, inData, pValue - (const Uint8 *)inData);				// write cookie name
 	nOffset += pCookiesRef->Write(nOffset, "\t", 1);								// write tab
 	pValue++;																		// skip '='
-	nOffset += pCookiesRef->Write(nOffset, pValue, inDataSize - (pValue - inData));	// write cookie value
+	nOffset += pCookiesRef->Write(nOffset, pValue, inDataSize - (pValue - (const Uint8 *)inData));	// write cookie value
 	pCookiesRef->Write(nOffset, "\r\r\n", 3);										// write end of line
 
 	return true;	

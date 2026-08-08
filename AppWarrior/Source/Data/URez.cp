@@ -128,11 +128,11 @@ static Int32 _RZAddItem(TRez inRef, Uint32 inType, SRezItemEntry *ioNewItemEntry
 static void _RZReadRezFile(TRez inRef);
 
 
-static THdl _RZGetNthItemListHdl(TRez inRef, UInt32 ind)
+static THdl _RZGetNthItemListHdl(TRez inRef, Uint32 ind)
 {
   // #define _RZGetNthItemListHdl(ref, ind)		
 	return (THdl)UMemory::ReadLong( ((SRez *)inRef)->typeList, 
-									(ind * sizeof(SRezTypeEntry)) + sizeof(UInt32));
+									(ind * sizeof(SRezTypeEntry)) + sizeof(Uint32));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -657,9 +657,9 @@ void URez::SetItemName(TRez inRef, Uint32 inType, Int32 inID, const void *inData
 			{
 				p = UMemory::Lock(h);
 				
-				*((Uint32 *)p)++ = 1;
-				*((Int32 *)p)++ = inID;
-				*((Uint16 *)p)++ = inDataSize;
+				*(*(Uint32 **)&p)++ = 1;
+				*(*(Int32 **)&p)++ = inID;
+				*(*(Uint16 **)&p)++ = inDataSize;
 				UMemory::Copy(p, inData, inDataSize);
 				
 				UMemory::Unlock(h);
@@ -724,8 +724,8 @@ void URez::SetItemName(TRez inRef, Uint32 inType, Int32 inID, const void *inData
 				(*(Uint32 *)p)++;
 				
 				p += offset;
-				*((Int32 *)p)++ = inID;
-				*((Uint16 *)p)++ = inDataSize;
+				*(*(Int32 **)&p)++ = inID;
+				*(*(Uint16 **)&p)++ = inDataSize;
 				UMemory::Copy(p, inData, inDataSize);
 			}
 			else							// found
@@ -735,8 +735,8 @@ void URez::SetItemName(TRez inRef, Uint32 inType, Int32 inID, const void *inData
 				
 				StHandleLocker lock(h, (void*&)p);
 				p += offset;
-				*((Int32 *)p)++ = inID;
-				*((Uint16 *)p)++ = inDataSize;
+				*(*(Int32 **)&p)++ = inID;
+				*(*(Uint16 **)&p)++ = inDataSize;
 				UMemory::Copy(p, inData, inDataSize);
 			}
 			
@@ -876,7 +876,7 @@ THdl URez::GetTypeListing(TRez inRef, Uint32 *outCount, Uint32 /* inOptions */)
 	while (n--)
 	{
 		lp[0] = typeEntry->type;
-		lp[1] = UMemory::ReadLong(typeEntry->data, (UInt32)&((SRezItemList*)0)->count);
+		lp[1] = UMemory::ReadLong(typeEntry->data, (Uint32)&((SRezItemList*)0)->count);
 				
 		if (lp[1]) lp += 2;		// don't save this one if no items (empty type)
 		
@@ -1805,13 +1805,13 @@ static void _RZReadRezFile(TRez inRef)
 
 		// check format and version
 		p = buf;
-		if (*((Uint32 *)p)++ != TB((Uint32)'AWRZ')) Fail(errorType_Misc, error_FormatUnknown);
-		if (*((Uint16 *)p)++ != TB((Uint16)1)) Fail(errorType_Misc, error_VersionUnknown);
+		if (*(*(Uint32 **)&p)++ != TB((Uint32)'AWRZ')) Fail(errorType_Misc, error_FormatUnknown);
+		if (*(*(Uint16 **)&p)++ != TB((Uint16)1)) Fail(errorType_Misc, error_VersionUnknown);
 		
 		// extract info from header
 		p += 18;
-		mapSize = FB(*((Uint32 *)p)++);
-		resDataSize = FB(*((Uint32 *)p)++);
+		mapSize = FB(*(*(Uint32 **)&p)++);
+		resDataSize = FB(*(*(Uint32 **)&p)++);
 		if (fileSize < (headerSize + resDataSize + mapSize)) goto corrupt;
 		if (mapSize < mapHeaderSize) goto corrupt;
 		resDataEndOffset = headerSize + resDataSize;
@@ -1823,8 +1823,8 @@ static void _RZReadRezFile(TRez inRef)
 		// extract and validate map header
 		p = (Uint8 *)heapBuf;
 		ep = p + mapSize;
-		if (FB(*((Uint32 *)p)++) != resDataEndOffset) goto corrupt;
-		typeCount = FB(*((Uint32 *)p)++);
+		if (FB(*(*(Uint32 **)&p)++) != resDataEndOffset) goto corrupt;
+		typeCount = FB(*(*(Uint32 **)&p)++);
 		if ((mapSize - mapHeaderSize) < (typeCount * typeHeaderSize)) goto corrupt;
 		
 		// add entry to lists for each resource
@@ -1834,8 +1834,8 @@ static void _RZReadRezFile(TRez inRef)
 		{
 			// extract info from type header
 			if (ep - p < typeHeaderSize) goto corrupt;
-			type = FB(*((Uint32 *)p)++);
-			itemCount = FB(*((Uint32 *)p)++);
+			type = FB(*(*(Uint32 **)&p)++);
+			itemCount = FB(*(*(Uint32 **)&p)++);
 			if ((ep - p) < (itemCount * resEntrySize)) goto corrupt;
 			if (type == 0) goto corrupt;
 			

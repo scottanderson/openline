@@ -9,6 +9,9 @@
 class CTextView : public CView
 {	
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		// construction
 		CTextView(CViewHandler *inHandler, const SRect& inBounds, Uint16 inMargin = 0);
 		virtual ~CTextView();

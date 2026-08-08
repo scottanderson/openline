@@ -16,7 +16,11 @@ struct STranHdr {
 	Uint32 error;						// error code used for reply
 	Uint32 totalSize;					// for splitting large transactions
 	Uint32 dataSize;					// number of bytes in following string
-	Uint8 data[];						// data for this transaction
+	// Uint8 data[];					// data for this transaction -- documents the
+	// wire layout (payload immediately follows this header) but is never accessed
+	// through this member (payload is read separately into rcvBuffer); dropped because
+	// GCC (unlike Metrowerks) rejects a flexible array member in a struct that's
+	// embedded as a non-final member of another struct (STransact::rcvHeader).
 };
 #pragma options align=reset
 

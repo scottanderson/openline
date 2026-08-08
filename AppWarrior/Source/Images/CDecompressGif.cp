@@ -200,6 +200,9 @@ imageagain:
 			switch (mImageStage)
 			{
 				case 1:
+					// Braced (GCC, unlike Metrowerks, rejects other case labels below
+					// jumping over ch/nRet's initialization while staying in scope).
+					{
 					Uint8 ch;
 					Uint32 nRet = ReadImage(&ch, 1, true);
 					if (nRet == END_OF_FB)
@@ -230,7 +233,8 @@ imageagain:
 						goto imageagain;
 					}
 					break;
-			
+					}
+
 				case 2:
 					// get the start of the image block 
 					if (ReadImage(&mImgBlock, sizeof(IMAGEBLOCK)) != END_OF_BYTES)

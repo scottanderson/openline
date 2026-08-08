@@ -8,6 +8,9 @@
 class CListView : public CSelectableItemsView
 {	
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CSelectableItemsView inherited;
+
 		// construction
 		CListView(CViewHandler *inHandler, const SRect& inBounds);
 		

@@ -1776,6 +1776,9 @@ void UGraphics_CopyPixels(TImage inDest, const SPoint& inDestPt, const SPixmap& 
 		case 2:
 		case 4:
 		case 8:
+			// Braced (GCC, unlike Metrowerks, rejects a later case label jumping over
+			// this block's local variable initializations while staying in scope).
+			{
 			// ignore any extra (unused) colors
 			colorCount = inSource.colorCount;
 			if (colorCount > 256) colorCount = 256;
@@ -1861,8 +1864,9 @@ void UGraphics_CopyPixels(TImage inDest, const SPoint& inDestPt, const SPixmap& 
 			{
 				::SetDIBitsToDevice(dstDC, theDestPt.x, theDestPt.y, inWidth, inHeight, theSourcePt.x, 0, 0, inHeight, BPTR(inSource.data) + (theSourcePt.y * inSource.rowBytes), bmi, DIB_RGB_COLORS);
 			}
+			}
 			break;
-		
+
 		case 16:
 			{
 				// fill in struct of info about source pixmap
@@ -1913,7 +1917,7 @@ void UGraphics_CopyPixels(TImage inDest, const SPoint& inDestPt, const SPixmap& 
 				{
 					while (lines--)
 					{
-						(Uint8 *)ip += indent;
+						*(Uint8 **)&ip += indent;
 						Uint32 w = rowWidth;
 						
 						while(w--)
@@ -1923,7 +1927,7 @@ void UGraphics_CopyPixels(TImage inDest, const SPoint& inDestPt, const SPixmap& 
 							ip++;
 						}
 						
-						(Uint8 *)ip += tail;
+						*(Uint8 **)&ip += tail;
 					}
 				}
 				else
@@ -1931,7 +1935,7 @@ void UGraphics_CopyPixels(TImage inDest, const SPoint& inDestPt, const SPixmap& 
 					Uint32 remainder = roundUpSize - outRowBytes;
 					while (lines--)
 					{
-						(Uint8 *)ip += indent;
+						*(Uint8 **)&ip += indent;
 						Uint32 w = rowWidth;
 						
 						while(w--)
@@ -1941,8 +1945,8 @@ void UGraphics_CopyPixels(TImage inDest, const SPoint& inDestPt, const SPixmap& 
 							ip++;
 						}
 						
-						(Uint8 *)ip += tail;
-						(Uint8 *)op += remainder;
+						*(Uint8 **)&ip += tail;
+						*(Uint8 **)&op += remainder;
 					}
 				}
 				::SetDIBitsToDevice(dstDC, theDestPt.x, theDestPt.y, inWidth, inHeight, 0, 0, 0, inHeight, data, bmi, DIB_RGB_COLORS);
@@ -2667,6 +2671,9 @@ void UGraphics_CopyPixelsTrans(TImage inDest, const SPoint& inDestPt, const SPix
 	::BitBlt(tmpDC, 0, 0, inWidth, inHeight, dstDC, theDestPt.x, theDestPt.y, SRCCOPY);
 	
 	// now that we've finally got access to the source and dest pixel data, we can do our Turbo-Studly(TM) transparent copy
+	// Braced (GCC, unlike Metrowerks, rejects "goto bail" below jumping over srcData's
+	// initialization while staying in its scope; "bail:" itself never needs srcData).
+	{
 	Uint8 *srcData = BPTR(inSource.data) + (inSource.rowBytes * theSourcePt.y) + theSourcePt.x;
 	switch (inSource.depth)
 	{
@@ -2684,7 +2691,7 @@ void UGraphics_CopyPixelsTrans(TImage inDest, const SPoint& inDestPt, const SPix
 			{
 				dstColorCount = dstBMI->bmiHeader.biClrUsed;
 				if (dstColorCount == 0 || dstColorCount > 256) dstColorCount = 256;
-				
+
 				_GRConvertBGRAandRGBA(dstBMI->bmiColors, dstColorCount);
 				_GRTransCopy8To8(inTransCol, dstBitmapBits, RoundUp4(inWidth), srcData, inSource.rowBytes, inWidth, inHeight, (Uint32 *)dstBMI->bmiColors, dstColorCount, inSource.colorTab, inSource.colorCount);
 			}
@@ -2697,6 +2704,7 @@ void UGraphics_CopyPixelsTrans(TImage inDest, const SPoint& inDestPt, const SPix
 		default:
 			goto bail;
 			break;
+	}
 	}
 
 	// unfortunately, our transparent copy was only between the temporary bitmaps, so now copy to the real dest

@@ -8,6 +8,9 @@
 class CSimpleIconButtonView : public CView
 {	
 	public:
+		// CodeWarrior implicitly provided this typedef in every class; explicit here.
+		typedef CView inherited;
+
 		CSimpleIconButtonView(CViewHandler *inHandler, const SRect& inBounds);
 		
 		virtual void SetIcons(TIcon inEnabled, TIcon inDisabled, TIcon inHilited);

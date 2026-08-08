@@ -273,14 +273,14 @@ Uint32 UDateTime::DateToText(const SCalendarDate& inInfo, void *outText, Uint32 
 			{
 				if (inOptions & (kShortDateText|kShortDateFullYearText))
 				{
-					*((Uint8 *)outText)++ = ' ';
+					*(*(Uint8 **)&outText)++ = ' ';
 					inMaxSize--;
 					s++;
 				}
 				else
 				{
-					*((Uint8 *)outText)++ = ',';
-					*((Uint8 *)outText)++ = ' ';
+					*(*(Uint8 **)&outText)++ = ',';
+					*(*(Uint8 **)&outText)++ = ' ';
 					inMaxSize -= 2;
 					s += 2;
 				}

@@ -111,9 +111,9 @@ class UFileSys
 		static void SetRef(TFSRefObj* inDst, TFSRefObj* inSrc);
 		
 		#if MACINTOSH
-		static SInt16 OpenResourceFork(TFSRefObj* inStartFolder, 
-							  const UInt8 *inPath, const Uint8 *inName,
-							  SInt8 rw = 0);
+		static Int16 OpenResourceFork(TFSRefObj* inStartFolder, 
+							  const Uint8 *inPath, const Uint8 *inName,
+							  Int8 rw = 0);
 		#endif
 		
 		// creating objects
@@ -189,7 +189,7 @@ class UFileSys
 		static void *MakePathData(const void *inPath1, Uint32 inPathSize1, const void *inPath2, Uint32 inPathSize2, Uint32& outPathSize);
 		static Uint32 GetPathSize(const void *inPath, Uint16 inOverrideCount = max_Uint16);
 		static Uint32 GetApplicationPath(void *outAppPath, Uint32 inMaxPathSize);
-		static Uint32 GetApplicationURL(UInt8 *url, Uint32 urlZ);
+		static Uint32 GetApplicationURL(Uint8 *url, Uint32 urlZ);
 		static Uint32 GetTempPath(void *outTempPath, Uint32 inMaxPathSize);
 
 		// path convertion

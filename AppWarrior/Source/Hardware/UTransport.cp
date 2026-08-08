@@ -210,10 +210,10 @@ Uint32 UTransport::CleanUpAddressText(Uint16 /* inType */, const void *inAddr, U
 	while (n--)
 	{
 		if (UText::IsGraph(*p))
-			*((Uint8 *)outAddr)++ = *p++;
+			*(*(Uint8 **)&outAddr)++ = *p++;
 		else
 		{
-			*((Uint8 *)outAddr)++ = 'x';
+			*(*(Uint8 **)&outAddr)++ = 'x';
 			p++;
 		}
 	}

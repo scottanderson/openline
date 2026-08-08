@@ -213,14 +213,14 @@ voidpf zcalloc (voidpf opaque, unsigned items, unsigned size)
 //    unsigned size;
 {
     if (opaque) items += size - size; /* make compiler happy */
-    return (voidpf)::calloc(items, size);
+    return (voidpf)calloc(items, size);
 }
 
 void  zcfree (voidpf opaque, voidpf ptr)
 //    voidpf opaque;
 //    voidpf ptr;
 {
-    ::free(ptr);
+    free(ptr);
     if (opaque) return; /* make compiler happy */
 }
 

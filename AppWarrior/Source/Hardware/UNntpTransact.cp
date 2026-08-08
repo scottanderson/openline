@@ -1803,7 +1803,7 @@ static bool _Process_GetArticle(TNntpTransact inTrn)
 	}
 
 	pArticleData += 2;
-	Uint32 nHeaderSize = pArticleData - TRN->pBuffer;
+	Uint32 nHeaderSize = pArticleData - (Uint8 *)TRN->pBuffer;
 
 	if (!_GetCurrentArticle((Uint8 *)TRN->pBuffer, (Uint8 *)TRN->pBuffer + nHeaderSize, TRN->stCurrentArticle, TRN->stCurrentEncoding))
 	{
@@ -2023,7 +2023,7 @@ static bool _SetOffsetList(TNntpTransact inTrn)
 			return true;				
 	
 		Uint32 *pOffset = (Uint32 *)UMemory::New(sizeof(Uint32));
-		*pOffset = pFieldBegin - TRN->pBuffer;
+		*pOffset = pFieldBegin - (Uint8 *)TRN->pBuffer;
 		
 		TRN->pOffsetList.AddItem(pOffset);		
 	}

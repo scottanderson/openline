@@ -40,6 +40,12 @@ badOS:
 	::ExitProcess(0);
 }
 
+// HL_NO_QUICKTIME: the vendored Apple QuickTime SDK (QTML/Movies headers, and the
+// QTDataHandler HL_Handler component) was removed from this repo for licensing reasons.
+// QuickTime is only used for optional embedded media playback and is never called from
+// Init()/WinMain, so we stub it out entirely: InitQuickTime() just reports unavailable.
+#ifndef HL_NO_QUICKTIME
+
 static void _UninitQuickTime()
 {
 	HL_HandlerUnregister();
@@ -61,7 +67,7 @@ bool UOperatingSystem::InitQuickTime()
 		::TerminateQTML();
 		return false;
 	}
-		
+
 	// check for Flash availability
 	ComponentDescription stCompDesc = {MediaHandlerType, FlashMediaType, kAppleManufacturer, 0, 0};
 	long nCount = ::CountComponents(&stCompDesc);
@@ -73,7 +79,7 @@ bool UOperatingSystem::InitQuickTime()
 	}
 
 	HL_HandlerRegister();
-		
+
 	try
 	{
 		UProgramCleanup::InstallSystem(_UninitQuickTime);
@@ -83,10 +89,19 @@ bool UOperatingSystem::InitQuickTime()
 		_UninitQuickTime();
 		throw;
 	}
-			
+
 	mIsQuickTimeAvailable = true;
 	return true;
 }
+
+#else // HL_NO_QUICKTIME
+
+bool UOperatingSystem::InitQuickTime()
+{
+	return false;
+}
+
+#endif // HL_NO_QUICKTIME
 
 Uint8 *UOperatingSystem::GetSystemVersion()
 {
@@ -126,7 +141,7 @@ Uint8 *UOperatingSystem::GetSystemVersion()
 /* -------------------------------------------------------------------------- */
 #pragma mark -
 
-void main();
+void AppMain();
 HINSTANCE _gProgramInstance;
 int _gStartupShowCmd;
 Int8 *_gCmdLineStr = NULL;
@@ -187,7 +202,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /* hPrevInstance */, LPSTR s
 	else
 	{
 		try {
-			main();
+			AppMain();
 		} catch(...) {}
 	}
 		

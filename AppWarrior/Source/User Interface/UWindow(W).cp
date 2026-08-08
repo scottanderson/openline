@@ -402,8 +402,12 @@ void UWindow::Dispose(TWindow inRef)
 		REF->state = windowState_Deleting;
 		
 		// unregister this window with QuickTime
+		// HL_NO_QUICKTIME: QuickTime SDK removed for licensing reasons; IsQuickTimeAvailable()
+		// is always false in this build, so this call is compiled out entirely.
+#ifndef HL_NO_QUICKTIME
 		if (UOperatingSystem::IsQuickTimeAvailable())
 			_UnregisterWithQuickTime(inRef);
+#endif
 
 		if (REF->backColBrush)
 			::DeleteObject(REF->backColBrush);
@@ -1525,8 +1529,11 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 		return (_gMDIClient ? DefMDIChildProc : DefWindowProc)(inWnd, inMsg, inWParam, inLParam);
 	
 	// send all messages to QuickTime (if we pass WM_ERASEBKGND message sometime QuickTime give an unhandled exception when the window is resized)
+	// HL_NO_QUICKTIME: QuickTime SDK removed for licensing reasons; compiled out (see above).
+#ifndef HL_NO_QUICKTIME
 	if (UOperatingSystem::IsQuickTimeAvailable() && inMsg != WM_ERASEBKGND)
 		_SendToQuickTime((TWindow)ref, inMsg, inWParam, inLParam);
+#endif
 	
 	try {
 
@@ -2237,8 +2244,11 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 
 		// WM_WINDOWPOSCHANGING - window layers
 		case WM_WINDOWPOSCHANGING:
+			// Braced (GCC, unlike Metrowerks, rejects the case labels below jumping
+			// over lpwp's initialization while staying in scope).
+			{
 			WINDOWPOS *lpwp = (WINDOWPOS *)inLParam;
-			
+
 			if (ref && ref->userRef)
 			{
 				CWindow *pWindow = (CWindow *)ref->userRef;
@@ -2279,6 +2289,7 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 			else
 				result = ::DefWindowProc(inWnd, inMsg, inWParam, inLParam);
 
+			}
 			break;
 		/*
 		 * Misc
@@ -2430,14 +2441,18 @@ static LRESULT CALLBACK _WNFrameWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam,
 		break;
 
 		case WM_COMMAND:
+		{
 			Int16 menuAndItem[2] = { 0, LOWORD(inWParam) };
 			UApplication::PostMessage(999, menuAndItem, sizeof(menuAndItem));
+		}
 			break;
 
 		// the WM_SETFOCUS code in DefFrameProc just loves to crash so we're not going to let it run
 		case WM_SETFOCUS:
+		{
 			HWND topWin = ::GetTopWindow(_gMDIClient);
 			if (topWin) ::SetFocus(topWin);
+		}
 			break;
 			
 		case WM_NCMOUSEMOVE:
@@ -3249,6 +3264,13 @@ static void _WNCalcUnobstructedBounds(TWindow inRef, SRect& rBounds)
 /* -------------------------------------------------------------------------- */
 #pragma mark -
 
+// HL_NO_QUICKTIME: this whole block calls into the real QuickTime for Windows SDK
+// (Movie/MovieController/CGrafPtr/EventRecord types and MCDoAction/GetMovieBox/etc APIs),
+// which was removed from this repo for licensing reasons. None of these functions have
+// callers left once CQuickTimeView.cp is excluded from the build, so we just compile
+// the whole block out rather than stub each Mac-Toolbox-typed signature individually.
+#ifndef HL_NO_QUICKTIME
+
 void _RegisterWithQuickTime(TWindow inRef)
 {
 	Require(inRef);
@@ -3321,6 +3343,8 @@ static void _UnregisterWithQuickTime(TWindow inRef)
 	if (REF->isQuickTimeView)
 		::DestroyPortAssociation((CGrafPtr)::GetHWNDPort(REF->hwnd));
 }
+
+#endif // !HL_NO_QUICKTIME
 
 /* -------------------------------------------------------------------------- */
 #pragma mark -

@@ -15,7 +15,10 @@
 
 #include "zlib.h"
 
-#ifndef AWZLIB
+/* AppWarrior's "AWZLIB" build normally skipped these libc headers, presumably because
+ * they were already available via a precompiled header in the Metrowerks project. For
+ * this standalone MinGW build we need them unconditionally (size_t, memcpy/memset,
+ * malloc/free are all used below and throughout zlib), so always include them. */
 #ifdef STDC
 #  include <stddef.h>
 #  include <string.h>
@@ -25,9 +28,6 @@
     extern int errno;
 #else
 #   include <errno.h>
-#endif
-#else
-    extern int errno;
 #endif
 
 #ifndef local
@@ -180,9 +180,13 @@ extern const char *z_errmsg[10]; /* indexed by 2-zlib_error */
 #    define zmemcmp _fmemcmp
 #    define zmemzero(dest, len) _fmemset(dest, 0, len)
 #  else
-#    define zmemcpy ::memcpy
-#    define zmemcmp ::memcmp
-#    define zmemzero(dest, len) ::memset(dest, 0, len)
+   /* MinGW-w64 cross-compile build: this vendored copy carried a Metrowerks-era
+    * "::memcpy" global-scope qualification, which requires C++ and conflicts with
+    * this file's old K&R-style function definitions elsewhere in zlib (valid C,
+    * invalid C++). Built as plain C here, like upstream zlib, so use plain names. */
+#    define zmemcpy memcpy
+#    define zmemcmp memcmp
+#    define zmemzero(dest, len) memset(dest, 0, len)
 #  endif
 #else
    extern void zmemcpy  OF((Bytef* dest, const Bytef* source, uInt len));
