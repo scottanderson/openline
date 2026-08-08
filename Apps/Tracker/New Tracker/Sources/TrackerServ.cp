@@ -20,7 +20,7 @@ const Uint8 kTrackerServVers[] = "\pv1.3";
 
 CMyApplication *gApp;
 
-void main()
+void AppMain()
 {
 	UOperatingSystem::Init();
 	
@@ -476,8 +476,8 @@ void CMyTracker::RemoveOldServers()
 	//ep = buf + sizeof(buf);
 	//count = 0;
 	
-	//*((Uint16 *)p)++ = 2;	// add type
-	//*((Uint32 *)p)++ = 0;	// space for size and count
+	//*((Uint16 *)p) = 2; p += sizeof(Uint16);	// add type
+	//*((Uint32 *)p) = 0; p += sizeof(Uint32);	// space for size and count
 
 	curTime = UDateTime::GetSeconds();
 	
@@ -496,8 +496,8 @@ void CMyTracker::RemoveOldServers()
 			//	break;
 			
 			//count++;
-			//*((Uint32 *)p)++ = info->address;
-			//*((Uint16 *)p)++ = info->port;
+			//*((Uint32 *)p) = info->address; p += sizeof(Uint32);
+			//*((Uint16 *)p) = info->port; p += sizeof(Uint16);
 			//p += UMemory::Copy(p, info->data, info->data[0]+1);
 			
 			mUserCount -= info->userCount;
@@ -1076,9 +1076,9 @@ void CMyTracker::SendServerList(TTransport inTpt)
 	n = mServerCount;
 	count = 0;
 	
-	*((Uint16 *)p)++ = TB((Uint16)1);	// add type
-	*((Uint16 *)p)++ = 0;				// space for size
-	*((Uint32 *)p)++ = 0;				// space for counts
+	*((Uint16 *)p) = TB((Uint16)1); p += sizeof(Uint16);	// add type
+	*((Uint16 *)p) = 0; p += sizeof(Uint16);				// space for size
+	*((Uint32 *)p) = 0; p += sizeof(Uint32);				// space for counts
 
 	pp = (SMyServerInfo **)UMemory::Lock(mServerList);
 	
@@ -1102,17 +1102,17 @@ void CMyTracker::SendServerList(TTransport inTpt)
 				// reset buf
 				count = 0;
 				p = buf;
-				*((Uint16 *)p)++ = TB((Uint16)1);	// add type
-				*((Uint16 *)p)++ = 0;				// space for size
-				*((Uint32 *)p)++ = 0;				// space for counts
+				*((Uint16 *)p) = TB((Uint16)1); p += sizeof(Uint16);	// add type
+				*((Uint16 *)p) = 0; p += sizeof(Uint16);				// space for size
+				*((Uint32 *)p) = 0; p += sizeof(Uint32);				// space for counts
 			}
 			
 			// add server to buf
 			count++;
-			*((Uint32 *)p)++ = info->address;
-			*((Uint16 *)p)++ = TB((Uint16)info->port);
-			*((Uint16 *)p)++ = TB((Uint16)info->userCount);
-			*((Uint16 *)p)++ = TB((Uint16)info->flags);
+			*((Uint32 *)p) = info->address; p += sizeof(Uint32);
+			*((Uint16 *)p) = TB((Uint16)info->port); p += sizeof(Uint16);
+			*((Uint16 *)p) = TB((Uint16)info->userCount); p += sizeof(Uint16);
+			*((Uint16 *)p) = TB((Uint16)info->flags); p += sizeof(Uint16);
 			p += UMemory::Copy(p, name, name[0]+1);
 			p += UMemory::Copy(p, desc, desc[0]+1);
 			
@@ -1149,13 +1149,13 @@ void CMyTracker::SendLookup(TTransport inTpt, const Uint8 *inName)
 		name = info->data;
 		desc = name + name[0] + 1;
 
-		*((Uint16 *)p)++ = TB((Uint16)4);				// type 4 means we found it
-		*((Uint16 *)p)++ = 0;							// space for the size
+		*((Uint16 *)p) = TB((Uint16)4); p += sizeof(Uint16);				// type 4 means we found it
+		*((Uint16 *)p) = 0; p += sizeof(Uint16);							// space for the size
 		
-		*((Uint32 *)p)++ = info->address;
-		*((Uint16 *)p)++ = TB((Uint16)info->port);
-		*((Uint16 *)p)++ = TB((Uint16)info->userCount);
-		*((Uint16 *)p)++ = TB((Uint16)info->flags);
+		*((Uint32 *)p) = info->address; p += sizeof(Uint32);
+		*((Uint16 *)p) = TB((Uint16)info->port); p += sizeof(Uint16);
+		*((Uint16 *)p) = TB((Uint16)info->userCount); p += sizeof(Uint16);
+		*((Uint16 *)p) = TB((Uint16)info->flags); p += sizeof(Uint16);
 		p += UMemory::Copy(p, name, name[0]+1);
 		p += UMemory::Copy(p, desc, desc[0]+1);
 		
@@ -1163,8 +1163,8 @@ void CMyTracker::SendLookup(TTransport inTpt, const Uint8 *inName)
 	}
 	else
 	{
-		*((Uint16 *)p)++ = TB((Uint16)5);				// type 5 means not found
-		*((Uint16 *)p)++ = 0;	// no data
+		*((Uint16 *)p) = TB((Uint16)5); p += sizeof(Uint16);				// type 5 means not found
+		*((Uint16 *)p) = 0; p += sizeof(Uint16);	// no data
 	}
 	
 	inTpt->Send(buf, p - buf);
@@ -1559,7 +1559,7 @@ Uint32 CMyTracker::GetServerInfoSize(const SMyServerInfo *inInfo)
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Prefs File ••
+#pragma mark Prefs File
 
 TFSRefObj* CMyTracker::GetPrefsRef()
 {
@@ -1699,7 +1699,7 @@ bool CMyTracker::ReadPrefs(SRect *outWinRects, Uint16 *outWinVis)
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Login File ••
+#pragma mark Login File
 
 TFSRefObj* CMyTracker::GetLoginRef()
 {
@@ -1933,7 +1933,7 @@ void CMyTracker::ClearLoginList()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Ban File ••
+#pragma mark Ban File
 
 TFSRefObj* CMyTracker::GetPermBanRef()
 {
@@ -2631,7 +2631,7 @@ void CMyApplication::ResetTrackerServ()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Prefs File ••
+#pragma mark Prefs File
 
 TFSRefObj* CMyApplication::GetPrefsRef()
 {

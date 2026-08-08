@@ -9,7 +9,7 @@
 
 #pragma def_inherited on
 
-#pragma mark •• Constants ••
+#pragma mark Constants
 
 #pragma mark View IDs
 enum {
@@ -51,7 +51,7 @@ enum {
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Structures ••
+#pragma mark Structures
 
 #pragma mark SMyTrackerInfo
 struct SMyTrackerInfo {
@@ -125,7 +125,7 @@ struct SMyPermBanInfo
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Views ••
+#pragma mark Views
 
 #pragma mark CMyTrackerListView
 class CMyTrackerListView : public CGeneralCheckListView<SMyTrackerInfo>
@@ -210,7 +210,7 @@ class CMyPermBanListView : public CGeneralCheckListView<SMyPermBanInfo>
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Windows ••
+#pragma mark Windows
 
 #pragma mark CMyToolbarWin
 class CMyToolbarWin : public CWindow
@@ -310,7 +310,7 @@ class CMyTextWin : public CWindow
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Application ••
+#pragma mark Application
 
 #pragma mark CMyTracker
 class CMyTracker

@@ -7,7 +7,7 @@
 #pragma def_inherited on
 
 
-#pragma mark •• Constants ••
+#pragma mark Constants
 
 #pragma mark View IDs
 enum {
@@ -16,7 +16,7 @@ enum {
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Structures ••
+#pragma mark Structures
 
 #pragma mark SMyServerInfo
 #pragma options align=packed
@@ -58,7 +58,7 @@ struct SMyPermBanInfo
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Views ••
+#pragma mark Views
 
 #pragma mark CMyLoginListView
 class CMyLoginListView : public CGeneralListView<SMyLoginInfo>
@@ -102,7 +102,7 @@ class CMyPermBanListView : public CGeneralListView<SMyPermBanInfo>
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Windows ••
+#pragma mark Windows
 
 #pragma mark CMyOptionsWin
 class CMyOptionsWin : public CWindow
@@ -174,7 +174,7 @@ class CMyTextWin : public CWindow
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Application ••
+#pragma mark Application
 
 #pragma mark CMyApplication
 class CMyApplication : public CApplication
