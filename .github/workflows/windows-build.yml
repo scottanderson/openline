@@ -1,0 +1,49 @@
+name: Windows build (MinGW-w64 cross-compile)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-hlclient:
+    # Cross-compiling for Windows via MinGW-w64, so a Linux runner is all we need --
+    # no windows-latest runner required.
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install MinGW-w64 (i686) cross-compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++-mingw-w64-i686
+
+      - name: Select the win32-threads MinGW-w64 toolchain variant
+        run: |
+          sudo update-alternatives --set i686-w64-mingw32-gcc /usr/bin/i686-w64-mingw32-gcc-win32
+          sudo update-alternatives --set i686-w64-mingw32-g++ /usr/bin/i686-w64-mingw32-g++-win32
+
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/mingw-w64-i686.cmake \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Verify hlclient.exe was produced
+        run: file build/Apps/Client/hlclient.exe
+
+      - name: Upload hlclient build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hlclient-win32
+          path: |
+            build/Apps/Client/hlclient.exe
+            build/Apps/Client/Data/
+            build/Apps/Client/Error Msgs/
+          if-no-files-found: error
