@@ -153,7 +153,7 @@ CMyDLFldr::CMyDLFldr(TFSRefObj* inRef, CMyDLFldr *inParent, bool inDBAccess)
 			if (inDBAccess || !UMemory::Search("drop box", 8, lower + 1, lower[0]))
 				mItems.AddItem(new CMyDLItem(item, this, inDBAccess));
 			
-			BPTR(item) += (sizeof(SFSListItem) + item->name[0] + 4) & 0xFFFFFFFC;
+			*(Uint8 **)&item += (sizeof(SFSListItem) + item->name[0] + 4) & 0xFFFFFFFC;
 		}
 	}
 }

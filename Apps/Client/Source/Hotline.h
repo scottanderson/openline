@@ -30,7 +30,7 @@
 #endif
 
 
-#pragma mark •• Constants ••
+#pragma mark Constants
 
 #pragma mark View IDs
 enum {
@@ -213,7 +213,7 @@ enum {
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Structures ••
+#pragma mark Structures
 
 // SMySoundPrefs
 #pragma options align=packed
@@ -422,7 +422,10 @@ struct SMyUserInfo {
 	Int16 iconID;
 	Uint16 flags;
 	Uint16 nameSize;
-	Uint8 nameData[];
+	// GCC (unlike Metrowerks) rejects a flexible array member in a struct that's
+	// embedded as a non-final member of another (local) struct elsewhere; sized [1]
+	// instead (no sizeof(this struct) use depends on it staying a true 0-sized FAM).
+	Uint8 nameData[1];
 };
 #pragma options align=reset
 
@@ -579,7 +582,7 @@ struct SMyNzHistCatGUIDItm
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Miscellaneous ••
+#pragma mark Miscellaneous
 
 #if USE_NEWS_HISTORY
 #pragma mark CNZReadList
@@ -753,7 +756,7 @@ class CMySearchText
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Views ••
+#pragma mark Views
 
 // a list view that shows a status when there are 0 items.
 #pragma mark CMyListStatusView
@@ -795,20 +798,20 @@ template <class T> class CMyTreeStatusView : public CTabbedTreeView<T>
 };
 
 template<class T> CMyTreeStatusView<T>::CMyTreeStatusView(CViewHandler *inHandler, const SRect& inBounds)
-	: CTabbedTreeView(inHandler, inBounds, 240, 241)
+	: CTabbedTreeView<T>(inHandler, inBounds, 240, 241)
 {
 #if USE_LARGE_FONT
-	mTabHeight = 23;
-	mCellHeight = 27;
+	this->mTabHeight = 23;
+	this->mCellHeight = 27;
 #elif WIN32	
-	mTabHeight = 18;
+	this->mTabHeight = 18;
 #endif
 
 #if DISABLE_TABS
-	mTabHeight = 0;
+	this->mTabHeight = 0;
 #endif
 
-	mLevelWidth = 20;
+	this->mLevelWidth = 20;
 
 	mStatus = 0;
 	mCustStatMsg = nil;
@@ -857,9 +860,9 @@ template<class T> void CMyTreeStatusView<T>::SetStatus(const Uint8 inMsg[])
 
 template<class T> Uint32 CMyTreeStatusView<T>::GetFullHeight() const
 {
-	if (mHandler && !GetTreeCount())
+	if (this->mHandler && !GetTreeCount())
 	{
-		CScrollerView *pHandler = dynamic_cast<CScrollerView *>(mHandler);
+		CScrollerView *pHandler = dynamic_cast<CScrollerView *>(this->mHandler);
 		if (pHandler)
 		{
 			SRect stBounds;
@@ -869,7 +872,7 @@ template<class T> Uint32 CMyTreeStatusView<T>::GetFullHeight() const
 		}		
 	}
 
-	return CTabbedTreeView::GetFullHeight();
+	return CTabbedTreeView<T>::GetFullHeight();
 }
 
 template<class T> void CMyTreeStatusView<T>::Draw(TImage inImage, const SRect& inUpdateRect, Uint32 inDepth)
@@ -906,16 +909,16 @@ template<class T> void CMyTreeStatusView<T>::Draw(TImage inImage, const SRect& i
 		// set color
 		inImage->SetInkColor(color_Gray);
 		
-		SRect stRect = mBounds;
+		SRect stRect = this->mBounds;
 		stRect.Enlarge(-4);
-		stRect.top += mTabHeight;
+		stRect.top += this->mTabHeight;
 		if (stRect.bottom < stRect.top)
 			stRect.bottom = stRect.top;
 		
 		inImage->DrawTextBox(stRect, inUpdateRect, statTxt + 1, statTxt[0], 0, textAlign_Left);
 	}
 
-	CTabbedTreeView::Draw(inImage, inUpdateRect, inDepth);
+	CTabbedTreeView<T>::Draw(inImage, inUpdateRect, inDepth);
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -1372,7 +1375,7 @@ CWindow *MakeClickPicWin(const SRect& inBounds, Int32 inID, const Uint8 *inTxt =
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Windows ••
+#pragma mark Windows
 
 #pragma mark CMyOptionsWin
 class CMyOptionsWin : public CWindow
@@ -2746,9 +2749,9 @@ class CMyWaitQuitWin : public CWindow
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Tracker ••
+#pragma mark Tracker
 	
-#pragma mark •constants•	
+#pragma mark constants
 enum
 {
 	TrackCmd_AddTracker			= 202,
@@ -2765,7 +2768,7 @@ enum
 	searchOpt_Remove 			= 3
 };
 
-#pragma mark •structs•
+#pragma mark structs
 #pragma mark SMyServerInfo
 struct SMyServerInfo{
 	TIcon Icon;
@@ -2802,7 +2805,7 @@ struct SWordPtr{
 	Uint16 negative;		// negative = 1, positive = 0
 };
 
-#pragma mark •classes•
+#pragma mark classes
 
 class CMyServerWindow;
 
@@ -2981,7 +2984,7 @@ class CMyTracker
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Tasks ••
+#pragma mark Tasks
 
 #pragma mark CMyTask
 class CMyTask
@@ -3806,7 +3809,7 @@ private:
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Application ••
+#pragma mark Application
 
 class CMyAdminWin;
 

@@ -34,7 +34,7 @@ SMyColorInfo kDefaultColorInfo;
 TFontDesc fd_Default9, fd_Default9Right, fd_Default9Bold, fd_Default9BoldRight, fd_Default9BoldCtr, fd_Default10, fd_Fixed9, fd_Default9BoldCenter;
 
 
-void main()
+void AppMain()
 {
 /*
 #if WIN32
@@ -401,11 +401,16 @@ void CMyApplication::StartUp()
 	}
 	
 	// init quicktime
+	// HL_NO_QUICKTIME: HL_SetProgressProc/HL_SetEventProc come from the QTDataHandler
+	// component (part of the removed QuickTime SDK). IsQuickTimeAvailable() is always
+	// false in this build so this never runs at runtime anyway; guarded so it compiles.
+#ifndef HL_NO_QUICKTIME
 	if (UOperatingSystem::IsQuickTimeAvailable())
 	{
-		HL_SetProgressProc(CMyViewFileWin::ProgressMovieProc);	
-		HL_SetEventProc(EventCallBack);	
+		HL_SetProgressProc(CMyViewFileWin::ProgressMovieProc);
+		HL_SetEventProc(EventCallBack);
 	}
+#endif
 	
 	// display sound disabled message
 	if (mSoundDisabled) 
@@ -430,7 +435,7 @@ CMyApplication::~CMyApplication()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Application Functions ••
+#pragma mark Application Functions
 
 void CMyApplication::UserQuit()
 {	
@@ -490,13 +495,19 @@ void CMyApplication::KeyCommand(Uint32 inCmd, const SKeyMsgData& inInfo)
 	if (mTracker && mTracker->KeyCommand(inCmd, inInfo))
 		return;
 
+	// Hoisted above the switch, uninitialized here: many case labels below reuse this
+	// (relying on it staying in scope across "break"), so it can't be scoped to a
+	// single case. GCC (unlike Metrowerks) rejects a case label jumping over an
+	// *initialized* declaration while staying in its scope.
+	CWindow *win;
+
 	switch (inCmd)
 	{
 		case viewID_Options:
 			DoOptions();
 			break;
 		case viewID_Connect:
-			CWindow *win = CWindow::GetFront(windowLayer_Standard);
+			win = CWindow::GetFront(windowLayer_Standard);
 			if (win && mTracker && win == mTracker->GetServersWindow())
 				DoConnectToTracked(true);	// call this with true if you wanna show the connect window, false if not
 			else
@@ -1229,6 +1240,13 @@ void CMyApplication::Error(const SError& inInfo)
 
 void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inData, Uint32 inDataSize)
 {
+	// Hoisted above the switch, undeclared/uninitialized here: case 1131 below reuses
+	// this after case 1130 assigns it (relying on it staying in scope across a "break"),
+	// so it can't be scoped to case 1130 alone. GCC (unlike Metrowerks) rejects any case
+	// label jumping over an *initialized* declaration while staying in its scope; an
+	// uninitialized declaration like this one doesn't trigger that.
+	const Uint8 *pMsg;
+
 	switch (inMsg)
 	{
 		case msg_DataArrived:
@@ -1349,7 +1367,7 @@ void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inD
 			break;
 		
 		case 1130:
-			const Uint8 *pMsg = (Uint8 *)inData;
+			pMsg = (Uint8 *)inData;
 			DisplayStandardMessage(pMsg, pMsg + pMsg[0] + 1, inDataSize - pMsg[0] - 1, icon_Note, 132, true);
 			break;
 		
@@ -1496,7 +1514,7 @@ bool CMyApplication::SaveTextAs(CTextView *inTextView)
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• GUI Hits ••
+#pragma mark GUI Hits
 
 void CMyApplication::DoWizard()
 {
@@ -5735,7 +5753,7 @@ void CMyApplication::DoUpdateVersion()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Utility Functions ••
+#pragma mark Utility Functions
 
 void CMyApplication::DisplayServerName(const Uint8 *inServerName)
 {
@@ -6777,7 +6795,7 @@ void CMyApplication::AddChatText(CMyPrivateChatWin *inWin, const void *inText, U
 		// stop blank line at top of chat window
 		if (v->IsEmpty() && *(Uint8 *)inText == '\r')
 		{
-			((Uint8 *)inText)++;
+			(*(Uint8 **)&inText)++;
 			inTextSize--;
 			if (inTextSize == 0) return;
 		}
@@ -6854,7 +6872,7 @@ bool CMyApplication::FindResumableFile(TFSRefObj* inRef, bool inIsFolder)
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Files and Prefs ••
+#pragma mark Files and Prefs
 
 void CMyApplication::ReadServerFile(TFSRefObj* inFile, Uint8 *outAddress, Uint8 *outLogin, Uint8 *outPassword)
 {
@@ -7590,7 +7608,7 @@ void CMyApplication::ReadCookies()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Tasks and Transport ••
+#pragma mark Tasks and Transport
 
 void CMyApplication::AddTask(CMyTask *inTask, const Uint8 inDesc[])
 {
@@ -8077,7 +8095,7 @@ void CMyApplication::KeepConnectionAlive()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Disconnect and Quit Confirmation ••
+#pragma mark Disconnect and Quit Confirmation
 
 bool CMyApplication::ConfirmDisconnect(bool *outSaveConnect)
 {
@@ -8337,7 +8355,7 @@ void CMyApplication::RestoreDisconnect()
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Incoming Transactions ••
+#pragma mark Incoming Transactions
 
 void CMyApplication::ProcessTran_NewMsg(TFieldData inData)
 {

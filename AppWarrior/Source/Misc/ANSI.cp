@@ -1532,6 +1532,13 @@ void __destroy_global_chain();
 
 #define max_funcs	64
 
+// On Windows, the MinGW CRT already provides real exit()/atexit() (crt2.o pulls in its
+// own atexit unconditionally, hence "multiple definition" if this one is also built),
+// and other things rely on being registered through it (e.g. static C++ object
+// destructors via __cxa_atexit), which this simplified reimplementation wouldn't run.
+// So it's Mac-only.
+#if !WIN32
+
 static void (*__atexit_funcs[max_funcs])(void);
 static long	__atexit_curr_func = 0;
 
@@ -1547,17 +1554,13 @@ void exit(int status)
 		(*__atexit_funcs[--__atexit_curr_func])();
 
 	//__end_critical_region(atexit_funcs_access);
-	
+
 	//__kill_critical_regions();
 
 #if MACINTOSH
 
 	__destroy_global_chain();
 	::ExitToShell();
-
-#elif WIN32
-
-	::ExitProcess(status);
 
 #else
 
@@ -1572,13 +1575,15 @@ int atexit(void (*func)(void))
 		return -1;
 
 	//__begin_critical_region(atexit_funcs_access);
-		
+
 	__atexit_funcs[__atexit_curr_func++] = func;
-	
+
 	//__end_critical_region(atexit_funcs_access);
-	
+
 	return 0;
 }
+
+#endif // !WIN32
 
 void abort(void)
 {

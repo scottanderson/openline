@@ -6,7 +6,7 @@
 
 
 /* ————————————————————————————————————————————————————————————————————————— */
-#pragma mark •• Structures ••
+#pragma mark Structures
 
 // SMyAdminUsersAccess
 #pragma mark SMyAdminUsersAccess
@@ -46,7 +46,7 @@ struct SMyAdminBoundsInfo {
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Views ••
+#pragma mark Views
 
 #pragma mark CMyAdminUserTreeView
 class CMyAdminWin;
@@ -142,7 +142,7 @@ class CMyAdminUserAccessView : public CScrollerView
 
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
-#pragma mark •• Windows ••
+#pragma mark Windows
 
 #pragma mark CMyAdminWin
 class CMyAdminWin : public CWindow

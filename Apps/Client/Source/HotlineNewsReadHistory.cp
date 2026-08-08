@@ -70,9 +70,17 @@ CMyNewsReadHistory::CMyNewsReadHistory(TFSRefObj* inRef)
 	};
 	
 	ClearStruct(data);
-	
+
 	bool existing = false;
-	
+
+	// Was "goto createNew;" from the catch block below, re-running the else branch
+	// after deleting a corrupt existing file. GCC (unlike Metrowerks) rejects that --
+	// jumping back into a try-block, over several locals' initialization, from its own
+	// catch handler -- so this is a while-loop instead: "continue" re-enters the try
+	// block, and since the corrupt file was just trashed, Exists() naturally takes the
+	// else (create-new) branch this time. Same behavior, no goto/label needed.
+	while (true)
+	{
 	try
 	{
 		if (mFile.ref->Exists())
@@ -82,7 +90,6 @@ CMyNewsReadHistory::CMyNewsReadHistory(TFSRefObj* inRef)
 		}
 		else
 		{
-createNew:
 			ClearStruct(data);
 			const Uint32 maxCats = 500;
 			const Uint32 blockSize = 32;
@@ -196,12 +203,15 @@ createNew:
 		{
 			mFile.ref->MoveToTrash();
 			existing = false;
-			goto createNew;
+			continue;
 		}
-		
-		throw;	
+
+		throw;
 	}
-	
+
+	break;
+	} // end retry loop
+
 	mFile.ref->Close();
 }
 
@@ -827,14 +837,20 @@ void CNZReadList::SetRead(Uint32 inID, bool inRead)
 	
 	}
 */	
+	// Hoisted above the early "goto unread" below (uninitialized, aside from "first",
+	// which the unread: code also depends on being 0 in that early-exit path): GCC
+	// (unlike Metrowerks) rejects a goto/case jumping over an *initialized* local
+	// while staying in its scope, and "unread:" (further down) uses all four of these.
 	Uint32 first = 0;
-	if (!mID || !mIDCount)
-		goto unread;
-	
-	Uint32 last = mIDCount - 1;
+	Uint32 last;
 	Uint32 middle;
 	Uint32 count;
-	
+
+	if (!mID || !mIDCount)
+		goto unread;
+
+	last = mIDCount - 1;
+
 	while (first != last)
 	{
 		middle = (first + last)/2;

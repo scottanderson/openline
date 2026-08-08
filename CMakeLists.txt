@@ -18,7 +18,12 @@ endif()
 
 option(HL_NO_QUICKTIME "Build without Apple QuickTime support (SDK not present in this repo for licensing reasons)" ON)
 
-set(CMAKE_CXX_STANDARD 98)
+# gnu++98 (matching the code's original C++98-ish style) has one problem: pre-C++11,
+# unnamed (anonymous) struct/class types can't be used as template arguments, and this
+# codebase does that (e.g. HotlineNewsReadHistory.cp's PurgeOldest() calls swap() on an
+# array of an anonymous local struct). C++11 relaxed that rule, so use gnu++11 instead
+# -- it's a superset of what this code needs, not a rewrite of it.
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS ON)
 
@@ -27,6 +32,4 @@ set(CMAKE_CXX_EXTENSIONS ON)
 add_compile_options(-w -fpermissive -fno-strict-aliasing)
 
 add_subdirectory(AppWarrior)
-if(EXISTS ${CMAKE_SOURCE_DIR}/Apps/Client/CMakeLists.txt)
-	add_subdirectory(Apps/Client)
-endif()
+add_subdirectory(Apps/Client)

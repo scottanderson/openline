@@ -1757,16 +1757,22 @@ void CMyGetBannerTask::Process()
 	if (mStage <= 2)
 		CMyGetBannerTimeTask::Process();
 
+	// Hoisted above the switch, uninitialized here: case 5/6 below reuse pData after
+	// case 3 assigns it (relying on it staying in scope across "goto startagain"), so
+	// it can't be scoped to case 3 alone. GCC (unlike Metrowerks) rejects a case label
+	// jumping over an *initialized* declaration while staying in its scope.
+	void *pData;
+
 startagain:
 
 	switch(mStage)
 	{
-		case 3:			
+		case 3:
 			// get the http data
 			Int8 csType[32];
 			Uint32 nDataSize;
-			
-			void *pData = mHttpTransact->ReceiveHttpData(nDataSize, csType);
+
+			pData = mHttpTransact->ReceiveHttpData(nDataSize, csType);
 			if (!pData || !nDataSize)
 			{
 				if (!mHttpTransact->IsConnected())
@@ -1840,16 +1846,20 @@ startagain:
 			break;
 
 		case 6:
+			// Braced (GCC, unlike Metrowerks, rejects "case 7:" below jumping over
+			// nTypeCode's initialization while staying in scope).
+			{
 			Uint32 nTypeCode = UMime::ConvertMime_TypeCode(csType);
-				
+
 			gApp->SetServerBanner(pData, nDataSize, nTypeCode, mImgHref, mImgComment);
-	
+
 			ShowProgress(5, 6);
 
 			mStage = 7;
 			goto startagain;
+			}
 			break;
-			
+
 		case 7:
 			ShowProgress(6, 6);
 			FinishBannerTask();
@@ -1870,13 +1880,13 @@ bool CMyGetBannerTask::SearchImageTag(void *inHtml, Uint32 inHtmlSize)
 	if (!pImgBegin)
 		return false;
 	
-	Uint32 nDepl = inHtmlSize - (pImgBegin + 4 - inHtml);
+	Uint32 nDepl = inHtmlSize - (pImgBegin + 4 - (Uint8 *)inHtml);
 	Uint8 *pSrcBegin = UText::SearchInsensitive("src=\"", 5, pImgBegin + 4, (nDepl > 256 ? 256 : nDepl));
 	if (!pSrcBegin)
 		return false;
 		
 	pSrcBegin += 5;
-	nDepl = inHtmlSize - (pSrcBegin - inHtml);
+	nDepl = inHtmlSize - (pSrcBegin - (Uint8 *)inHtml);
 			
 	Uint8 *pSrcEnd = UMemory::SearchByte('\"', pSrcBegin, (nDepl > 255 ? 255 : nDepl));
 	if (!pSrcEnd)
@@ -1885,7 +1895,7 @@ bool CMyGetBannerTask::SearchImageTag(void *inHtml, Uint32 inHtmlSize)
 	mImgSrc[0] = UMemory::Copy(mImgSrc + 1, pSrcBegin, pSrcEnd - pSrcBegin);
 
 	nDepl = 1;
-	while(*(pImgBegin - nDepl++) != '<' && nDepl < pImgBegin - inHtml){}
+	while(*(pImgBegin - nDepl++) != '<' && nDepl < pImgBegin - (Uint8 *)inHtml){}
 	
 	Uint8 *pABegin = UText::SearchInsensitive("<a", 2, pImgBegin - nDepl, nDepl);
 				
@@ -1907,13 +1917,13 @@ bool CMyGetBannerTask::SearchImageTag(void *inHtml, Uint32 inHtmlSize)
 		}
 	}
 	
-	nDepl = inHtmlSize - (pSrcEnd - inHtml);
+	nDepl = inHtmlSize - (pSrcEnd - (Uint8 *)inHtml);
 	Uint8 *pAltBegin = UText::SearchInsensitive("alt=\"", 5, pSrcEnd, (nDepl > 25 ? 25 : nDepl));
 	
 	if (pAltBegin)
 	{
 		pAltBegin += 5;
-		nDepl = inHtmlSize - (pAltBegin - inHtml);
+		nDepl = inHtmlSize - (pAltBegin - (Uint8 *)inHtml);
 			
 		Uint8 *pAltEnd = UMemory::SearchByte('\"', pAltBegin, (nDepl > 255 ? 255 : nDepl));
 
@@ -3366,7 +3376,7 @@ goFromStart:
 			StPtr header(mHeaderSize);
 			mTpt->Receive(header, mHeaderSize);
 			Uint8 *p = BPTR(header);
-			Uint16 type = FB(*((Uint16 *)p)++);
+			Uint16 type = FB(*(*(Uint16 **)&p)++);
 
 			mFilePathSize = UFS::ValidateFilePath(p, mHeaderSize - 2);
 
@@ -4396,9 +4406,9 @@ goNextFile:
 				Uint32 s = path + sizeof(path) - startPtr + 4;
 							
 				// send that data:
-				*--((Uint16 *)startPtr) = TB((Uint16)pathCount);
-				*--((Uint16 *)startPtr) = TB((Uint16)(folder ? 1 : 0));
-				*--((Uint16 *)startPtr) = TB((Uint16)s);
+				*--(*(Uint16 **)&startPtr) = TB((Uint16)pathCount);
+				*--(*(Uint16 **)&startPtr) = TB((Uint16)(folder ? 1 : 0));
+				*--(*(Uint16 **)&startPtr) = TB((Uint16)s);
 							
 				mTpt->Send(startPtr, s + 2);
 				mStage = folder ? 4 : 5;

@@ -59,6 +59,25 @@ _TTCToolTipView::~_TTCToolTipView()
 	delete mFontDesc;
 }
 
+// These two were declared but never defined anywhere in the original sources (dead
+// code -- nothing outside this file calls _TTCToolTipWin::SetFont either), so there
+// was nothing platform-specific to port. Implemented to match the equivalent
+// CLabelView::SetFont() pattern (takes ownership of the TFontDesc).
+void _TTCToolTipView::SetFont(TFontDesc inFont)
+{
+	delete mFontDesc;
+	mFontDesc = inFont;
+	Refresh();
+}
+
+void _TTCToolTipView::SetFont(const Uint8 *inName, const Uint8 *inStyle, Uint32 inSize, Uint32 inEffect)
+{
+	TFontDesc fd = UFontDesc::New(inName, inStyle, inSize, inEffect);
+	delete mFontDesc;
+	mFontDesc = fd;
+	Refresh();
+}
+
 void _TTCToolTipView::Draw(TImage inImage, const SRect &/*& inUpdateRect*/, Uint32 /*inDepth*/)
 {
 	inImage->SetFont(mFontDesc);

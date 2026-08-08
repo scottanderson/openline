@@ -3728,27 +3728,36 @@ bool CMyViewFileWin::IsEndViewFileTask()
 
 bool CMyViewFileWin::CanCloseViewFileWin()
 {
+	// HL_NO_QUICKTIME: HL_HandlerIsReading comes from the QTDataHandler component
+	// (part of the removed QuickTime SDK). Nothing can be "reading" via it in this
+	// build, so there's nothing here to block the close.
+#ifndef HL_NO_QUICKTIME
 	if (mQuickTimeView)
 	{
 		Uint8 psTempFileName[32];
 		mTempFile.GetTempName(psTempFileName, sizeof(psTempFileName));
-		
+
 		if (HL_HandlerIsReading(psTempFileName))
 			return false;
 	}
-		
+#endif
+
 	return true;
 }
 
 void CMyViewFileWin::SetMustCloseFlag()
 {
+	// HL_NO_QUICKTIME: HL_HandlerCancelReading comes from the QTDataHandler component
+	// (part of the removed QuickTime SDK); see CanCloseViewFileWin() above.
+#ifndef HL_NO_QUICKTIME
 	if (mQuickTimeView)
 	{
 		Uint8 psTempFileName[32];
 		mTempFile.GetTempName(psTempFileName, sizeof(psTempFileName));
-	
+
 		HL_HandlerCancelReading(psTempFileName);
 	}
+#endif
 
 	mMustCloseFlag = true;
 	gApp->mCloseWinTimer->Start(500, kOnceTimer);

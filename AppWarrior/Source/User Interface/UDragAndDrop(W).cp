@@ -954,6 +954,18 @@ void UDragAndDrop::DrawHilite(TImage inImage, const SRect& inRect)
 	DrawHilite(inImage, inRect, SColor(0x6666,0x9999,0xCCCC));
 }
 
+// This overload was missing from the original Windows port (only implemented in the
+// Mac (M).cp using Mac-specific region APIs) -- written here using UGraphics::DrawRegion
+// with fill_ClosedFrame, matching the rect+color overload's 2px frame above it.
+void UDragAndDrop::DrawHilite(TImage inImage, TRegion inRgn, const SColor& inColor)
+{
+	UGraphics::SetInkMode(inImage, mode_Copy);
+	UGraphics::SetInkColor(inImage, inColor);
+	UGraphics::SetPenSize(inImage, 2);
+	UGraphics::DrawRegion(inImage, inRgn, fill_ClosedFrame);
+	UGraphics::SetPenSize(inImage, 1);
+}
+
 void UDragAndDrop::DrawHilite(TImage inImage, TRegion inRgn)
 {
 	DrawHilite(inImage, inRgn, SColor(0x6666,0x9999,0xCCCC));

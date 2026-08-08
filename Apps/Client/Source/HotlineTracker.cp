@@ -795,6 +795,9 @@ bool CMyTracker::WindowHit(CWindow *inWindow, const SHitMsgData& inInfo)
 			break;
 						
 		case TrackCmd_SaveTracker:
+			// Braced (GCC, unlike Metrowerks, rejects later case labels jumping over
+			// win's initialization while staying in scope).
+			{
 			CMyTrackServWindow *win = dynamic_cast<CMyTrackServWindow *>(inWindow);
 			if (win)
 			{				
@@ -828,13 +831,18 @@ bool CMyTracker::WindowHit(CWindow *inWindow, const SHitMsgData& inInfo)
 				else
 					gApp->DisplayStandardMessage("\pNeed Address", "\pPlease enter the address of this tracker.", icon_Stop, 1);
 			}
+			}
 			break;
-						
+
 		case TrackCmd_AddTracker:
+			// Braced (GCC, unlike Metrowerks, rejects "default:" below jumping over
+			// pWindow's initialization while staying in scope).
+			{
 			mServerTreeView->DeselectAllTreeItems();
-		
+
 			CMyTrackServWindow *pWindow = new CMyTrackServWindow(gApp->mAuxParentWin);
 			pWindow->Show();
+			}
 			break;
 							
 		default:
@@ -972,10 +980,10 @@ Uint32 CMyTracker::AddListFromData(Uint16 inTrackerID, const Uint8 *inData, Uint
 	while (p < ep)
 	{
 		if (ep - p < 12) break;
-		addr = *((Uint32 *)p)++;
-		port = FB( *((Uint16 *)p)++ );
-		userCount = FB( *((Uint16 *)p)++ );
-		*((Uint16 *)p)++;
+		addr = *(*(Uint32 **)&p)++;
+		port = FB( *(*(Uint16 **)&p)++ );
+		userCount = FB( *(*(Uint16 **)&p)++ );
+		*(*(Uint16 **)&p)++;
 		name = p;
 		p += *p + 1;
 		if (p >= ep) break;
@@ -1901,7 +1909,11 @@ Uint32 CMyTracker::ReadPrefs(TFSRefObj* inFile, Uint32 inOffset, Uint16 inTabWid
 	CUnflatten unflat(buf, nSize);
 	if (unflat.NotEnufData(nTotalSize))
 		goto corrupt;
-		
+
+	// Braced (GCC, unlike Metrowerks, rejects "corrupt:" below jumping over these
+	// locals' initialization while staying in scope; "corrupt:" itself only needs
+	// pTrackerInfo, declared above).
+	{
 	Uint32 nVerNumber = unflat.ReadLong();
 	if (nVerNumber != 3)	// tracker list version number
 		goto corrupt;
@@ -1944,7 +1956,8 @@ Uint32 CMyTracker::ReadPrefs(TFSRefObj* inFile, Uint32 inOffset, Uint16 inTabWid
 
 	AddTrackersInTree();
 	return nTotalSize;
-	
+	}
+
 corrupt:
 	if (pTrackerInfo)
 		delete pTrackerInfo;	// don't want any mem leaks

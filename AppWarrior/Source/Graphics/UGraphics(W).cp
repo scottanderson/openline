@@ -1612,6 +1612,14 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 /* -------------------------------------------------------------------------- */
 #pragma mark -
 
+// This overload was missing from the original Windows port (only implemented in the
+// Mac (M).cp using NewGWorld) -- it's really just NewCompatibleImage() sized off an
+// SRect instead of separate width/height, so implemented as a thin wrapper.
+TImage UGraphics::NewImage(const SRect& inBounds)
+{
+	return UGraphics::NewCompatibleImage(inBounds.GetWidth(), inBounds.GetHeight());
+}
+
 TImage UGraphics::NewCompatibleImage(Uint32 inWidth, Uint32 inHeight)
 {
 	HDC onscreenDC = NULL;

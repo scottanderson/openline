@@ -216,7 +216,10 @@ struct SMyFileInfo {
 	Uint32 rsvd;
 	Uint16 nameScript;
 	Uint16 nameSize;
-	Uint8 nameData[];
+	// GCC (unlike Metrowerks) rejects a flexible array member in a struct that's
+	// embedded as a non-final member of another (local) struct elsewhere; sized [1]
+	// instead (no sizeof(this struct) use depends on it staying a true 0-sized FAM).
+	Uint8 nameData[1];
 };
 #pragma options align=reset
 

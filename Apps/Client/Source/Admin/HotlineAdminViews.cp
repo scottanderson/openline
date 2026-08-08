@@ -1199,8 +1199,11 @@ CMyAdminUserAccessView::CMyAdminUserAccessView(CViewHandler *inHandler, const SR
 			switch (p->type)
 			{
 				case 1:
+					// Braced (GCC, unlike Metrowerks, rejects the next case label
+					// jumping over box/lbl's initialization while staying in scope).
+					{
 					if (top != 6) top += 16;
-					
+
 					r.top = top;
 					r.left = 4;
 					r.bottom = r.top + 18;
@@ -1218,10 +1221,11 @@ CMyAdminUserAccessView::CMyAdminUserAccessView(CViewHandler *inHandler, const SR
 					lbl->SetText(p->name);
 					lbl->SetSizing(sizing_RightSticky);
 					lbl->Show();
-					
+
 					top += 20;
+					}
 					break;
-					
+
 				case 2:
 					r.top = top;
 					r.left = 16;
