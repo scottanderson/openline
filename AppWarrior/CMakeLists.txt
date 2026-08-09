@@ -70,6 +70,29 @@ endif()
 # Explicitly mark these as C++ -- ".cp" isn't a default-recognized CXX extension.
 set_source_files_properties(${AW_ALL_SOURCES} PROPERTIES LANGUAGE CXX)
 
+# ANSI.cp is a hand-rolled ANSI C runtime (malloc/free, memcpy/memmove/memset,
+# strlen/strcpy/strcmp/strtol/etc.) written for the original classic-Mac CodeWarrior
+# toolchain, which lacked a full ANSI libc. Its functions are deliberately named to
+# match the standard library (e.g. `size_t strlen(const char *str)`).
+#
+# Without -fno-builtin, GCC recognizes these names as the builtins it already knows the
+# semantics of, and can rewrite a hand-written definition into a self-referential call
+# to "the builtin" -- which, since the symbol being defined *is* that builtin, becomes
+# infinite tail recursion. At -O3 this collapsed strlen()'s body into a 2-byte `jmp $`
+# (opcodes eb fe) at its own entry point: an unconditional jump to itself, i.e. a
+# process-wide 100%-CPU hang. Confirmed via disassembly of the compiled ANSI.cp.obj
+# (see the "_strlen" symbol) and reproduced/fixed in isolation by recompiling this one
+# file with/without -fno-builtin.
+#
+# This is what caused hlclient.exe (and, since they share this same statically-linked
+# appwarrior library, hlserver.exe and both hltracker*.exe) to hang at ~99% CPU
+# immediately on launch, before WinMain ever runs: strlen() is called very early during
+# CRT/static-init, on the first path that happened to route through it, and simply never
+# returns.
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/Source/Misc/ANSI.cp PROPERTIES
+	COMPILE_OPTIONS "-fno-builtin"
+)
+
 add_library(appwarrior STATIC ${AW_ALL_SOURCES})
 
 target_include_directories(appwarrior PUBLIC
