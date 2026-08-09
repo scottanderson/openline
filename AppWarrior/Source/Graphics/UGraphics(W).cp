@@ -1551,7 +1551,7 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 			{
 				*p++ = _UTCharMap_AWToPC[*q++];
 			}
-			::TextOut(dc, boundsRight, curY, (char *)linePtr, UText::GetVisibleLength(linePtr, lineBytes));
+			::TextOut(dc, boundsRight, curY, convTxt, UText::GetVisibleLength(linePtr, lineBytes));
 			
 			curY += inLineHeight;
 			i++;
@@ -1574,7 +1574,7 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 			{
 				*p++ = _UTCharMap_AWToPC[*q++];
 			}
-			::TextOut(dc, boundsMiddle, curY, (char *)linePtr, UText::GetVisibleLength(linePtr, lineBytes));
+			::TextOut(dc, boundsMiddle, curY, convTxt, UText::GetVisibleLength(linePtr, lineBytes));
 
 			curY += inLineHeight;
 			i++;
