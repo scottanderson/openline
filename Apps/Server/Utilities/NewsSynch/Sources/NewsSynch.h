@@ -13,7 +13,7 @@
 #endif
 
 #define NEW_NEWS_FORMAT			0
-#define APPLICATION_NAME		"\pHotline News Synchronizer"
+#define APPLICATION_NAME		"\x19" "Hotline News Synchronizer"
 
 #define DEFAULT_SYNCH_HOURS		24
 #define DEFAULT_PURGE_DAYS		90

@@ -152,5 +152,5 @@ class CNewsDatabase_v3 : public CNewsDatabase
 		TFSRefObj* mFile;
 };
 
-const Uint8 _NZ_DataType_Item[] = "\papplication/x-hlnewsitem";
+const Uint8 _NZ_DataType_Item[] = "\x18" "application/x-hlnewsitem";
 const Uint8 _NZ_DataType_ItemLen = 24;	// the length of the above pstring

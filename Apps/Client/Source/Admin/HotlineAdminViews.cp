@@ -27,8 +27,8 @@ CMyAdminUserTreeView::CMyAdminUserTreeView(CViewHandler *inHandler, const SRect&
 #endif
 
 	// set headers
-	AddTab("\pLogin", 100, 100);
-	AddTab("\pName");
+	AddTab("\x05" "Login", 100, 100);
+	AddTab("\x04" "Name");
 	SetTabs(60, 40);	
 }
 
@@ -309,7 +309,7 @@ bool CMyAdminUserTreeView::UpdateUserAccess(Uint32 inAccessID)
 					// restore access
 					SetUsersAccess(nFirstSelected, true);
 					
-					gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to modify account information.", icon_Caution, 1);
+					gApp->DisplayStandardMessage("\x0e" "Server Message", "\x32" "You are not allowed to modify account information.", icon_Caution, 1);
 					return false;
 				}
 			}
@@ -340,7 +340,7 @@ bool CMyAdminUserTreeView::UpdateUserAccess(Uint32 inAccessID)
 				// restore access
 				SetUsersAccess(nFirstSelected, true);
 
-				gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to modify account information.", icon_Caution, 1);
+				gApp->DisplayStandardMessage("\x0e" "Server Message", "\x32" "You are not allowed to modify account information.", icon_Caution, 1);
 				return false;
 			}
 			else if (nFirstSelected != nLastSelected)	// two or more items selected
@@ -357,7 +357,7 @@ bool CMyAdminUserTreeView::UpdateUserAccess(Uint32 inAccessID)
 							// restore access
 							SetUsersAccess(nFirstSelected, true);
 
-							gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to modify account information.", icon_Caution, 1);
+							gApp->DisplayStandardMessage("\x0e" "Server Message", "\x32" "You are not allowed to modify account information.", icon_Caution, 1);
 							return false;
 						}
 					}
@@ -442,7 +442,7 @@ bool CMyAdminUserTreeView::AddNewUser(const Uint8 *inName, const Uint8 *inLogin,
 	// check access
 	if (!gApp->HasGeneralPriv(myAcc_CreateUser))
 	{
-		gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to create new accounts.", icon_Caution, 1);
+		gApp->DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to create new accounts.", icon_Caution, 1);
 		return false;
 	}
 
@@ -454,9 +454,9 @@ bool CMyAdminUserTreeView::AddNewUser(const Uint8 *inName, const Uint8 *inLogin,
 		MakeTreeItemVisibleInList(nIndex);
 		
 		Uint8 psMessage[256];
-		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "Cannot create account “%#s” because there is already an account with that login.", inLogin);
+		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "Cannot create account \xd2%#s\xd3 because there is already an account with that login.", inLogin);
 
-		gApp->DisplayStandardMessage("\pNew Account", psMessage, icon_Stop, 1);
+		gApp->DisplayStandardMessage("\x0b" "New Account", psMessage, icon_Stop, 1);
 		return false;
 	}
 
@@ -515,7 +515,7 @@ bool CMyAdminUserTreeView::ModifySelectedUser(const Uint8 *inName, const Uint8 *
 	// check access
 	if (!pUserInfo->IsNewUser() && !gApp->HasGeneralPriv(myAcc_ModifyUser))
 	{
-		gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to modify account information.", icon_Caution, 1);
+		gApp->DisplayStandardMessage("\x0e" "Server Message", "\x32" "You are not allowed to modify account information.", icon_Caution, 1);
 		return false;
 	}
 
@@ -523,9 +523,9 @@ bool CMyAdminUserTreeView::ModifySelectedUser(const Uint8 *inName, const Uint8 *
 	if (nIndex && nIndex != nFirstSelected)
 	{
 		Uint8 psMessage[256];
-		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "Cannot rename account “%#s” because there is already an account with that login.", inLogin);
+		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "Cannot rename account \xd2%#s\xd3 because there is already an account with that login.", inLogin);
 
-		gApp->DisplayStandardMessage("\pEdit Account", psMessage, icon_Stop, 1);
+		gApp->DisplayStandardMessage("\x0c" "Edit Account", psMessage, icon_Stop, 1);
 		return false;
 	}
 
@@ -583,7 +583,7 @@ bool CMyAdminUserTreeView::DeleteSelectedUsers()
 		// check if new user				
 		if (!pUserInfo->IsNewUser())
 		{
-			gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete accounts.", icon_Caution, 1);
+			gApp->DisplayStandardMessage("\x0e" "Server Message", "\x27" "You are not allowed to delete accounts.", icon_Caution, 1);
 			return false;
 		}
 		else if (nFirstSelected != nLastSelected)	// two or more items selected
@@ -597,7 +597,7 @@ bool CMyAdminUserTreeView::DeleteSelectedUsers()
 					// check if new user				
 					if (pCheckUserInfo && !pCheckUserInfo->IsNewUser())						
 					{
-						gApp->DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete accounts.", icon_Caution, 1);
+						gApp->DisplayStandardMessage("\x0e" "Server Message", "\x27" "You are not allowed to delete accounts.", icon_Caution, 1);
 						return false;
 					}
 				}
@@ -620,15 +620,15 @@ bool CMyAdminUserTreeView::DeleteSelectedUsers()
 		SMsgBox mb;
 		ClearStruct(mb);
 
-		Uint8 *psMessage = "\pDelete selected accounts and all associated files?";
+		Uint8 *psMessage = "\x32" "Delete selected accounts and all associated files?";
 
 		mb.icon = icon_Caution;
 		mb.sound = 1;
-		mb.title = "\pDelete Accounts";	
+		mb.title = "\x0f" "Delete Accounts";	
 		mb.messageSize = psMessage[0];
 		mb.messageData = psMessage + 1;
-		mb.button1 = "\pDelete";
-		mb.button2 = "\pCancel";
+		mb.button1 = "\x06" "Delete";
+		mb.button2 = "\x06" "Cancel";
 			
 		if (MsgBox(mb) != 1)
 			return false;
@@ -1129,54 +1129,54 @@ CMyAdminUserAccessView::CMyAdminUserAccessView(CViewHandler *inHandler, const SR
 	};
 	
 	const SMyAccessItem accessItems[] = {
-		{ 1, nil, "\pFile System Maintenance" },
-		{ 2, myAcc_DownloadFile, "\pCan Download Files" },			// 0
-		{ 2, myAcc_DownloadFolder, "\pCan Download Folders" },		// 1
-		{ 2, myAcc_UploadFile, "\pCan Upload Files" },				// 2
-		{ 2, myAcc_UploadFolder, "\pCan Upload Folders" },			// 3
-		{ 2, myAcc_UploadAnywhere, "\pCan Upload Anywhere" },		// 4
-		{ 2, myAcc_DeleteFile, "\pCan Delete Files" },				// 5
-		{ 2, myAcc_RenameFile, "\pCan Rename Files" },				// 6
-		{ 2, myAcc_MoveFile, "\pCan Move Files" },					// 7
-		{ 2, myAcc_SetFileComment, "\pCan Comment Files" },			// 8
-		{ 2, myAcc_CreateFolder, "\pCan Create Folders" },			// 9
-		{ 2, myAcc_DeleteFolder, "\pCan Delete Folders" },			// 10
-		{ 2, myAcc_RenameFolder, "\pCan Rename Folders" },			// 11
-		{ 2, myAcc_MoveFolder, "\pCan Move Folders" },				// 12
-		{ 2, myAcc_SetFolderComment, "\pCan Comment Folders" },		// 13
-		{ 2, myAcc_ViewDropBoxes, "\pCan View Drop Boxes" },		// 14
-		{ 2, myAcc_MakeAlias, "\pCan Make Aliases" },				// 15
+		{ 1, nil, "\x17" "File System Maintenance" },
+		{ 2, myAcc_DownloadFile, "\x12" "Can Download Files" },			// 0
+		{ 2, myAcc_DownloadFolder, "\x14" "Can Download Folders" },		// 1
+		{ 2, myAcc_UploadFile, "\x10" "Can Upload Files" },				// 2
+		{ 2, myAcc_UploadFolder, "\x12" "Can Upload Folders" },			// 3
+		{ 2, myAcc_UploadAnywhere, "\x13" "Can Upload Anywhere" },		// 4
+		{ 2, myAcc_DeleteFile, "\x10" "Can Delete Files" },				// 5
+		{ 2, myAcc_RenameFile, "\x10" "Can Rename Files" },				// 6
+		{ 2, myAcc_MoveFile, "\x0e" "Can Move Files" },					// 7
+		{ 2, myAcc_SetFileComment, "\x11" "Can Comment Files" },			// 8
+		{ 2, myAcc_CreateFolder, "\x12" "Can Create Folders" },			// 9
+		{ 2, myAcc_DeleteFolder, "\x12" "Can Delete Folders" },			// 10
+		{ 2, myAcc_RenameFolder, "\x12" "Can Rename Folders" },			// 11
+		{ 2, myAcc_MoveFolder, "\x10" "Can Move Folders" },				// 12
+		{ 2, myAcc_SetFolderComment, "\x13" "Can Comment Folders" },		// 13
+		{ 2, myAcc_ViewDropBoxes, "\x13" "Can View Drop Boxes" },		// 14
+		{ 2, myAcc_MakeAlias, "\x10" "Can Make Aliases" },				// 15
 
-		{ 1, nil, "\pUser Maintenance" },
-		{ 2, myAcc_CreateUser, "\pCan Create Accounts" },			// 16
-		{ 2, myAcc_DeleteUser, "\pCan Delete Accounts" },			// 17
-		{ 2, myAcc_OpenUser, "\pCan Read Accounts" },				// 18
-		{ 2, myAcc_ModifyUser, "\pCan Modify Accounts" },			// 19
-		{ 2, myAcc_GetClientInfo, "\pCan Get User Info" },			// 20
-		{ 2, myAcc_DisconUser, "\pCan Disconnect Users" },			// 21
-		{ 2, myAcc_CannotBeDiscon, "\pCannot be Disconnected" },	// 22
+		{ 1, nil, "\x10" "User Maintenance" },
+		{ 2, myAcc_CreateUser, "\x13" "Can Create Accounts" },			// 16
+		{ 2, myAcc_DeleteUser, "\x13" "Can Delete Accounts" },			// 17
+		{ 2, myAcc_OpenUser, "\x11" "Can Read Accounts" },				// 18
+		{ 2, myAcc_ModifyUser, "\x13" "Can Modify Accounts" },			// 19
+		{ 2, myAcc_GetClientInfo, "\x11" "Can Get User Info" },			// 20
+		{ 2, myAcc_DisconUser, "\x14" "Can Disconnect Users" },			// 21
+		{ 2, myAcc_CannotBeDiscon, "\x16" "Cannot be Disconnected" },	// 22
 
-		{ 1, nil, "\pMessaging" },
-		{ 2, myAcc_SendMessage, "\pCan Send Messages" },			// 23
-		{ 2, myAcc_Broadcast, "\pCan Broadcast" },					// 24
+		{ 1, nil, "\x09" "Messaging" },
+		{ 2, myAcc_SendMessage, "\x11" "Can Send Messages" },			// 23
+		{ 2, myAcc_Broadcast, "\x0d" "Can Broadcast" },					// 24
 
-		{ 1, nil, "\pNews" },
-		{ 2, myAcc_NewsReadArt, "\pCan Read Articles" },			// 25
-		{ 2, myAcc_NewsPostArt, "\pCan Post Articles" },			// 26
-		{ 2, myAcc_NewsDeleteArt, "\pCan Delete Articles" },		// 27
-		{ 2, myAcc_NewsCreateCat, "\pCan Create Categories" },		// 28
-		{ 2, myAcc_NewsDeleteCat, "\pCan Delete Categories" },		// 29
-		{ 2, myAcc_NewsCreateFldr, "\pCan Create News Bundles" },	// 30
-		{ 2, myAcc_NewsDeleteFldr, "\pCan Delete News Bundles" },	// 31
+		{ 1, nil, "\x04" "News" },
+		{ 2, myAcc_NewsReadArt, "\x11" "Can Read Articles" },			// 25
+		{ 2, myAcc_NewsPostArt, "\x11" "Can Post Articles" },			// 26
+		{ 2, myAcc_NewsDeleteArt, "\x13" "Can Delete Articles" },		// 27
+		{ 2, myAcc_NewsCreateCat, "\x15" "Can Create Categories" },		// 28
+		{ 2, myAcc_NewsDeleteCat, "\x15" "Can Delete Categories" },		// 29
+		{ 2, myAcc_NewsCreateFldr, "\x17" "Can Create News Bundles" },	// 30
+		{ 2, myAcc_NewsDeleteFldr, "\x17" "Can Delete News Bundles" },	// 31
 		
-		{ 1, nil, "\pChat" },
-		{ 2, myAcc_CreateChat, "\pCan Initiate Private Chat" },		// 32
-		{ 2, myAcc_ReadChat, "\pCan Read Chat" },					// 33
-		{ 2, myAcc_SendChat, "\pCan Send Chat" },					// 34
+		{ 1, nil, "\x04" "Chat" },
+		{ 2, myAcc_CreateChat, "\x19" "Can Initiate Private Chat" },		// 32
+		{ 2, myAcc_ReadChat, "\x0d" "Can Read Chat" },					// 33
+		{ 2, myAcc_SendChat, "\x0d" "Can Send Chat" },					// 34
 
-		{ 1, nil, "\pMiscellaneous" },
-		{ 2, myAcc_AnyName, "\pCan Use Any Name" },					// 35
-		{ 2, myAcc_NoAgreement, "\pDon't Show Agreement" }//,		// 36
+		{ 1, nil, "\x0d" "Miscellaneous" },
+		{ 2, myAcc_AnyName, "\x10" "Can Use Any Name" },					// 35
+		{ 2, myAcc_NoAgreement, "\x14" "Don't Show Agreement" }//,		// 36
 
 		// remember to update size of mAccessChecks if we add checks to this
 	};

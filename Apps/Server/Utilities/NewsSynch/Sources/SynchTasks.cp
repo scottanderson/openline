@@ -41,12 +41,12 @@ void CMyTask::Finish()
 #pragma mark CMyConnectTask
 
 CMyConnectTask::CMyConnectTask(SMyServerInfo& inServerInfo)
-	: CMyTask("\pConnecting...")
+	: CMyTask("\x0d" "Connecting...")
 {
 	UMemory::Copy(mServerAddr, inServerInfo.psServerAddr, inServerInfo.psServerAddr[0] + 1);
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Connecting with news server “%#s”", mServerAddr);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Connecting with news server \xd2%#s\xd3", mServerAddr);
 	ShowProgress(0, 1, psBuf);
 
 	mNntpTransact->SetMessageHandler(gApp->MessageHandler, gApp);
@@ -106,7 +106,7 @@ void CMyConnectTask::AddLog(const Uint8 *inLogText)
 
 void CMyConnectTask::LogRefused()
 {
-	Uint8 *pErrorMsg = "\pError: Connection refused";
+	Uint8 *pErrorMsg = "\x19" "Error: Connection refused";
 	
 	ShowProgress(100, 100, pErrorMsg);
 	gApp->AddLog(mLogID, pErrorMsg);
@@ -114,7 +114,7 @@ void CMyConnectTask::LogRefused()
 
 void CMyConnectTask::LogClosed()
 {
-	Uint8 *pErrorMsg = "\pError: Connection closed";
+	Uint8 *pErrorMsg = "\x18" "Error: Connection closed";
 	
 	ShowProgress(100, 100, pErrorMsg);
 	gApp->AddLog(mLogID, pErrorMsg);
@@ -133,7 +133,7 @@ void CMyConnectTask::LogError(bool inShowProgress)
 
 void CMyConnectTask::LogStop()
 {
-	Uint8 *pErrorMsg = "\pError: Task stopped";
+	Uint8 *pErrorMsg = "\x13" "Error: Task stopped";
 	
 	ShowProgress(100, 100, pErrorMsg);
 	gApp->AddLog(mLogID, pErrorMsg);
@@ -174,7 +174,7 @@ CMyListGroupsTask::CMyListGroupsTask(SMyServerInfo& inServerInfo)
 	mGroupIndex = 0;
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Listing news groups from server “%#s”", mServerAddr);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Listing news groups from server \xd2%#s\xd3", mServerAddr);
 	MakeLog(psBuf);
 }
 
@@ -200,7 +200,7 @@ void CMyListGroupsTask::Process()
  				
 			if (mNntpTransact->IsConnected())
 			{
-				ShowProgress(0, 1, "\pListing news groups...");
+				ShowProgress(0, 1, "\x16" "Listing news groups...");
 			
 				mNntpTransact->Command_ListGroups();
 				mStage++;
@@ -249,7 +249,7 @@ CMyListArticlesTask::CMyListArticlesTask(SMyServerInfo& inServerInfo, const Uint
 	UMemory::Copy(mGroupName, inGroupName, inGroupName[0] + 1);	
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Listing articles from news group “%#s”", mGroupName);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Listing articles from news group \xd2%#s\xd3", mGroupName);
 	MakeLog(psBuf);
 }
 
@@ -294,7 +294,7 @@ void CMyListArticlesTask::Process()
 
 			if (mNntpTransact->IsConnected())
 			{
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName);
 				ShowProgress(0, 1, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName);
@@ -321,7 +321,7 @@ void CMyListArticlesTask::Process()
 				
 				FinishTimerArmed();
 				
-				ShowProgress(0, 1, "\pListing articles...");
+				ShowProgress(0, 1, "\x13" "Listing articles...");
 				
 				mNntpTransact->Command_ListArticles();
 				mStage++;
@@ -372,7 +372,7 @@ CMyGetArticleTask::CMyGetArticleTask(SMyServerInfo& inServerInfo, const Uint8 *i
 	mArticleSize = 0;
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Receiving article “%#s”", mArticleName);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Receiving article \xd2%#s\xd3", mArticleName);
 	MakeLog(psBuf);
 }
 
@@ -401,7 +401,7 @@ void CMyGetArticleTask::Process()
 
 			if (mNntpTransact->IsConnected())
 			{
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName);
 				ShowProgress(1, 3, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName);
@@ -428,7 +428,7 @@ void CMyGetArticleTask::Process()
 
 				FinishTimerArmed();
 				
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Receiving article “%#s”", mArticleName);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Receiving article \xd2%#s\xd3", mArticleName);
 				ShowProgress(2, 3, psBuf);
 			
 				mNntpTransact->Command_GetArticle(mArticleID);
@@ -446,7 +446,7 @@ void CMyGetArticleTask::Process()
 			{
 				mArticleSize = nDataSize;
 				
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Receiving article “%#s” (%#s)", mArticleName, psDataSize);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Receiving article \xd2%#s\xd3 (%#s)", mArticleName, psDataSize);
 				ShowProgress(2, 3, psBuf);
 
 				FinishTimerArmed();
@@ -688,7 +688,7 @@ bool CMySynchGroupTask::SetArticleIDsTree1(bool inFinish)
 		}		
 
 		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-						"%lu articles received from news group “%#s”", 
+						"%lu articles received from news group \xd2%#s\xd3", 
 						mArticleIDsTree1.GetTreeCount(), mGroupName1);
 						//mArticleIndex1, mGroupName1);
 		AddLog(psBuf);	
@@ -917,7 +917,7 @@ bool CMySynchGroupTask::SetArticleIDsTree2()
 	UMemory::Dispose(pArticleList);
 	
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "%lu articles in news category “%#s”", nArticleCount, mGroupName2);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "%lu articles in news category \xd2%#s\xd3", nArticleCount, mGroupName2);
 	AddLog(psBuf);	
 	
 	PurgeArticles();
@@ -960,12 +960,12 @@ bool CMySynchGroupTask::CreateGroup2()
 		
 	try
 	{
-		StNewsDatabase pNewsDatabase(mSynchFile2, mGroupName2, "\p", gApp->UseOldNewsFormat());
+		StNewsDatabase pNewsDatabase(mSynchFile2, mGroupName2, "\x00" "", gApp->UseOldNewsFormat());
 	}
 	catch (SError& err)
 	{
 		Uint8 psBuf[256];
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Cannot create news category “%#s”", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Cannot create news category \xd2%#s\xd3", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -1061,7 +1061,7 @@ bool CMySynchGroupTask::SynchArticle1(Uint32& outSynchSize)
 	}
 	catch(...)
 	{
-		AddLog("\pError: Article corrupt");
+		AddLog("\x16" "Error: Article corrupt");
 		return false;
 	}
 
@@ -1069,7 +1069,7 @@ bool CMySynchGroupTask::SynchArticle1(Uint32& outSynchSize)
 	psDataSize[0] = UText::SizeToText(pArticleIDsInfo->nDataSize, psDataSize + 1, sizeof(psDataSize) - 1, kDontShowBytes);
 
 	Uint8 psMsg[256];
-	psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "<--- Synchronizing article “%#s” (%#s)", stArticleInfo.title, psDataSize);
+	psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "<--- Synchronizing article \xd2%#s\xd3 (%#s)", stArticleInfo.title, psDataSize);
 	ShowProgress(mTreeIndex2, mArticleIDsTree2.GetTreeCount(), psMsg);
 
 	// reverse the order of parent ID's
@@ -1118,7 +1118,7 @@ bool CMySynchGroupTask::SynchArticle1(Uint32& outSynchSize)
 			TPtr pData = pNewsDatabase->GetArticleData(pArticleIDsInfo->nArticleID, pDataInfo->psName, nDataSize);
 			if (!pData)
 			{
-				psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Error: Article “%#s” corrupt", stArticleInfo.title);
+				psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Error: Article \xd2%#s\xd3 corrupt", stArticleInfo.title);
 				AddLog(psMsg);
 
 				return false;
@@ -1129,7 +1129,7 @@ bool CMySynchGroupTask::SynchArticle1(Uint32& outSynchSize)
 		}
 		catch(...)
 		{
-			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Error: Article “%#s” corrupt", stArticleInfo.title);
+			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Error: Article \xd2%#s\xd3 corrupt", stArticleInfo.title);
 			AddLog(psMsg);
 
 			return false;
@@ -1141,7 +1141,7 @@ bool CMySynchGroupTask::SynchArticle1(Uint32& outSynchSize)
 	void *pAddText = gApp->GetAddArticleText(nTextSize);
 	if (pAddText)
 	{
-		mNntpTransact->AddPostData("text/plain", "\padd text", pAddText, nTextSize); // take ownership of pAddText
+		mNntpTransact->AddPostData("text/plain", "\x08" "add text", pAddText, nTextSize); // take ownership of pAddText
 		outSynchSize += nTextSize;
 	}
 
@@ -1172,7 +1172,7 @@ bool CMySynchGroupTask::SynchArticle2(Uint32& outSynchSize)
 
 	Uint8 psMsg[256];
 	psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, 
-					"---> Synchronizing article “%#s” (%#s)", 
+					"---> Synchronizing article \xd2%#s\xd3 (%#s)", 
 					stArticleInfo.psArticleName, psDataSize);
 	ShowProgress(mTreeIndex1, mArticleIDsTree1.GetTreeCount(), psMsg);
 
@@ -1193,7 +1193,7 @@ bool CMySynchGroupTask::SynchArticle2(Uint32& outSynchSize)
 		if (!nArticleID)
 		{
 			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, 
-							"Error: Article “%#s” corrupt", 
+							"Error: Article \xd2%#s\xd3 corrupt", 
 							stArticleInfo.psArticleName);
 			AddLog(psMsg);
 
@@ -1203,7 +1203,7 @@ bool CMySynchGroupTask::SynchArticle2(Uint32& outSynchSize)
 	catch (...)
 	{
 		psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, 
-						"Error: Article “%#s” corrupt", 
+						"Error: Article \xd2%#s\xd3 corrupt", 
 						stArticleInfo.psArticleName);
 		AddLog(psMsg);
 
@@ -1227,7 +1227,7 @@ bool CMySynchGroupTask::SynchArticle2(Uint32& outSynchSize)
 		}
 		catch (...)
 		{
-			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Error: Article “%#s” corrupt", stArticleInfo.psArticleName);
+			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Error: Article \xd2%#s\xd3 corrupt", stArticleInfo.psArticleName);
 			AddLog(psMsg);
 	
 			return false;
@@ -1244,7 +1244,7 @@ void CMySynchGroupTask::MakeMaxArticles()
 		return;
 
 	Uint32 nPurgeCount = 0;
-	ShowProgress(0, 1, "\pPurging old articles...");
+	ShowProgress(0, 1, "\x17" "Purging old articles...");
 
 	Uint32 nArticleCount = 0;
 
@@ -1356,7 +1356,7 @@ void CMySynchGroupTask::MakeMaxArticles()
 						}
 						catch (...)
 						{
-							AddLog("\pError: Purging article failed");
+							AddLog("\x1d" "Error: Purging article failed");
 						}
 						
 						mArticleIDsTree2.RemoveItem(j, false);
@@ -1389,7 +1389,7 @@ void CMySynchGroupTask::PurgeArticles()
 		return;
 
 	Uint32 nPurgeCount = 0;
-	ShowProgress(0, 1, "\pPurging old articles...");
+	ShowProgress(0, 1, "\x17" "Purging old articles...");
 	
 	StNewsDatabase pNewsDatabase(mSynchFile2);
 
@@ -1408,7 +1408,7 @@ void CMySynchGroupTask::PurgeArticles()
 			}
 			catch (...)
 			{
-				AddLog("\pError: Purging article failed");
+				AddLog("\x1d" "Error: Purging article failed");
 			}
 			
 			mArticleIDsTree2.RemoveItem(i, false);
@@ -1430,7 +1430,7 @@ void CMySynchGroupTask::PurgeArticles()
 void CMySynchGroupTask::MarkSynchronized()
 {
 	Uint32 nSynchronizedCount = 0;
-	ShowProgress(0, 1, "\pSearching articles already synchronized...");
+	ShowProgress(0, 1, "\x2a" "Searching articles already synchronized...");
 
 	Uint32 i = 0;
 	SMyArticleIDsInfo2 *pArticleIDsInfo2;
@@ -1512,13 +1512,13 @@ CMySynchGroupTask1::CMySynchGroupTask1(SMyServerInfo& inServerInfo, const Uint8 
 	mSynchFile2->GetName(mGroupName2);
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Synchronizing news groups: “%#s” <--- “%#s”", mGroupName1, mGroupName2);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Synchronizing news groups: \xd2%#s\xd3 <--- \xd2%#s\xd3", mGroupName1, mGroupName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (!mSynchFile2->Exists(&bIsFolder) || bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -1547,13 +1547,13 @@ CMySynchGroupTask1::CMySynchGroupTask1(SMyServerInfo& inServerInfo, const Uint8 
 	mSynchFile2 = UFileSys::New(inGroupFolder, nil, 0, mGroupName2);
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Synchronizing news groups: “%#s” <--- “%#s”", mGroupName1, mGroupName2);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Synchronizing news groups: \xd2%#s\xd3 <--- \xd2%#s\xd3", mGroupName1, mGroupName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (!mSynchFile2->Exists(&bIsFolder) || bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -1597,7 +1597,7 @@ void CMySynchGroupTask1::Process()
 			if (mNntpTransact->IsConnected())
 			{
 				Uint8 psBuf[256];
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName1);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName1);
 				ShowProgress(0, 1, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName1);
@@ -1624,7 +1624,7 @@ void CMySynchGroupTask1::Process()
 				
 				FinishTimerArmed();
 				
-				ShowProgress(0, 1, "\pListing articles...");
+				ShowProgress(0, 1, "\x13" "Listing articles...");
 
 				mNntpTransact->Command_ListArticles();
 				mStage++;
@@ -1654,7 +1654,7 @@ void CMySynchGroupTask1::Process()
 			
 				MarkSynchronized();
 				
-				ShowProgress(0, 1, "\p<--- Starting synchronization...");
+				ShowProgress(0, 1, "\x20" "<--- Starting synchronization...");
 
 				if (!SelectNextArticle2())
 				{
@@ -1749,14 +1749,14 @@ CMySynchGroupTask2::CMySynchGroupTask2(SMyServerInfo& inServerInfo, const Uint8 
 
 	Uint8 psBuf[256];
 	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-					"---> Synchronizing news groups: “%#s” ---> “%#s”", 
+					"---> Synchronizing news groups: \xd2%#s\xd3 ---> \xd2%#s\xd3", 
 					mGroupName1, mGroupName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (mSynchFile2->Exists(&bIsFolder) && bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -1800,14 +1800,14 @@ CMySynchGroupTask2::CMySynchGroupTask2(SMyServerInfo& inServerInfo, const Uint8 
 
 	Uint8 psBuf[256];
 	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-					"---> Synchronizing news groups: “%#s” ---> “%#s”", 
+					"---> Synchronizing news groups: \xd2%#s\xd3 ---> \xd2%#s\xd3", 
 					mGroupName1, mGroupName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (mSynchFile2->Exists(&bIsFolder) && bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -1852,7 +1852,7 @@ void CMySynchGroupTask2::Process()
 			if (mNntpTransact->IsConnected())
 			{
 				Uint8 psBuf[256];
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName1);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName1);
 				ShowProgress(0, 1, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName1);
@@ -1879,7 +1879,7 @@ void CMySynchGroupTask2::Process()
 
 				FinishTimerArmed();
 			
-				ShowProgress(0, 1, "\pListing articles...");
+				ShowProgress(0, 1, "\x13" "Listing articles...");
 
 				mNntpTransact->Command_ListArticles();
 				mStage++;
@@ -1910,7 +1910,7 @@ void CMySynchGroupTask2::Process()
 				MarkSynchronized();
 				MakeMaxArticles();
 
-				ShowProgress(0, 1, "\p---> Starting synchronization...");
+				ShowProgress(0, 1, "\x20" "---> Starting synchronization...");
 
 				if (!SelectNextArticle1() || !CreateGroup2())
 				{
@@ -1978,14 +1978,14 @@ CMySynchGroupTask21::CMySynchGroupTask21(SMyServerInfo& inServerInfo, const Uint
 
 	Uint8 psBuf[256];
 	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-					"<--> Synchronizing news groups: “%#s” <--> “%#s”", 
+					"<--> Synchronizing news groups: \xd2%#s\xd3 <--> \xd2%#s\xd3", 
 					mGroupName1, mGroupName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (mSynchFile2->Exists(&bIsFolder) && bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -2031,14 +2031,14 @@ CMySynchGroupTask21::CMySynchGroupTask21(SMyServerInfo& inServerInfo, const Uint
 
 	Uint8 psBuf[256];
 	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-						"<--> Synchronizing news groups: “%#s” <--> “%#s”", 
+						"<--> Synchronizing news groups: \xd2%#s\xd3 <--> \xd2%#s\xd3", 
 						mGroupName1, mGroupName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (mSynchFile2->Exists(&bIsFolder) && bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", mGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", mGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -2101,7 +2101,7 @@ goFromStart:
 			if (mNntpTransact->IsConnected())
 			{
 				Uint8 psBuf[256];
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName1);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName1);
 				ShowProgress(0, 1, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName1);
@@ -2128,7 +2128,7 @@ goFromStart:
 
 				FinishTimerArmed();
 				
-				ShowProgress(0, 1, "\pListing articles...");
+				ShowProgress(0, 1, "\x13" "Listing articles...");
 
 				mNntpTransact->Command_ListArticles();
 				mStage++;
@@ -2159,7 +2159,7 @@ goFromStart:
 				MarkSynchronized();
 				MakeMaxArticles();
 
-				ShowProgress(0, 1, "\p---> Starting synchronization...");
+				ShowProgress(0, 1, "\x20" "---> Starting synchronization...");
 
 				if (!CreateGroup2())
 				{
@@ -2236,7 +2236,7 @@ goFromStart:
 
 			FinishTimerArmed();
 			
-			ShowProgress(0, 1, "\p<--- Starting synchronization...");
+			ShowProgress(0, 1, "\x20" "<--- Starting synchronization...");
 
 			if (!SelectNextArticle2())
 			{
@@ -2332,13 +2332,13 @@ CMySynchArticleTask1::CMySynchArticleTask1(SMyServerInfo& inServerInfo, const Ui
 	UMemory::Copy(mArticleName2, inArticleName2, inArticleName2[0] + 1);	
 
 	Uint8 psBuf[256];
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Synchronizing article “%#s”", mArticleName2);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Synchronizing article \xd2%#s\xd3", mArticleName2);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (!mSynchFile2->Exists(&bIsFolder) || bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", inGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", inGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -2434,7 +2434,7 @@ void CMySynchArticleTask1::Process()
 
 				if (!mNntpTransact->IsPostingAllowed())
 				{
-					Uint8 *pErrorMsg = "\pError: Posting not allowed";
+					Uint8 *pErrorMsg = "\x1a" "Error: Posting not allowed";
 					ShowProgress(100, 100, pErrorMsg);
 					AddLog(pErrorMsg);
 					
@@ -2442,7 +2442,7 @@ void CMySynchArticleTask1::Process()
 					return;
 				}
 
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName1);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName1);
 				ShowProgress(1, 4, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName1);
@@ -2469,7 +2469,7 @@ void CMySynchArticleTask1::Process()
 			
 				if (!mNntpTransact->IsGroupPostingAllowed())
 				{
-					Uint8 *pErrorMsg = "\pError: Posting not allowed";
+					Uint8 *pErrorMsg = "\x1a" "Error: Posting not allowed";
 					ShowProgress(100, 100, pErrorMsg);
 					AddLog(pErrorMsg);
 					
@@ -2479,7 +2479,7 @@ void CMySynchArticleTask1::Process()
 					
 				FinishTimerArmed();
 				
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Start posting article “%#s”", mArticleName2);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Start posting article \xd2%#s\xd3", mArticleName2);
 				ShowProgress(2, 4, psBuf);
 
 				mNntpTransact->Command_PostArticleStart();
@@ -2553,14 +2553,14 @@ bool CMySynchArticleTask1::SynchArticle1()
 	}
 	catch(...)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article “%#s” corrupt", mArticleName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article \xd2%#s\xd3 corrupt", mArticleName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
 		return false;
 	}
 
-	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Posting article “%#s”", mArticleName2);
+	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "<--- Posting article \xd2%#s\xd3", mArticleName2);
 	ShowProgress(3, 4, psBuf);
 
 	// add parent ID's
@@ -2594,7 +2594,7 @@ bool CMySynchArticleTask1::SynchArticle1()
 			TPtr pData = pNewsDatabase->GetArticleData(mArticleID2, pDataInfo->psName, nDataSize);
 			if (!pData)
 			{
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article “%#s” corrupt", mArticleName2);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article \xd2%#s\xd3 corrupt", mArticleName2);
 				ShowProgress(100, 100, psBuf);
 				AddLog(psBuf);
 
@@ -2606,7 +2606,7 @@ bool CMySynchArticleTask1::SynchArticle1()
 		}
 		catch(...)
 		{
-			psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article “%#s” corrupt", mArticleName2);
+			psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article \xd2%#s\xd3 corrupt", mArticleName2);
 			ShowProgress(100, 100, psBuf);
 			AddLog(psBuf);
 
@@ -2619,7 +2619,7 @@ bool CMySynchArticleTask1::SynchArticle1()
 	void *pAddText = gApp->GetAddArticleText(nTextSize);
 	if (pAddText)
 	{
-		mNntpTransact->AddPostData("text/plain", "\padd text", pAddText, nTextSize); // take ownership of pAddText
+		mNntpTransact->AddPostData("text/plain", "\x08" "add text", pAddText, nTextSize); // take ownership of pAddText
 		mSynchSize1 += nTextSize;
 	}
 
@@ -2642,14 +2642,14 @@ CMySynchArticleTask2::CMySynchArticleTask2(SMyServerInfo& inServerInfo, const Ui
 
 	Uint8 psBuf[256];
 	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-						"---> Synchronizing article “%#s”", 
+						"---> Synchronizing article \xd2%#s\xd3", 
 						mArticleName1);
 	MakeLog(psBuf);
 
 	bool bIsFolder;
 	if (!mSynchFile2->Exists(&bIsFolder) || bIsFolder)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: “%#s” is invalid", inGroupName2);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: \xd2%#s\xd3 is invalid", inGroupName2);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 
@@ -2708,7 +2708,7 @@ void CMySynchArticleTask2::Process()
 
 			if (mNntpTransact->IsConnected())
 			{
-				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group “%#s”", mGroupName1);
+				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Selecting news group \xd2%#s\xd3", mGroupName1);
 				ShowProgress(1, 3, psBuf);
 
 				mNntpTransact->Command_SelectGroup(mGroupName1);
@@ -2736,7 +2736,7 @@ void CMySynchArticleTask2::Process()
 				FinishTimerArmed();
 
 				psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-									"---> Start posting article “%#s”", 
+									"---> Start posting article \xd2%#s\xd3", 
 									mArticleName1);
 				ShowProgress(2, 3, psBuf);
 
@@ -2756,7 +2756,7 @@ void CMySynchArticleTask2::Process()
 					LogSynchronized();
 				else
 				{
-					Uint8 *pErrorMsg = "\pError: Article corrupt";
+					Uint8 *pErrorMsg = "\x16" "Error: Article corrupt";
 					ShowProgress(100, 100, pErrorMsg);
 					AddLog(pErrorMsg);
 				}
@@ -2792,7 +2792,7 @@ bool CMySynchArticleTask2::SynchArticle2()
 
 	Uint8 psBuf[256];
 	psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, 
-						"---> Posting article “%#s”", 
+						"---> Posting article \xd2%#s\xd3", 
 						mArticleName1);
 	ShowProgress(3, 4, psBuf);
 
@@ -2809,7 +2809,7 @@ bool CMySynchArticleTask2::SynchArticle2()
 		nArticleID = pNewsDatabase->AddArticle(mParentID2, stArticleInfo.psArticleName, pPosterName, 0, &stArticleDate, stArticleInfo.psArticleID);
 		if (!nArticleID)
 		{
-			psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article “%#s” corrupt", stArticleInfo.psArticleName);
+			psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article \xd2%#s\xd3 corrupt", stArticleInfo.psArticleName);
 			ShowProgress(100, 100, psBuf);
 			AddLog(psBuf);
 
@@ -2818,7 +2818,7 @@ bool CMySynchArticleTask2::SynchArticle2()
 	}
 	catch (...)
 	{
-		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article “%#s” corrupt", stArticleInfo.psArticleName);
+		psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article \xd2%#s\xd3 corrupt", stArticleInfo.psArticleName);
 		ShowProgress(100, 100, psBuf);
 		AddLog(psBuf);
 	
@@ -2839,7 +2839,7 @@ bool CMySynchArticleTask2::SynchArticle2()
 		}
 		catch (...)
 		{
-			psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article “%#s” corrupt", stArticleInfo.psArticleName);
+			psBuf[0] = UText::Format(psBuf + 1, sizeof(psBuf) - 1, "Error: Article \xd2%#s\xd3 corrupt", stArticleInfo.psArticleName);
 			ShowProgress(100, 100, psBuf);
 			AddLog(psBuf);
 		

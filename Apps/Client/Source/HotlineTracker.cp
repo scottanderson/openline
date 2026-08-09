@@ -27,9 +27,9 @@ CMyServerTreeView::CMyServerTreeView(CViewHandler *inHandler, const SRect& inBou
 	mBigDesc[0] = 0;
 
 	// set headers
-	AddTab("\pName", 80, 80);
-	AddTab("\pStatus", 1, 1, align_CenterHoriz);
-	AddTab("\pDescription");
+	AddTab("\x04" "Name", 80, 80);
+	AddTab("\x06" "Status", 1, 1, align_CenterHoriz);
+	AddTab("\x0b" "Description");
 	SetTabs(70,17,13);
 }
 
@@ -431,7 +431,7 @@ CMyServerWindow::CMyServerWindow(CWindow *inParent)
 #endif
 		
 	// setup window
-	SetTitle("\pServers");
+	SetTitle("\x07" "Servers");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 	SetLimits(300,150);
 		
@@ -441,12 +441,12 @@ CMyServerWindow::CMyServerWindow(CWindow *inParent)
 	
 	CLabelView *labl = new CLabelView(vc, SRect(88,8,135,24));
 	labl->SetFont(kDefaultFont, nil, 9);
-	labl->SetText("\pSearch:");
+	labl->SetText("\x07" "Search:");
 	labl->Show();
 	
 	mServerNumLabl = new CLabelView(vc, SRect(222,8,275,24));
 	mServerNumLabl->SetFont(kDefaultFont, nil, 9);
-	mServerNumLabl->SetText("\p0/0");
+	mServerNumLabl->SetText("\x03" "0/0");
 	mServerNumLabl->SetSizing(sizing_HorizSticky);
 	mServerNumLabl->Show();
 	
@@ -460,31 +460,31 @@ CMyServerWindow::CMyServerWindow(CWindow *inParent)
 	Scr->Show();
 	
 	CIconButtonView *icb  = new CIconButtonView(vc, SRect(3, 3,27,27), viewID_Connect, nil, 411, nil);
-	icb->SetTooltipMsg("\pConnect to Server");
+	icb->SetTooltipMsg("\x11" "Connect to Server");
 	icb->SetID(viewID_Connect);
 	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(30,3,54,27), TrackCmd_AddTracker, nil, 232, nil);
-	icb->SetTooltipMsg("\pAdd Tracker");
+	icb->SetTooltipMsg("\x0b" "Add Tracker");
 	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(57,3,81,27), viewID_Refresh, nil, 205, nil);
 	icb->SetID(viewID_Refresh);
-	icb->SetTooltipMsg("\pRefresh");
+	icb->SetTooltipMsg("\x07" "Refresh");
 	icb->Show();
 	
     // help
 	icb = new CIconButtonView(vc, SRect(276,3,300,27));
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpServers);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
 	  
  	icb = new CIconButtonView(vc, SRect(303,3,327,27), viewID_Delete, nil, 212, nil);
 	icb->SetID(viewID_Delete);
-	icb->SetTooltipMsg("\pDelete");
+	icb->SetTooltipMsg("\x06" "Delete");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Disable();
 	icb->Show();
@@ -531,7 +531,7 @@ CMyTrackServWindow::CMyTrackServWindow(CWindow *inParent)
 #endif
 	
 	// setup window
-	SetTitle("\pNew Account");
+	SetTitle("\x0b" "New Account");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 	
 	// make container view for content
@@ -539,12 +539,12 @@ CMyTrackServWindow::CMyTrackServWindow(CWindow *inParent)
 	vc->Show();
 
 	CBoxView *Box = new CBoxView(vc, SRect(4,5,273,82));
-	Box->SetTitle("\pTracker Info");
+	Box->SetTitle("\x0c" "Tracker Info");
 	Box->SetStyle(boxStyle_Etched);
 	Box->Show();
 	
 	CBoxView *Box2 = new CBoxView(vc, SRect(4,115,273,253));
-	Box2->SetTitle("\pConnection");
+	Box2->SetTitle("\x0a" "Connection");
 	Box2->SetStyle(boxStyle_Etched);
 	Box2->Show();
 	
@@ -588,7 +588,7 @@ CMyTrackServWindow::CMyTrackServWindow(CWindow *inParent)
 //	mDisclose->Show();
 	
 	mGuest = new CCheckBoxView(vc, SRect(22,133,80,148));
-	mGuest->SetTitle("\pGuest");
+	mGuest->SetTitle("\x05" "Guest");
 	mGuest->SetCommandID(TrackCmd_GuestHit);
 	mGuest->SetMark(true);
 	mGuest->SetStyle(1);
@@ -596,7 +596,7 @@ CMyTrackServWindow::CMyTrackServWindow(CWindow *inParent)
 	
 	mAccount = new CCheckBoxView(vc, SRect(22,157,95,171));
 	mAccount->SetCommandID(TrackCmd_AccntHit);
-	mAccount->SetTitle("\pAccount");
+	mAccount->SetTitle("\x07" "Account");
 	mAccount->SetStyle(1);
 	mAccount->Show();
 	
@@ -605,25 +605,25 @@ CMyTrackServWindow::CMyTrackServWindow(CWindow *inParent)
 	
 	// make buttons
 	CButtonView *save, *cancel;
-	SButtons btns[] = {{TrackCmd_SaveTracker, "\pSave", btnOpt_CommandID | btnOpt_Default, &save}, {cmd_Cancel, "\pCancel", btnOpt_CommandID | btnOpt_Cancel, &cancel}};
+	SButtons btns[] = {{TrackCmd_SaveTracker, "\x04" "Save", btnOpt_CommandID | btnOpt_Default, &save}, {cmd_Cancel, "\x06" "Cancel", btnOpt_CommandID | btnOpt_Cancel, &cancel}};
 	CButtonView::BuildButtons(vc, SRect(90,254,270,280), btns);
 	save->SetSizing(sizing_VertSticky+sizing_HorizSticky);
 	cancel->SetSizing(sizing_VertSticky+sizing_HorizSticky);
 
 	CLabelView *name = new CLabelView(vc, SRect(38,27,79,43));
-	name->SetText("\pName:");
+	name->SetText("\x05" "Name:");
 	name->Show();
 	
 	CLabelView *addr = new CLabelView(vc, SRect(26,55,83,70));
-	addr->SetText("\pAddress:");
+	addr->SetText("\x08" "Address:");
 	addr->Show();
 	
 	CLabelView *login = new CLabelView(vc, SRect(46,187,85,202));
-	login->SetText("\pLogin:");
+	login->SetText("\x06" "Login:");
 	login->Show();
 	
 	CLabelView *pass = new CLabelView(vc, SRect(24,217,91,233));
-	pass->SetText("\pPassword:");
+	pass->SetText("\x09" "Password:");
 	pass->Show();
 	
 	// set default to be colapsed
@@ -816,7 +816,7 @@ bool CMyTracker::WindowHit(CWindow *inWindow, const SHitMsgData& inInfo)
 					win->GetPass(psPass);
 				
 					Uint8 psComments[256];
-					pstrcpy(psComments, "\p");
+					pstrcpy(psComments, "\x00" "");
 				
 					short bIsAccount = win->IsAccount();
 
@@ -829,7 +829,7 @@ bool CMyTracker::WindowHit(CWindow *inWindow, const SHitMsgData& inInfo)
 					delete inWindow;
 				}
 				else
-					gApp->DisplayStandardMessage("\pNeed Address", "\pPlease enter the address of this tracker.", icon_Stop, 1);
+					gApp->DisplayStandardMessage("\x0c" "Need Address", "\x29" "Please enter the address of this tracker.", icon_Stop, 1);
 			}
 			}
 			break;
@@ -912,10 +912,10 @@ void CMyTracker::AddBookmarksInTree()
 	pTrackerInfo->SearchName = (Uint8 *)UMemory::New(10);
 	pTrackerInfo->SearchDesc = (Uint8 *)UMemory::New(10);
 		
-	UMemory::Copy(pTrackerInfo->Name, "\pBookmarks", 10);
-	UMemory::Copy(pTrackerInfo->Desc, "\pBookmarks", 10);
-	UMemory::Copy(pTrackerInfo->SearchName, "\pBookmarks", 10);
-	UMemory::Copy(pTrackerInfo->SearchDesc, "\pBookmarks", 10);
+	UMemory::Copy(pTrackerInfo->Name, "\x09" "Bookmarks", 10);
+	UMemory::Copy(pTrackerInfo->Desc, "\x09" "Bookmarks", 10);
+	UMemory::Copy(pTrackerInfo->SearchName, "\x09" "Bookmarks", 10);
+	UMemory::Copy(pTrackerInfo->SearchDesc, "\x09" "Bookmarks", 10);
 
 	mServerTree.AddItem(0, pTrackerInfo);
 	mServerTreeView->AddTracker(pTrackerInfo);
@@ -1021,8 +1021,8 @@ void CMyTracker::AddServerInTree(Uint32 inParentIndex, Uint32 inParentIndexView,
 	pstrcpy(pServerInfo->Name, inName);
 	pstrcpy(pServerInfo->Desc, inDesc);
 	
-	Uint8 bufName[256] = "\p";
-	Uint8 bufDesc[256] = "\p";
+	Uint8 bufName[256] = "\x00" "";
+	Uint8 bufDesc[256] = "\x00" "";
 		    	
 	pstrcpy(bufName,inName);
 	pstrcpy(bufDesc,inDesc);
@@ -1041,7 +1041,7 @@ void CMyTracker::AddServerInTree(Uint32 inParentIndex, Uint32 inParentIndexView,
 	
 	mServerTree.AddItem(inParentIndex, pServerInfo);
 	
-	Uint8 FilterText[256] = "\p";
+	Uint8 FilterText[256] = "\x00" "";
 	mServerWin->GetFilterText(FilterText);
 	
 	if (FilterText[0])
@@ -1268,10 +1268,10 @@ void CMyTracker::RemoveSelectedItem()
 			
 		// add the ".hbm" to the file name
 	#if WIN32
-		pstrcat(psBookmarkName, "\p.hbm");
+		pstrcat(psBookmarkName, "\x04" ".hbm");
 	#endif
 
-		StFileSysRef pBookmarkFile(kProgramFolder, "\pBookmarks", psBookmarkName, fsOption_RequireExistingFile);
+		StFileSysRef pBookmarkFile(kProgramFolder, "\x09" "Bookmarks", psBookmarkName, fsOption_RequireExistingFile);
 		if (pBookmarkFile.IsValid())
 		{
 			pBookmarkFile->MoveToTrash();
@@ -1290,9 +1290,9 @@ void CMyTracker::SetServerCountLabel()
 	Uint32 nTotalCount = mServerTree.GetTreeCount() - mServerTree.GetRootCount();
     Uint32 nListCount = mServerTreeView->GetTotalServerCount() - mServerTreeView->GetRootCount();
     
-    Uint8 Status[256] = "\p";
-    Uint8 LCText[256] = "\p";
-    Uint8 TCText[256] = "\p";
+    Uint8 Status[256] = "\x00" "";
+    Uint8 LCText[256] = "\x00" "";
+    Uint8 TCText[256] = "\x00" "";
     LCText[0] = UText::IntegerToText(LCText+1, 255, nListCount);
     TCText[0] = UText::IntegerToText(TCText+1, 255, nTotalCount);
     Status[0] = UText::Format(Status+1, 255, "%#s\/%#s", LCText, TCText);
@@ -1327,7 +1327,7 @@ short CMyTracker::FilterServer(Uint8 *inText, SMyServerInfo *inServer)
 	if (!(*inText)) 
 		return true;
 
-    Uint8 bufSearch[256] = "\p";
+    Uint8 bufSearch[256] = "\x00" "";
     
     pstrcpy(bufSearch, inText);
     UText::MakeLowercase(bufSearch+1, bufSearch[0]);
@@ -1402,7 +1402,7 @@ void CMyTracker::FilterServerList(Uint8 *inText)
 			if (inText[1] == '-')
 				goto displayAllServs;
 				
-		    Uint8 bufSearch[256] = "\p";
+		    Uint8 bufSearch[256] = "\x00" "";
 		    
 		    pstrcpy(bufSearch, inText);
 		    UText::MakeLowercase(bufSearch+1, bufSearch[0]);
@@ -1422,7 +1422,7 @@ void CMyTracker::FilterServerList(Uint8 *inText)
 		}
 		else
 		{
-		    Uint8 bufSearch[256] = "\p";
+		    Uint8 bufSearch[256] = "\x00" "";
 		    
 		    pstrcpy(bufSearch, inText);
 		    UText::MakeLowercase(bufSearch+1, bufSearch[0]);
@@ -1533,17 +1533,17 @@ bool CMyTracker::RefreshBookmarks()
 	
 	try
 	{
-		folder = UFS::New(kProgramFolder, nil, "\pBookmarks", fsOption_PreferExistingFolder);
+		folder = UFS::New(kProgramFolder, nil, "\x09" "Bookmarks", fsOption_PreferExistingFolder);
 		if (!folder)
 		{
-			folder = UFS::New(kProgramFolder, nil, "\pServers", fsOption_PreferExistingFolder);
+			folder = UFS::New(kProgramFolder, nil, "\x07" "Servers", fsOption_PreferExistingFolder);
 			
 			if (!folder)
 			{
 				// create a bookmarks folder if none exists
 				try
 				{
-					folder = UFS::New(kProgramFolder, nil, "\pBookmarks");
+					folder = UFS::New(kProgramFolder, nil, "\x09" "Bookmarks");
 					if(folder)
 					{
 						scopekill(TFSRefObj, folder);
@@ -1555,7 +1555,7 @@ bool CMyTracker::RefreshBookmarks()
 				return false;
 			}
 			
-			folder->SetName("\pBookmarks");
+			folder->SetName("\x09" "Bookmarks");
 		}
 	}
 	catch(...)
@@ -1654,9 +1654,9 @@ void CMyTracker::RefreshTrackers()
 			if (pTrackerInfo->hasAccount)
 				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, pTrackerInfo->Login, pTrackerInfo->Pass);
 			else
-				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, "\p", "\p");
+				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, "\x00" "", "\x00" "");
 		
-			SetStatusMsg(pTrackerInfo->nTrackerID, "\pConnecting...");
+			SetStatusMsg(pTrackerInfo->nTrackerID, "\x0d" "Connecting...");
 		}
 		
 		infoPtr++;
@@ -1709,9 +1709,9 @@ void CMyTracker::RefreshTrackers(Uint16 inMods)
 			if (pTrackerInfo->hasAccount)
 				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, pTrackerInfo->Login, pTrackerInfo->Pass);
 			else
-				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, "\p", "\p");
+				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, "\x00" "", "\x00" "");
 		
-			SetStatusMsg(nTrackerID, "\pConnecting...");
+			SetStatusMsg(nTrackerID, "\x0d" "Connecting...");
 			break;
 		}
 	
@@ -1748,9 +1748,9 @@ void CMyTracker::RefreshTracker(Uint16 inTrackerID)
 			if (pTrackerInfo->hasAccount)
 				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, pTrackerInfo->Login, pTrackerInfo->Pass);
 			else
-				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, "\p", "\p");
+				new CMyGetTrackServListTask(pTrackerInfo->Address, pTrackerInfo->Name, pTrackerInfo->nTrackerID, "\x00" "", "\x00" "");
 			
-			SetStatusMsg(pTrackerInfo->nTrackerID, "\pConnecting...");
+			SetStatusMsg(pTrackerInfo->nTrackerID, "\x0d" "Connecting...");
 			break;
 		}
 		
@@ -1769,7 +1769,7 @@ void CMyTracker::SetDefaultTracker()
 		SMyDefTrackerInfo *pTrackerInfo;
 		
 		while (gApp->mOptions.stTrackerList.GetNext(pTrackerInfo, i))
-			AddTrackerInList(pTrackerInfo->psName, "\p", pTrackerInfo->psAddr, "\p", "\p", false, mLastTrackerID++);
+			AddTrackerInList(pTrackerInfo->psName, "\x00" "", pTrackerInfo->psAddr, "\x00" "", "\x00" "", false, mLastTrackerID++);
 	}
 }
 
@@ -1793,10 +1793,10 @@ bool CMyTracker::GetSelectedServInfo(Uint8 *outName, Uint8 *outAddress, Uint8 *o
 	{
 		// add the ".hbm" to the file name
 	#if WIN32
-		pstrcat(outName, "\p.hbm");
+		pstrcat(outName, "\x04" ".hbm");
 	#endif
 
-		StFileSysRef pBookmarkFile(kProgramFolder, "\pBookmarks", outName, fsOption_RequireExistingFile);
+		StFileSysRef pBookmarkFile(kProgramFolder, "\x09" "Bookmarks", outName, fsOption_RequireExistingFile);
 		if (pBookmarkFile.IsValid())
 			gApp->ReadServerFile(pBookmarkFile, outAddress, outLogin, outPassword);
 

@@ -77,7 +77,7 @@ struct _NZ_SGenericBlock
 	Uint32 nextFlav;
 	Uint32 size;
 	Uint8 type[32];		// pstring (max 31 chars for type)
-	Uint8 name[];		// pstring (max 63 chars for name) ("\p.body" for default text)
+	Uint8 name[];		// pstring (max 63 chars for name) ("\x05" ".body" for default text)
 };
 
 struct _NZ_SNewsItemBlock
@@ -85,7 +85,7 @@ struct _NZ_SNewsItemBlock
 	Uint32 nextFlav;
 	Uint32 size;
 	Uint8 type[_NZ_DataType_ItemLen + 1];
-	Uint8 name[8];		// pstring ("\p.header")
+	Uint8 name[8];		// pstring ("\x07" ".header")
 	
 	struct
 	{
@@ -663,7 +663,7 @@ Uint32 CNewsDatabase_v3::AddArticle(Uint32 inParentID, const Uint8 inTitle[], co
 		// header stuff
 		itm->size = TB((Uint32)sizeof(itm->body));
 		pstrcpy(itm->type, _NZ_DataType_Item);
-		pstrcpy(itm->name, "\p.header");
+		pstrcpy(itm->name, "\x07" ".header");
 	
 		// body stuff
 		itm->body.id = head->nextArticleID;	// already in network byte order

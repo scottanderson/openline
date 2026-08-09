@@ -226,15 +226,15 @@ void CMyApplication::StartUp()
 	
 	LoadRezFile();
 
-//	if (!UTransport::IsRegisteredForProtocol("\photline"))
-	UTransport::RegisterProtocol("\photline");
+//	if (!UTransport::IsRegisteredForProtocol("\x07" "hotline"))
+	UTransport::RegisterProtocol("\x07" "hotline");
 
 #if WIN32
-	if (!UExternalApp::IsRegisteredAssociation("\phbm"))
-		UExternalApp::RegisterAssociation("\phbm", "\pHotline Bookmark");
+	if (!UExternalApp::IsRegisteredAssociation("\x03" "hbm"))
+		UExternalApp::RegisterAssociation("\x03" "hbm", "\x10" "Hotline Bookmark");
 	
-	if (!UExternalApp::IsRegisteredAssociation("\phpf"))
-		UExternalApp::RegisterAssociation("\phpf", "\pHotline Partial File");
+	if (!UExternalApp::IsRegisteredAssociation("\x03" "hpf"))
+		UExternalApp::RegisterAssociation("\x03" "hpf", "\x14" "Hotline Partial File");
 #endif
 
 	SRect r;
@@ -321,14 +321,14 @@ void CMyApplication::StartUp()
 #if MACINTOSH
 	// load custom soundset
 	{
-		StFileSysRef soundsetFile(kProgramFolder, nil, "\pSoundset", fsOption_PreferExistingFile);
+		StFileSysRef soundsetFile(kProgramFolder, nil, "\x08" "Soundset", fsOption_PreferExistingFile);
 		if (soundsetFile.IsValid() && soundsetFile->GetTypeCode() == TB((Uint32)'HTss'))
 			_AddResFileToSearchChain(soundsetFile);
 	}
 
 	// load custom icons
 	{
-		StFileSysRef iconsFile(kProgramFolder, nil, "\pUser Icons", fsOption_PreferExistingFile);
+		StFileSysRef iconsFile(kProgramFolder, nil, "\x0a" "User Icons", fsOption_PreferExistingFile);
 		if (iconsFile.IsValid())
 			_AddResFileToSearchChain(iconsFile);
 	}
@@ -1030,48 +1030,48 @@ void CMyApplication::WindowHit(CWindow *inWindow, const SHitMsgData& inInfo)
 			break;
 	    // help buttons from everywhere
 		case viewID_HelpToolbar:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/toolbar.html");
+			UTransport::LaunchURL("\x32" "http://www.hotspringsinc.com/hl19help/toolbar.html");
 			break;
 		case viewID_HelpTasks:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/tasks.html");
+			UTransport::LaunchURL("\x30" "http://www.hotspringsinc.com/hl19help/tasks.html");
 			break;
 		case viewID_HelpNews:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/news.html");
+			UTransport::LaunchURL("\x2f" "http://www.hotspringsinc.com/hl19help/news.html");
 			break;
 		case viewID_HelpFiles:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/files.html");
+			UTransport::LaunchURL("\x30" "http://www.hotspringsinc.com/hl19help/files.html");
 			break;
 		case viewID_HelpUsers:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/users.html");
+			UTransport::LaunchURL("\x30" "http://www.hotspringsinc.com/hl19help/users.html");
 			break;
 		case viewID_HelpChat:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/chat.html");
+			UTransport::LaunchURL("\x2f" "http://www.hotspringsinc.com/hl19help/chat.html");
 			break;
 		case viewID_HelpServers:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/servers.html");
+			UTransport::LaunchURL("\x32" "http://www.hotspringsinc.com/hl19help/servers.html");
 			break;
 		case viewID_HelpPrivateChat:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/privatechat.html");
+			UTransport::LaunchURL("\x36" "http://www.hotspringsinc.com/hl19help/privatechat.html");
 			break;
 		case viewID_HelpPrivateMessage:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/privatemessage.html");
+			UTransport::LaunchURL("\x39" "http://www.hotspringsinc.com/hl19help/privatemessage.html");
 			break;
 		case viewID_HelpBroadcast:
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/broadcast.html");
+			UTransport::LaunchURL("\x34" "http://www.hotspringsinc.com/hl19help/broadcast.html");
 			break;
 		case viewID_OpenDloadFolder:
 			DoOpenDloadFolder();
 			break;
 		case viewID_ISP:
-//			UTransport::LaunchURL("\phttp://www.hotlineisp.com");
-//			UTransport::LaunchURL("\phttp://join.hotlineisp.com/preregisterhlisp.asp?ID=139&refID=&u1=&u2=/");
-			UTransport::LaunchURL("\phttp://join.hotlineisp.com");
+//			UTransport::LaunchURL("\x19" "http://www.hotlineisp.com");
+//			UTransport::LaunchURL("\x46" "http://join.hotlineisp.com/preregisterhlisp.asp?ID=139&refID=&u1=&u2=/");
+			UTransport::LaunchURL("\x1a" "http://join.hotlineisp.com");
 			break;
 		case viewID_Securiphone:
 			DoLaunchSecuriphone();
 			break;
 		case viewID_Xsprings:
-			UTransport::LaunchURL("\phttp://www.crossprings.com");
+			UTransport::LaunchURL("\x1a" "http://www.crossprings.com");
 			break;
 
 
@@ -1272,11 +1272,11 @@ void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inD
 			break;
 
 		case 1100:
-			DisplayStandardMessage("\pServer Message", inData, inDataSize, icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", inData, inDataSize, icon_Caution, 1);
 			break;
 		
 		case 1102:
-			DisplayStandardMessage("\pAdministrator Message", inData, inDataSize, icon_Note, 132, true);
+			DisplayStandardMessage("\x15" "Administrator Message", inData, inDataSize, icon_Note, 132, true);
 			break;
 			
 		case 1101:
@@ -1352,11 +1352,11 @@ void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inD
 			psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "Do you want to connect to the %#s Hotline Server?", mOptions.psAutoconnectName);
 
 			mb.icon = 1001;
-			mb.title = "\pConnect";			
+			mb.title = "\x07" "Connect";			
 			mb.messageSize = psMessage[0];
 			mb.messageData = psMessage + 1;
-			mb.button1 = "\pConnect";
-			mb.button2 = "\pCancel";
+			mb.button1 = "\x07" "Connect";
+			mb.button2 = "\x06" "Cancel";
 			
 			if (MsgBox(mb) == 1)
 				DoConnect(mOptions.psAutoconnectAddr, mOptions.psAutoconnectName);
@@ -1526,7 +1526,7 @@ void CMyApplication::DoWizard()
 	// make "enter name" tab
 	CContainerView *pNameCont = new CContainerView(nil, SRect(0,0,340,240));
 	CLabelView *lbl = new CLabelView(pNameCont, SRect(30,20,310,50));
-	lbl->SetText("\pEnter the name you want to use on Hotline.");
+	lbl->SetText("\x2a" "Enter the name you want to use on Hotline.");
 	lbl->Show();
 
 	// make name text box
@@ -1540,7 +1540,7 @@ void CMyApplication::DoWizard()
 
 	// make "select icon" tab
 	CMyOptIconTab *pIconTab = new CMyOptIconTab(SPoint(14,10));
-	pIconTab->SetText("\pClick an icon to select it. It will appear next to your name in the Users window.");
+	pIconTab->SetText("\x51" "Click an icon to select it. It will appear next to your name in the Users window.");
 	pIconTab->SetIconID(mIconID);
 
 	// make "finish" tab
@@ -1559,7 +1559,7 @@ void CMyApplication::DoWizard()
 
 	// make wizard window
 	CWizard wiz;
-	wiz.SetTitle("\pWelcome to Hotline!");
+	wiz.SetTitle("\x13" "Welcome to Hotline!");
 		
 	wiz.AddPane(pWelcomeLabel);
 	wiz.AddPane(pNameCont);
@@ -1574,7 +1574,7 @@ void CMyApplication::DoWizard()
 		UText::ReplaceNonPrinting(psUserName + 1, psUserName[0], 0, '*', 1);
 
 		if (psUserName[0] == 0 || (psUserName[0] == 1 && psUserName[1] == ' '))
-			UMemory::Copy(mUserName, "\punnamed", 8);
+			UMemory::Copy(mUserName, "\x07" "unnamed", 8);
 		else	
 			UMemory::Copy(mUserName, psUserName, psUserName[0] + 1);
 
@@ -1584,7 +1584,7 @@ void CMyApplication::DoWizard()
 		if (mOptions.bCustomDist && mOptions.bAutoconnectFirstLaunch && mOptions.psAutoconnectAddr[0])
 			DoConnect(mOptions.psAutoconnectAddr, mOptions.psAutoconnectName);
 		else
-			DoConnect("\phlserver.com", "\phlserver");
+			DoConnect("\x0c" "hlserver.com", "\x08" "hlserver");
 	}
 	
 	if (mTracker)
@@ -1739,7 +1739,7 @@ bool CMyApplication::DoOptions()
 		else if (id == 6)						// Sound
 			win.UpdateSoundChecks();
 		else if (id == viewID_HelpOptions)
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/options.html");
+			UTransport::LaunchURL("\x32" "http://www.hotspringsinc.com/hl19help/options.html");
 	}
 	
 	return false;
@@ -1765,7 +1765,7 @@ void CMyApplication::DoBroadcast()
 	// check access
 	if (!HasGeneralPriv(myAcc_Broadcast))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to broadcast.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x21" "You are not allowed to broadcast.", icon_Caution, 1);
 		return;
 	}
 
@@ -1798,7 +1798,7 @@ void CMyApplication::DoBroadcast()
 			break;
 		}
 		else if (id == viewID_HelpBroadcast)
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/broadcast.html");
+			UTransport::LaunchURL("\x34" "http://www.hotspringsinc.com/hl19help/broadcast.html");
 	}
 }
 
@@ -1810,7 +1810,7 @@ void CMyApplication::DoOldPostNewsWin()
 	// check access
 	if (!HasGeneralPriv(myAcc_NewsPostArt))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to post news.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x21" "You are not allowed to post news.", icon_Caution, 1);
 		return;
 	}
 
@@ -1882,14 +1882,14 @@ void CMyApplication::DoShowConnect(const Uint8 *inAddress, const Uint8 *inUserLo
 		{
 			win.GetInfo(psAddress, nil, nil);
 			if (!psAddress[0]) 
-				pstrcpy(psAddress, "\pUntitled");
+				pstrcpy(psAddress, "\x08" "Untitled");
 			
 		#if WIN32
-			pstrcat(psAddress, "\p.hbm");
+			pstrcat(psAddress, "\x04" ".hbm");
 		#endif
 			
-			StFileSysRef pBookmarkFolder(kProgramFolder, nil, "\pBookmarks", fsOption_PreferExistingFolder);
-			TFSRefObj* fp = UFS::UserSaveFile(pBookmarkFolder, psAddress, "\pSave Bookmark As:");
+			StFileSysRef pBookmarkFolder(kProgramFolder, nil, "\x09" "Bookmarks", fsOption_PreferExistingFolder);
+			TFSRefObj* fp = UFS::UserSaveFile(pBookmarkFolder, psAddress, "\x11" "Save Bookmark As:");
 			
 			if (fp)
 			{
@@ -1939,7 +1939,7 @@ void CMyApplication::DoConnect(const Uint8 *inAddress, const Uint8 *inServerName
 		mUserPassword[0] = 0;
 
 	// check if inAddress has hotline: and don't copy it if it does
-	const Uint8 hlProtoPrefx[] = "\photline:";
+	const Uint8 hlProtoPrefx[] = "\x08" "hotline:";
 	Uint8 *pStartAddress = UText::SearchInsensitive(hlProtoPrefx + 1, hlProtoPrefx[0], inAddress + 1, inAddress[0]);
 	
 	Uint8 bufAddress[256];
@@ -2034,7 +2034,7 @@ void CMyApplication::DoChatSend(bool inAction)
 	
 	if (!HasGeneralPriv(myAcc_SendChat))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to participate in chat.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to participate in chat.", icon_Caution, 1);
 		return;
 	}
 
@@ -2053,11 +2053,11 @@ void CMyApplication::DoChatSend(bool inAction)
 	{
 		switch (UMath::GetRandom(1, 5))
 		{
-			case 1:		p = "\pdoze frogz are gunna pay";	break;
-			case 2:		p = "\ppork pork";					break;
-			case 3:		p = "\ppork pork pork";				break;
-			case 4:		p = "\ppork pork pork pork";		break;
-			default:	p = "\ppork";						break;
+			case 1:		p = "\x18" "doze frogz are gunna pay";	break;
+			case 2:		p = "\x09" "pork pork";					break;
+			case 3:		p = "\x0e" "pork pork pork";				break;
+			case 4:		p = "\x13" "pork pork pork pork";		break;
+			default:	p = "\x04" "pork";						break;
 		}
 		fieldData->AddPString(myField_Data, p);
 		mTpt->SendTransaction(myTran_ChatSend, fieldData);
@@ -2117,7 +2117,7 @@ void CMyApplication::DoPrivChatSend(CMyPrivateChatWin *inWin, bool inAction)
 	
 	if (!HasGeneralPriv(myAcc_SendChat))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to participate in chat.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to participate in chat.", icon_Caution, 1);
 		return;
 	}
 
@@ -2230,11 +2230,11 @@ void CMyApplication::DoSaveServerBookmark()
 		UMemory::Copy(psFileName, psAddress, psAddress[0] + 1);
 
 #if WIN32
-	pstrcat(psFileName, "\p.hbm");
+	pstrcat(psFileName, "\x04" ".hbm");
 #endif
 
-	StFileSysRef pBookmarkFolder(kProgramFolder, nil, "\pBookmarks", fsOption_PreferExistingFolder);
-	TFSRefObj* fp = UFS::UserSaveFile(pBookmarkFolder, psFileName, "\pSave Bookmark As:");
+	StFileSysRef pBookmarkFolder(kProgramFolder, nil, "\x09" "Bookmarks", fsOption_PreferExistingFolder);
+	TFSRefObj* fp = UFS::UserSaveFile(pBookmarkFolder, psFileName, "\x11" "Save Bookmark As:");
 			
 	if (fp)
 	{
@@ -2256,7 +2256,7 @@ void CMyApplication::DoFileView(const Uint8 *inFileName, const void *inPathData,
 	// check access
 	if (!HasFolderPriv(myAcc_DownloadFile))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to view files.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x22" "You are not allowed to view files.", icon_Caution, 1);
 		return;
 	}
 
@@ -2303,14 +2303,14 @@ void CMyApplication::DoFileView(const Uint8 *inFileName, const void *inPathData,
 	{
 		if (!CQuickTimeView::IsSupported(nTypeCode))
 		{
-			DisplayStandardMessage("\pView", "\pViewing is not implemented for files of this type.", icon_Note);
+			DisplayStandardMessage("\x04" "View", "\x32" "Viewing is not implemented for files of this type.", icon_Note);
 			return;
 		}
 		else
 		{
 			if (!UOperatingSystem::IsQuickTimeAvailable())
 			{
-				DisplayStandardMessage("\pQuickTime", "\pQuickTime is not available.", icon_Caution, 1);
+				DisplayStandardMessage("\x09" "QuickTime", "\x1b" "QuickTime is not available.", icon_Caution, 1);
 				return;
 			}
 		}
@@ -2360,7 +2360,7 @@ void CMyApplication::DoFileDownload(const Uint8 *inFileName,
 	// check access
 	if (!HasFolderPriv(myAcc_DownloadFile) && (mServerVers < 182 || !HasFolderPriv(myAcc_DownloadFolder)))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to download.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x20" "You are not allowed to download.", icon_Caution, 1);
 		return;
 	}
 
@@ -2369,13 +2369,13 @@ void CMyApplication::DoFileDownload(const Uint8 *inFileName,
 	{
 		if (mServerVers >= 182 && !HasFolderPriv(myAcc_DownloadFolder))
 		{
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed to download folders.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x28" "You are not allowed to download folders.", icon_Caution, 1);
 			return;
 		}
 	}
 	else if (!HasFolderPriv(myAcc_DownloadFile))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to download files.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x26" "You are not allowed to download files.", icon_Caution, 1);
 		return;
 	}
 	
@@ -2404,9 +2404,9 @@ void CMyApplication::DoFileDownload(const Uint8 *inFileName,
 		{
 	askDownloadName:
 			if (inIsFolder)
-				fp = UFS::UserSaveFile(dlFolder, psValidatedName, "\pSave Folder As:");
+				fp = UFS::UserSaveFile(dlFolder, psValidatedName, "\x0f" "Save Folder As:");
 			else
-				fp = UFS::UserSaveFile(dlFolder, psValidatedName, "\pSave File As:");
+				fp = UFS::UserSaveFile(dlFolder, psValidatedName, "\x0d" "Save File As:");
 
 			if (fp == nil) 
 				goto alldone;
@@ -2501,7 +2501,7 @@ void CMyApplication::DoFileUpload(CMyFileWin *inWin, const void *inPathData, Uin
 	// check access
 	if (!HasFolderPriv(myAcc_UploadFile))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to upload files.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x24" "You are not allowed to upload files.", icon_Caution, 1);
 		return;
 	}
 
@@ -2539,7 +2539,7 @@ void CMyApplication::DoFileUploadFromDrop(CMyFileWin *inWin, const void *inPathD
 	// check access
 	if (!HasFolderPriv(myAcc_UploadFile) && (mServerVers < 182 || !HasFolderPriv(myAcc_UploadFolder)))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to upload.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x1e" "You are not allowed to upload.", icon_Caution, 1);
 		inWin->ClearUploadList();
 		return;
 	}
@@ -2567,7 +2567,7 @@ void CMyApplication::DoFileUploadFromDrop(CMyFileWin *inWin, const void *inPathD
 					if (bDispMsg)
 					{
 						bDispMsg = false;
-						DisplayStandardMessage("\pServer Message", "\pYou are not allowed to upload folders.", icon_Caution, 1);
+						DisplayStandardMessage("\x0e" "Server Message", "\x26" "You are not allowed to upload folders.", icon_Caution, 1);
 					}
 					
 					continue;
@@ -2578,7 +2578,7 @@ void CMyApplication::DoFileUploadFromDrop(CMyFileWin *inWin, const void *inPathD
 				if (bDispMsg)
 				{
 					bDispMsg = false;
-					DisplayStandardMessage("\pServer Message", "\pYou are not allowed to upload files.", icon_Caution, 1);
+					DisplayStandardMessage("\x0e" "Server Message", "\x24" "You are not allowed to upload files.", icon_Caution, 1);
 				}
 				
 				continue;
@@ -2630,13 +2630,13 @@ void CMyApplication::DoFileMove(CMyItemsWin *inWin, Uint16 inMods, const Uint8 *
 		{
 			if (!HasFolderPriv(myAcc_MakeAlias))
 			{
-				DisplayStandardMessage("\pServer Message", "\pYou are not allowed to make aliases.", icon_Caution, 1);
+				DisplayStandardMessage("\x0e" "Server Message", "\x24" "You are not allowed to make aliases.", icon_Caution, 1);
 				return;
 			}
 		}
 		else if (!HasFolderPriv(myAcc_MakeAlias))
 		{
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed to make aliases.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x24" "You are not allowed to make aliases.", icon_Caution, 1);
 			return;
 		}
 
@@ -2658,7 +2658,7 @@ void CMyApplication::DoFileDelete(const Uint8 *inFileName, const void *inPathDat
 	{
 		if (!HasFolderPriv(myAcc_DeleteFolder))
 		{
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete folders.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x26" "You are not allowed to delete folders.", icon_Caution, 1);
 			return;
 		}
 	}
@@ -2666,7 +2666,7 @@ void CMyApplication::DoFileDelete(const Uint8 *inFileName, const void *inPathDat
 	{
 		if (!HasFolderPriv(myAcc_DeleteFile))
 		{
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete files.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x24" "You are not allowed to delete files.", icon_Caution, 1);
 			return;
 		}
 	}
@@ -2770,7 +2770,7 @@ void CMyApplication::DoFileOpenParent(CMyItemsWin *inWin, Uint16 inMods)
 			else
 			{
 				inWin->SetPathData(nil, 0);
-				inWin->SetTitle("\pFiles");
+				inWin->SetTitle("\x05" "Files");
 				inWin->GetContent();
 			}
 		}
@@ -2843,12 +2843,12 @@ void CMyApplication::DoFileNewFolder(CMyItemsWin *inWin, const void *inPathData,
 	// check access
 	if (!HasFolderPriv(myAcc_CreateFolder))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to create folders.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x26" "You are not allowed to create folders.", icon_Caution, 1);
 		return;
 	}
 
-	CMyNewFolderWin win("\pEnter a name for the new folder:");
-	win.SetTitle("\pCreate Folder");
+	CMyNewFolderWin win("\x20" "Enter a name for the new folder:");
+	win.SetTitle("\x0d" "Create Folder");
 	
 	Uint32 id;
 	Uint8 name[256];
@@ -2902,7 +2902,7 @@ void CMyApplication::DoFileSaveInfo(CMyFileInfoWin *inWin)
 	{
 		if (!HasFolderPriv(myAcc_SetFolderComment))
 		{
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed set comments for folders.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x2d" "You are not allowed set comments for folders.", icon_Caution, 1);
 			return;
 		}
 	}
@@ -2910,7 +2910,7 @@ void CMyApplication::DoFileSaveInfo(CMyFileInfoWin *inWin)
 	{
 		if (!HasFolderPriv(myAcc_SetFileComment))
 		{
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed set comments for files.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed set comments for files.", icon_Caution, 1);
 			return;
 		}
 	}
@@ -3073,17 +3073,17 @@ void CMyApplication::DoNewsFldrTrash(CMyItemsWin *inWin, const Uint8 *inItemName
 	// check access
 	if (inType == 1 && !HasBundlePriv(myAcc_NewsDeleteFldr))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete news bundles.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to delete news bundles.", icon_Caution, 1);
 		return;
 	}
 	
 	if (!HasBundlePriv(myAcc_NewsDeleteCat))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete news categories.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2e" "You are not allowed to delete news categories.", icon_Caution, 1);
 		return;
 	}
 	
-	if (MsgBox(160, inType == 1 ? "\pnews bundle" : "\pnews item", inItemName) == 2)
+	if (MsgBox(160, inType == 1 ? "\x0b" "news bundle" : "\x09" "news item", inItemName) == 2)
 		return;
 		
 	new CMyDeleteNewsFldrItemTask(inItemName, inType, inPathData, inPathSize);
@@ -3097,7 +3097,7 @@ void CMyApplication::DoNewsFldrNewCat(CMyItemsWin *inWin, const void *inPathData
 	// check access
 	if (!HasBundlePriv(myAcc_NewsCreateCat))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to create news categories.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2e" "You are not allowed to create news categories.", icon_Caution, 1);
 		return;
 	}
 
@@ -3134,12 +3134,12 @@ void CMyApplication::DoNewsFldrNewFldr(CMyItemsWin *inWin, const void *inPathDat
 	// check access
 	if (!HasBundlePriv(myAcc_NewsCreateFldr))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to create news bundles.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to create news bundles.", icon_Caution, 1);
 		return;
 	}
 
-	CMyNewFolderWin win("\pEnter a name for the new news bundle:");
-	win.SetTitle("\pCreate News Folder");
+	CMyNewFolderWin win("\x25" "Enter a name for the new news bundle:");
+	win.SetTitle("\x12" "Create News Folder");
 	
 	Uint32 id;
 	Uint8 name[256];
@@ -3189,7 +3189,7 @@ void CMyApplication::DoNewsFldrOpenParent(CMyItemsWin *inWin, Uint16 inMods)
 			else
 			{
 				inWin->SetPathData(nil, 0);
-				inWin->SetTitle("\pNews");
+				inWin->SetTitle("\x04" "News");
 				inWin->GetContent();
 			}
 		}
@@ -3408,7 +3408,7 @@ void CMyApplication::DoNewsCatOpen(const void *inPathData, Uint32 inPathSize, Ui
 	if (!inPathData || !HasBundlePriv(myAcc_NewsReadArt))
 	{
 		UMemory::Dispose((TPtr)inPathData);
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to read articles.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x25" "You are not allowed to read articles.", icon_Caution, 1);
 		return;
 	}
 		
@@ -3455,7 +3455,7 @@ void CMyApplication::DoNewsCatOpen(const void *inPathData, Uint32 inPathSize, Ui
 	// check access
 	if (!inPathData || !HasBundlePriv(myAcc_NewsReadArt))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to read articles.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x25" "You are not allowed to read articles.", icon_Caution, 1);
 		return;
 	}
 
@@ -3505,7 +3505,7 @@ void CMyApplication::DoNewsCatTrash(CMyItemsWin *inWin, const void *inPathData, 
 	// check access
 	if (!inPathData || !HasBundlePriv(myAcc_NewsDeleteArt))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete articles.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x27" "You are not allowed to delete articles.", icon_Caution, 1);
 		return;
 	}
 	
@@ -3527,7 +3527,7 @@ void CMyApplication::DoNewsArticSend(CMyNewsArticTextWin *inWin)
 	// check access
 	if (!path || !HasBundlePriv(myAcc_NewsPostArt))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to post articles.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x25" "You are not allowed to post articles.", icon_Caution, 1);
 		return;
 	}
 	
@@ -3614,21 +3614,21 @@ void CMyApplication::DoNewsNavigateArticle(CMyNewsArticTextWin *inWin, Uint32 in
 	switch(inType)
 	{
 		case viewID_NewsArticGoNext:
-			//msg = "\pGetting next article...";
+			//msg = "\x17" "Getting next article...";
 			prev = inWin->GetArticID();
 			break;
 				
 		case viewID_NewsArticGoPrev:
-			//msg = "\pGetting previous article...";
+			//msg = "\x1b" "Getting previous article...";
 			next = inWin->GetArticID();
 			break;
 		
 		case viewID_NewsArticGoParent:
-			//msg = "\pGetting parent article...";
+			//msg = "\x19" "Getting parent article...";
 			break;
 		
 		case viewID_NewsArticGo1stChild:
-			//msg = "\pGetting first reply...";
+			//msg = "\x16" "Getting first reply...";
 			parent = inWin->GetArticID();
 			break;
 		
@@ -3743,7 +3743,7 @@ void CMyApplication::DoAbout()
 							kClientVersion " ( %#s )", 
 							mOptions.psBuildName);
 		else
-			pstrcpy(psVersion, "\p" kClientVersion);
+			pstrcpy(psVersion, "\x00" "" kClientVersion);
 	
 //		mAboutWin = MakeClickPicWin(SRect(0, 0, winWidth, winHeight), 130, psVersion);
 		mAboutWin = MakeClickPicWin(SRect(0, 0, winWidth, winHeight), 130, nil);
@@ -3829,7 +3829,7 @@ void CMyApplication::DoSendPrivMsg(Uint32 inUserID, const Uint8 *inUserName)
 	// check access
 	if (mServerVers >= 182 && !HasGeneralPriv(myAcc_SendMessage))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to send private messages.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2d" "You are not allowed to send private messages.", icon_Caution, 1);
 		return;
 	}
 	
@@ -3856,7 +3856,7 @@ void CMyApplication::DoSendPrivMsg(Uint32 inUserID, const Uint8 *inUserName)
 					void *pMsg;
 					StHandleLocker locker(hMsg, pMsg);
 					
-					mChatLog.AppendLog("\pPrivMsg", inUserName, (Uint8*)pMsg,nMsgSize);
+					mChatLog.AppendLog("\x07" "PrivMsg", inUserName, (Uint8*)pMsg,nMsgSize);
 					
 					new CMySendPrivMsgTask(inUserID, pMsg, nMsgSize, myOpt_UserMessage);
 				}
@@ -3876,7 +3876,7 @@ void CMyApplication::DoSendPrivMsg(Uint32 inUserID, const Uint8 *inUserName)
 		else if (id == 2)
 			break;
 		else if (id == viewID_HelpPrivateMessage)
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/privatemessage.html");
+			UTransport::LaunchURL("\x39" "http://www.hotspringsinc.com/hl19help/privatemessage.html");
 	}
 	
 	if (win)
@@ -3888,14 +3888,14 @@ void CMyApplication::DoReplyPrivMsg(CMyPrivMsgWin *inWin)
 	// check connection
 	if (!IsConnected())
 	{
-		DisplayStandardMessage("\pConnection Closed", "\pYou are no longer connected to the Server.", icon_Stop, 1);
+		DisplayStandardMessage("\x11" "Connection Closed", "\x2a" "You are no longer connected to the Server.", icon_Stop, 1);
 		return;
 	}
 	
 	// check access
 	if (mServerVers >= 182 && !HasGeneralPriv(myAcc_SendMessage))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to send private messages.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2d" "You are not allowed to send private messages.", icon_Caution, 1);
 		return;
 	}
 
@@ -3908,7 +3908,7 @@ void CMyApplication::DoReplyPrivMsg(CMyPrivMsgWin *inWin)
 	{
 		Uint8 psMessage[256];
 		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "The user %#s is no longer connected to the Server.", psUserName);
-		DisplayStandardMessage("\pServer Message", psMessage, icon_Stop, 1);
+		DisplayStandardMessage("\x0e" "Server Message", psMessage, icon_Stop, 1);
 		return;
 	}
 		
@@ -3970,7 +3970,7 @@ void CMyApplication::DoReplyPrivMsg(CMyPrivMsgWin *inWin)
 		else if (id == 2)
 			break;
 		else if (id == viewID_HelpPrivateMessage)
-			UTransport::LaunchURL("\phttp://www.hotspringsinc.com/hl19help/privatemessage.html");
+			UTransport::LaunchURL("\x39" "http://www.hotspringsinc.com/hl19help/privatemessage.html");
 	}
 	
 	if (win)
@@ -4015,7 +4015,7 @@ void CMyApplication::DoDisconnectUser(Uint16 inMods)
 	// check access
 	if (!HasGeneralPriv(myAcc_DisconUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to disconnect users.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x28" "You are not allowed to disconnect users.", icon_Caution, 1);
 		return;
 	}
 	
@@ -4045,7 +4045,7 @@ void CMyApplication::DoDisconnectUser(CMyUserInfoWin *inWin, Uint16 inMods)
 	// check access
 	if (!HasGeneralPriv(myAcc_DisconUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to disconnect users.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x28" "You are not allowed to disconnect users.", icon_Caution, 1);
 		return;
 	}
 	
@@ -4089,7 +4089,7 @@ void CMyApplication::DoGetClientInfo(Uint16 inUserID, const Uint8 *inUserName)
 	// check access
 	if (!HasGeneralPriv(myAcc_GetClientInfo))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to get client information.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2e" "You are not allowed to get client information.", icon_Caution, 1);
 		return;
 	}
 
@@ -4121,7 +4121,7 @@ void CMyApplication::DoUserInfoRefresh(CMyUserInfoWin *inWin)
 	// check access
 	if (!HasGeneralPriv(myAcc_GetClientInfo))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to get client information.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2e" "You are not allowed to get client information.", icon_Caution, 1);
 		return;
 	}
 
@@ -4185,7 +4185,7 @@ void CMyApplication::DoShowMessage(TFieldData inData)
 		}
 		
 		// log this message if logging enabled
-		mChatLog.AppendLog("\pPrivMsg", userName, (Uint8*)pMsg,nMsgSize);
+		mChatLog.AppendLog("\x07" "PrivMsg", userName, (Uint8*)pMsg,nMsgSize);
 		
 		// create window
 		win = new CMyPrivMsgWin(mAuxParentWin, bIsAutomaticResponse);  // if is an automatic response don't show Reply button
@@ -4306,11 +4306,11 @@ void CMyApplication::DoSecret()
 					Uint8 *p;
 					
 					if (mTotalBytesUploaded == 0 && mTotalBytesDownloaded == 0)
-						p = "\pannounces a LEECH RATING of >>>> 0";
+						p = "\x22" "announces a LEECH RATING of >>>> 0";
 					if (mTotalBytesUploaded == 0)
-						p = "\pannounces a LEECH RATING of >>>> ∞";
+						p = "\x22" "announces a LEECH RATING of >>>> \xb0";
 					else if (mTotalBytesDownloaded == 0)
-						p = "\pannounces a LEECH RATING of >>>> -∞";
+						p = "\x23" "announces a LEECH RATING of >>>> -\xb0";
 					else
 					{
 						if (mTotalBytesDownloaded > mTotalBytesUploaded)
@@ -4351,7 +4351,7 @@ void CMyApplication::DoSecret()
 					chat[0] = UText::SizeToText(mTotalChatBytes, chat+1, sizeof(chat)-1, kSmallKilobyteFrac);
 					online[0] = UText::SecondsToText(mTotalSecsOnline, online+1, sizeof(online)-1);
 
-					str[0] = UText::Format(str+1, sizeof(str)-1, "%#s %#s, %#s uploaded, %#s chat, %#s online", down, mIsLeechMode ? "\pleeched" : "\pdownloaded", up, chat, online);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "%#s %#s, %#s uploaded, %#s chat, %#s online", down, mIsLeechMode ? "\x07" "leeched" : "\x0a" "downloaded", up, chat, online);
 
 					StFieldData fieldData;
 					fieldData->AddPString(myField_Data, str);
@@ -4373,10 +4373,10 @@ void CMyApplication::DoSecret()
 					Uint16 numC = val[3] - 48;
 					
 					InitSubsTable(mScramTable);
-					BuildSubsTable("\pbcdfghjklmnpqrstvwxyz", numA, numB, numC, mScramTable);
-					BuildSubsTable("\pBCDFGHJKLMNPQRSTVWXYZ", numA, numB, numC, mScramTable);
-					BuildSubsTable("\paeiouäáâéëêîïíöøüûú", numA, numB, numC, mScramTable);
-					BuildSubsTable("\p0123456789", numA, numB, numC, mScramTable);
+					BuildSubsTable("\x15" "bcdfghjklmnpqrstvwxyz", numA, numB, numC, mScramTable);
+					BuildSubsTable("\x15" "BCDFGHJKLMNPQRSTVWXYZ", numA, numB, numC, mScramTable);
+					BuildSubsTable("\x13" "aeiou\x8a\x87\x89\x8e\x91\x90\x94\x95\x92\x9a\xbf\x9f\x9e\x9c", numA, numB, numC, mScramTable);
+					BuildSubsTable("\x0a" "0123456789", numA, numB, numC, mScramTable);
 					ReverseSubsTable(mScramTable, mUnscramTable);
 					
 					mScramChat = true;
@@ -4394,7 +4394,7 @@ void CMyApplication::DoSecret()
 				{
 					StFieldData fieldData;
 					fieldData->AddInteger(myField_UserIconID, 154);
-					fieldData->AddPString(myField_UserName, "\pBacon");
+					fieldData->AddPString(myField_UserName, "\x05" "Bacon");
 					
 					mTpt->SendTransaction(myTran_SetClientUserInfo, fieldData);
 					mPorkMode = true;
@@ -4595,7 +4595,7 @@ void CMyApplication::DoShowNewsWin()
 	try
 	{
 		if (mWindowPat) win->SetPattern(mWindowPat);
-		win->SetTitle("\pNews");
+		win->SetTitle("\x04" "News");
 		win->SetAutoBounds(windowPos_Unobstructed, windowPosOn_WinScreen);
 		win->Show();
 	}
@@ -4901,7 +4901,7 @@ void CMyApplication::DoOpenUserList()
 		if (HasGeneralPriv(myAcc_CreateUser))
 			ShowAdminWin(nil);
 		else
-			DisplayStandardMessage("\pServer Message", "\pYou are not allowed to administer accounts.", icon_Caution, 1);
+			DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to administer accounts.", icon_Caution, 1);
 		
 		return;
 	}
@@ -4917,7 +4917,7 @@ void CMyApplication::DoAdminNewUser()
 	// check access
 	if (!HasGeneralPriv(myAcc_CreateUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to create new accounts.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to create new accounts.", icon_Caution, 1);
 		return;
 	}
 
@@ -4952,7 +4952,7 @@ void CMyApplication::DoAdminNewUser()
 			
 			// check name
 			if (psName[0] == 0)
-				UMemory::Copy(psName, "\punnamed", 8);
+				UMemory::Copy(psName, "\x07" "unnamed", 8);
 
 			if (mAdminWin->AddNewUser(psName, psLogin, psPass))
 				break;
@@ -4970,7 +4970,7 @@ void CMyApplication::DoAdminOpenUser()
 	// check access
 	if (!HasGeneralPriv(myAcc_OpenUser) && !HasGeneralPriv(myAcc_CreateUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to get account information.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2f" "You are not allowed to get account information.", icon_Caution, 1);
 		return;
 	}
 	
@@ -5008,7 +5008,7 @@ void CMyApplication::DoAdminOpenUser()
 
 			// check name
 			if (psName[0] == 0)
-				UMemory::Copy(psName, "\punnamed", 8);
+				UMemory::Copy(psName, "\x07" "unnamed", 8);
 
 			// check if the password has not changed
 			if (win.IsDummyPassword())
@@ -5041,7 +5041,7 @@ void CMyApplication::DoAdminSaveUsers()
 	// check access
 	if (!HasGeneralPriv(myAcc_CreateUser) && !HasGeneralPriv(myAcc_ModifyUser) && !HasGeneralPriv(myAcc_DeleteUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to modify account information.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x32" "You are not allowed to modify account information.", icon_Caution, 1);
 		return;
 	}
 
@@ -5050,15 +5050,15 @@ void CMyApplication::DoAdminSaveUsers()
 		SMsgBox mb;
 		ClearStruct(mb);
 
-		Uint8 *psMessage = "\pSave all the modifications?";
+		Uint8 *psMessage = "\x1b" "Save all the modifications?";
 
 		mb.icon = icon_Caution;
 		mb.sound = 1;
-		mb.title = "\pSave";	
+		mb.title = "\x04" "Save";	
 		mb.messageSize = psMessage[0];
 		mb.messageData = psMessage + 1;
-		mb.button1 = "\pSave";
-		mb.button2 = "\pCancel";
+		mb.button1 = "\x04" "Save";
+		mb.button2 = "\x06" "Cancel";
 			
 		Uint16 nRet = MsgBox(mb);
 		if (nRet == 2)
@@ -5074,7 +5074,7 @@ void CMyApplication::DoAdminSaveUsers()
 		}
 	}
 	else
-		DisplayStandardMessage("\pSave", "\pNo modification to save.", icon_Stop, 1);	
+		DisplayStandardMessage("\x04" "Save", "\x18" "No modification to save.", icon_Stop, 1);	
 }
 
 void CMyApplication::DoAdminRevertUsers()
@@ -5087,15 +5087,15 @@ void CMyApplication::DoAdminRevertUsers()
 		SMsgBox mb;
 		ClearStruct(mb);
 
-		Uint8 *psMessage = "\pRevert all the modifications?";
+		Uint8 *psMessage = "\x1d" "Revert all the modifications?";
 
 		mb.icon = icon_Caution;
 		mb.sound = 1;
-		mb.title = "\pRevert";	
+		mb.title = "\x06" "Revert";	
 		mb.messageSize = psMessage[0];
 		mb.messageData = psMessage + 1;
-		mb.button1 = "\pRevert";
-		mb.button2 = "\pCancel";
+		mb.button1 = "\x06" "Revert";
+		mb.button2 = "\x06" "Cancel";
 			
 		Uint16 nRet = MsgBox(mb);
 		if (nRet == 2)
@@ -5105,7 +5105,7 @@ void CMyApplication::DoAdminRevertUsers()
 			mAdminWin->RevertUserList();
 	}
 	else
-		DisplayStandardMessage("\pRevert", "\pNo modification to revert.", icon_Stop, 1);		
+		DisplayStandardMessage("\x06" "Revert", "\x1a" "No modification to revert.", icon_Stop, 1);		
 }
 
 void CMyApplication::DoAdminClose()
@@ -5118,16 +5118,16 @@ void CMyApplication::DoAdminClose()
 		SMsgBox mb;
 		ClearStruct(mb);
 
-		Uint8 *psMessage = "\pSave all the modifications?";
+		Uint8 *psMessage = "\x1b" "Save all the modifications?";
 		
 		mb.icon = icon_Caution;
 		mb.sound = 1;
-		mb.title = "\pClose";
+		mb.title = "\x05" "Close";
 		mb.messageSize = psMessage[0];
 		mb.messageData = psMessage + 1;
-		mb.button1 = "\pSave";
-		mb.button2 = "\pDiscard";
-		mb.button3 = "\pCancel";
+		mb.button1 = "\x04" "Save";
+		mb.button2 = "\x07" "Discard";
+		mb.button3 = "\x06" "Cancel";
 			
 		Uint16 nRet = MsgBox(mb);
 		if (nRet == 3)
@@ -5137,7 +5137,7 @@ void CMyApplication::DoAdminClose()
 		{
 			// check access
 			if (!HasGeneralPriv(myAcc_CreateUser) && !HasGeneralPriv(myAcc_ModifyUser) && !HasGeneralPriv(myAcc_DeleteUser))
-				DisplayStandardMessage("\pServer Message", "\pYou are not allowed to modify account information.", icon_Caution, 1);
+				DisplayStandardMessage("\x0e" "Server Message", "\x32" "You are not allowed to modify account information.", icon_Caution, 1);
 			else
 				new CMySetUserListTask(mAdminWin->GetFieldsFromList());
 		}
@@ -5167,7 +5167,7 @@ void CMyApplication::DoNewUser()
 	// check access
 	if (!HasGeneralPriv(myAcc_CreateUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to create new accounts.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2b" "You are not allowed to create new accounts.", icon_Caution, 1);
 		return;
 	}
 
@@ -5193,7 +5193,7 @@ void CMyApplication::DoNewUser()
 
 	win->SetAccess(acc);
 	win->SetNewUser(true);
-	win->SetTitle("\pNew Account");
+	win->SetTitle("\x0b" "New Account");
 	win->HideDeleteButton();
 	
 	pass[0] = 20;
@@ -5222,7 +5222,7 @@ void CMyApplication::DoOpenUser()
 	// check access
 	if (!HasGeneralPriv(myAcc_OpenUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to get account information.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x2f" "You are not allowed to get account information.", icon_Caution, 1);
 		return;
 	}
 	
@@ -5285,7 +5285,7 @@ void CMyApplication::DoSaveEditUser(CMyEditUserWin *inWin)
 
 	// check name
 	if (psName[0] == 0)
-		UMemory::Copy(psName, "\punnamed", 8);
+		UMemory::Copy(psName, "\x07" "unnamed", 8);
 
 	SMyUserAccess stUserAccess;
 	inWin->GetAccess(stUserAccess);
@@ -5327,7 +5327,7 @@ void CMyApplication::DoDeleteEditUser(CMyEditUserWin *inWin)
 	// check access
 	if (!HasGeneralPriv(myAcc_DeleteUser))
 	{
-		DisplayStandardMessage("\pServer Message", "\pYou are not allowed to delete accounts.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x27" "You are not allowed to delete accounts.", icon_Caution, 1);
 		return;
 	}
 
@@ -5495,7 +5495,7 @@ bool _GetLoginPassURLAddress(const void *inText, Uint32 inTextSize, Uint32& outL
 void CMyApplication::DoGoHotlineURL(const void *inText, Uint32 inTextSize)
 {
 	// check if inText has hotline:
-	const Uint8 hlProtoPrefx[] = "\photline:";
+	const Uint8 hlProtoPrefx[] = "\x08" "hotline:";
 	if (inTextSize <= hlProtoPrefx[0] || UText::CompareInsensitive(inText, hlProtoPrefx + 1, hlProtoPrefx[0]))
 		return;
 	
@@ -5709,7 +5709,7 @@ void CMyApplication::DoUpdateVersion()
 			
 			if (updateRef)
 			{
-				DisplayStandardMessage("\pNew Version Available", "\pThere is a new version of Hotline Client.\r\rClick \"Ok\" to begin the download.", 1001, 1);
+				DisplayStandardMessage("\x15" "New Version Available", "\x4c" "There is a new version of Hotline Client.\r\rClick \"Ok\" to begin the download.", 1001, 1);
 
 				TExternalApp app = UExternalApp::LaunchApplication(updateRef);
 				
@@ -5733,19 +5733,19 @@ void CMyApplication::DoUpdateVersion()
 	SMsgBox mb;
 	ClearStruct(mb);
 	
-	Uint8 *psMessage = "\pThere is a new version of Hotline Client.  See http://www.BigRedH.com/update to download.";
+	Uint8 *psMessage = "\x59" "There is a new version of Hotline Client.  See http://www.BigRedH.com/update to download.";
 	
 	mb.icon = 1001;
 	mb.sound = 1;
-	mb.title = "\pNew Version Available";
+	mb.title = "\x15" "New Version Available";
 	mb.messageSize = psMessage[0];
 	mb.messageData = psMessage + 1;
-	mb.button1 = "\pGo!";
-	mb.button2 = "\pCancel";
+	mb.button1 = "\x03" "Go!";
+	mb.button2 = "\x06" "Cancel";
 	
 	if (MsgBox(mb) == 1)
 	{
-		const Uint8 *psUrl = "\phttp://www.BigRedH.com/update";
+		const Uint8 *psUrl = "\x1d" "http://www.BigRedH.com/update";
 		UTransport::LaunchURL(psUrl + 1, psUrl[0]);
 	}
 }
@@ -5761,10 +5761,10 @@ void CMyApplication::DisplayServerName(const Uint8 *inServerName)
 	{
 		mServerName[0] = 0;
 
-		mChatWin->SetTitle("\pChat");
-		mTasksWin->SetTitle("\pTasks");
+		mChatWin->SetTitle("\x04" "Chat");
+		mTasksWin->SetTitle("\x05" "Tasks");
 	#if !NEW_NEWS
-		mOldNewsWin->SetTitle("\pNews");
+		mOldNewsWin->SetTitle("\x04" "News");
 	#endif	
 	}
 	else
@@ -6327,7 +6327,7 @@ void CMyApplication::ShowAdminWin(TFieldData inData)
 		delete mAdminWin;
 		mAdminWin = nil;
 		
-		DisplayStandardMessage("\pServer Message", "\pCannot read account list.", icon_Caution, 1);
+		DisplayStandardMessage("\x0e" "Server Message", "\x19" "Cannot read account list.", icon_Caution, 1);
 		return;
 	}
 	
@@ -6567,14 +6567,14 @@ bool CMyApplication::GetResourceBanner(bool inQuickTimeBanner)
 	{
 		nType = 'MooV';
 		nRealType = 'MooV';
-		psUrl = "\p";
+		psUrl = "\x00" "";
 	}
 	else
 	{
 		nType = 'GIFf';
 		nRealType = 'GIFf';
-		//psUrl = "\phttp://www.bigredh.com/hotline2/1.8/HotAubahn";
-			psUrl = "\phttp://www.hotspringsinc.com";
+		//psUrl = "\x2d" "http://www.bigredh.com/hotline2/1.8/HotAubahn";
+			psUrl = "\x1c" "http://www.hotspringsinc.com";
 	}
 				
 #if MACINTOSH
@@ -6820,7 +6820,7 @@ bool CMyApplication::FindResumableFile(TFSRefObj* inRef, bool inIsFolder)
 
 #if WIN32
 	if (!inIsFolder)
-		pstrcat(psFileName, "\p.hpf");
+		pstrcat(psFileName, "\x04" ".hpf");
 #endif
 
 	if (mResumableFile)
@@ -6958,7 +6958,7 @@ void CMyApplication::SaveServerFile(TFSRefObj* inFile, const Uint8 inAddress[], 
 
 TFSRefObj* CMyApplication::GetDataRef()
 {
-	const Uint8 kMyDataFolderName[] = "\pData";
+	const Uint8 kMyDataFolderName[] = "\x04" "Data";
 	TFSRefObj* fp = UFS::New(kProgramFolder, nil, kMyDataFolderName);
 	
 	if (!fp->Exists())
@@ -6970,10 +6970,10 @@ TFSRefObj* CMyApplication::GetDataRef()
 void CMyApplication::LoadRezFile()
 {
 #if WIN32
-		try { URez::AddProgramFileToSearchChain("\pData//hlc19.dat"); } catch(...){ }
-//	try { URez::AddProgramFileToSearchChain("\pData//hotline.dat"); } catch(...){ }
-//	try { URez::AddProgramFileToSearchChain("\pData//soundset.dat"); } catch(...) { }
-//	try { URez::AddProgramFileToSearchChain("\pData//usericons.dat"); } catch(...) { }
+		try { URez::AddProgramFileToSearchChain("\x0f" "Data//hlc19.dat"); } catch(...){ }
+//	try { URez::AddProgramFileToSearchChain("\x11" "Data//hotline.dat"); } catch(...){ }
+//	try { URez::AddProgramFileToSearchChain("\x12" "Data//soundset.dat"); } catch(...) { }
+//	try { URez::AddProgramFileToSearchChain("\x13" "Data//usericons.dat"); } catch(...) { }
 #endif
 }
 
@@ -6982,7 +6982,7 @@ TFSRefObj* CMyApplication::GetNewsHistRef()
 	TFSRefObj* fpData = GetDataRef();
 	scopekill(TFSRefObj, fpData);
 
-	const Uint8 kMyNewsFileName[] = "\pNews History";
+	const Uint8 kMyNewsFileName[] = "\x0c" "News History";
 	TFSRefObj* fp = UFS::New(fpData, nil, kMyNewsFileName);
 	
 	if (!fp->Exists())
@@ -6999,7 +6999,7 @@ TFSRefObj* CMyApplication::GetNewsHistRef()
 
 TFSRefObj* CMyApplication::GetPrefsRef()
 {
-	const Uint8 kMyPrefsFileName[] = "\pHotline Prefs";
+	const Uint8 kMyPrefsFileName[] = "\x0d" "Hotline Prefs";
 
 	TFSRefObj* fpData = GetDataRef();
 	scopekill(TFSRefObj, fpData);
@@ -7356,7 +7356,7 @@ void CMyApplication::ReadPrefs(SMyPrefs *outPrefs)
 		
 		// set default prefs
 		mIconID = 414;
-		UMemory::Copy(mUserName, "\punnamed", 8);
+		UMemory::Copy(mUserName, "\x07" "unnamed", 8);
 		mTotalBytesUploaded = mTotalBytesDownloaded = mTotalSecsOnline = mTotalChatBytes = 0;
 
 		mOptions.ColorPublicChat = kDefaultColorInfo;
@@ -7380,7 +7380,7 @@ void CMyApplication::ReadPrefs(SMyPrefs *outPrefs)
 
 TFSRefObj* CMyApplication::GetCustomRef()
 {
-	const Uint8 kMyCustomFileName[] = "\pBuild Data";
+	const Uint8 kMyCustomFileName[] = "\x0a" "Build Data";
 
 	TFSRefObj* fpData = GetDataRef();
 	scopekill(TFSRefObj, fpData);
@@ -7475,44 +7475,44 @@ void CMyApplication::ReadCustomInfo()
 		try
 		{
 			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-			pstrcpy(pTrackerInfo->psName, "\pFeatured Servers");
-			pstrcpy(pTrackerInfo->psAddr, "\phltracker.com");
+			pstrcpy(pTrackerInfo->psName, "\x10" "Featured Servers");
+			pstrcpy(pTrackerInfo->psAddr, "\x0d" "hltracker.com");
 			mOptions.stTrackerList.AddItem(pTrackerInfo);
 			pTrackerInfo = nil;
 			
 			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-			pstrcpy(pTrackerInfo->psName, "\pTechnology &Internet");
-			pstrcpy(pTrackerInfo->psAddr, "\ptech.hltracker.com");
+			pstrcpy(pTrackerInfo->psName, "\x14" "Technology &Internet");
+			pstrcpy(pTrackerInfo->psAddr, "\x12" "tech.hltracker.com");
 			mOptions.stTrackerList.AddItem(pTrackerInfo);
 			pTrackerInfo = nil;
 			
 			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-			pstrcpy(pTrackerInfo->psName, "\pMusic");
-			pstrcpy(pTrackerInfo->psAddr, "\pmusic.hltracker.com");
+			pstrcpy(pTrackerInfo->psName, "\x05" "Music");
+			pstrcpy(pTrackerInfo->psAddr, "\x13" "music.hltracker.com");
 			mOptions.stTrackerList.AddItem(pTrackerInfo);
 			pTrackerInfo = nil;
 
 			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-			pstrcpy(pTrackerInfo->psName, "\pDigital Art");
-			pstrcpy(pTrackerInfo->psAddr, "\part.hltracker.com");
+			pstrcpy(pTrackerInfo->psName, "\x0b" "Digital Art");
+			pstrcpy(pTrackerInfo->psAddr, "\x11" "art.hltracker.com");
 			mOptions.stTrackerList.AddItem(pTrackerInfo);
 			pTrackerInfo = nil;
 
 			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-			pstrcpy(pTrackerInfo->psName, "\pGames");
-			pstrcpy(pTrackerInfo->psAddr, "\pgames.hltracker.com");
+			pstrcpy(pTrackerInfo->psName, "\x05" "Games");
+			pstrcpy(pTrackerInfo->psAddr, "\x13" "games.hltracker.com");
 			mOptions.stTrackerList.AddItem(pTrackerInfo);
 			pTrackerInfo = nil;
 
 //			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-//			pstrcpy(pTrackerInfo->psName, "\pChat");
-//			pstrcpy(pTrackerInfo->psAddr, "\pchat.hltracker.com");
+//			pstrcpy(pTrackerInfo->psName, "\x04" "Chat");
+//			pstrcpy(pTrackerInfo->psAddr, "\x12" "chat.hltracker.com");
 //			mOptions.stTrackerList.AddItem(pTrackerInfo);
 //			pTrackerInfo = nil;
 
 //			pTrackerInfo = (SMyDefTrackerInfo *)UMemory::NewClear(sizeof(SMyDefTrackerInfo));
-//			pstrcpy(pTrackerInfo->psName, "\pIdeas");
-//			pstrcpy(pTrackerInfo->psAddr, "\pideas.hltracker.com");
+//			pstrcpy(pTrackerInfo->psName, "\x05" "Ideas");
+//			pstrcpy(pTrackerInfo->psAddr, "\x13" "ideas.hltracker.com");
 //			mOptions.stTrackerList.AddItem(pTrackerInfo);
 //			pTrackerInfo = nil;
 		}
@@ -7536,13 +7536,13 @@ TFSRefObj* CMyApplication::GetDownloadFolder()
 	
 	try
 	{
-		fp = UFS::New(kProgramFolder, nil, "\pLeeched Goods", fsOption_PreferExistingFolder);
+		fp = UFS::New(kProgramFolder, nil, "\x0d" "Leeched Goods", fsOption_PreferExistingFolder);
 		
 		if (fp)
 			mIsLeechMode = true;
 		else
 		{
-			fp = UFS::New(kProgramFolder, nil, "\pDownloads", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
+			fp = UFS::New(kProgramFolder, nil, "\x09" "Downloads", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
 			
 			if (type == fsItemType_NonExistant)
 				fp->CreateFolder();
@@ -7559,7 +7559,7 @@ TFSRefObj* CMyApplication::GetDownloadFolder()
 
 TFSRefObj* CMyApplication::GetCookiesRef()
 {
-	const Uint8 kMyCookiesFileName[] = "\pCookies";
+	const Uint8 kMyCookiesFileName[] = "\x07" "Cookies";
 
 	TFSRefObj* fpData = GetDataRef();
 	scopekill(TFSRefObj, fpData);
@@ -7897,7 +7897,7 @@ void CMyApplication::KillTasksAndDisconnect()
 	}
 	
 	if (mToolbarWin)
-		mToolbarWin->SetStatusText("\pNot Connected");
+		mToolbarWin->SetStatusText("\x0d" "Not Connected");
 	
 	mServerName[0] = 0;
 	
@@ -8427,7 +8427,7 @@ void CMyApplication::ProcessTran_ChatMsg(TFieldData inData)
 			
 			inData->GetField(myField_Data, p, s);
 			
-			mChatLog.AppendLog("\pPrivChat", "\p", (Uint8*)p,s);
+			mChatLog.AppendLog("\x08" "PrivChat", "\x00" "", (Uint8*)p,s);
 			AddChatText(chatWin, p, s, true);			
 		}
 		
@@ -8464,7 +8464,7 @@ void CMyApplication::ProcessTran_ChatMsg(TFieldData inData)
 			if (s == 0) return;
 		}
 		
-		mChatLog.AppendLog("\pChat", "\p", (Uint8*)p,s);
+		mChatLog.AppendLog("\x04" "Chat", "\x00" "", (Uint8*)p,s);
 		v->InsertText(max_Uint32, p, s);
 		v->SetFullHeight();
 		
@@ -8657,7 +8657,7 @@ void CMyApplication::ProcessTran_ShowAgreement(TFieldData inData)
 		THdl hServerBannerUrl = nil;
 		if (GetAgreement(inData, myField_ServerBannerUrl, hServerBannerUrl))
 		{
-			new CMyGetBannerTask("\pLoading Agreement...", hServerBannerUrl, 1105);
+			new CMyGetBannerTask("\x14" "Loading Agreement...", hServerBannerUrl, 1105);
 			UMemory::Dispose(hServerBannerUrl);
 		}
 		else
@@ -8700,7 +8700,7 @@ void CMyApplication::ProcessTran_ServerBanner(TFieldData inData)
 	if (nServerBannerType == TB('URL '))
 	{
 		if (GetAgreement(inData, myField_ServerBannerUrl, hServerBannerUrl))
-			new CMyGetBannerTask("\pLoading Server Banner...", hServerBannerUrl, 1114);
+			new CMyGetBannerTask("\x18" "Loading Server Banner...", hServerBannerUrl, 1114);
 	}
 	else
 	{
@@ -8909,7 +8909,7 @@ void CMyApplication::ProcessTran_UserAccess(TFieldData inData)
 
 void CMyApplication::ProcessTran_UserBroadcast(TFieldData inData)
 {
-	ShowStandardMessage(inData, "\pAdministrator Message", true);
+	ShowStandardMessage(inData, "\x15" "Administrator Message", true);
 }
 
 void CMyApplication::ProcessTran_DownloadInfo(TFieldData inData)
@@ -8935,7 +8935,7 @@ void CMyApplication::DoOpenDloadFolder()
     Uint32 z = UFileSys::GetApplicationURL(name,400);
     if (z>0)
     {
-    	const Uint8 str[] = "\p/Downloads";
+    	const Uint8 str[] = "\x0a" "/Downloads";
     	z += UMemory::Copy(name+z, str+1, min((Uint32)str[0],400-z));
 // 		for (Uint8* b= (Uint8*)"/Downloads"; *b!=0; ++b)
 // 			name[z++] = *b;
@@ -8952,7 +8952,7 @@ void CMyApplication::DoViewDloadFile(Uint8* fName)
     Uint32 z = UFileSys::GetApplicationURL(name,400);
     if (z>0)
     {
-    	const Uint8 str[] = "\p/Downloads/";
+    	const Uint8 str[] = "\x0b" "/Downloads/";
     	z += UMemory::Copy(name+z, str+1, min((Uint32)str[0],400-z));
     	z += UMemory::Copy(name+z, fName+1, min((Uint32)fName[0],400-z));
   		name[z] = 0;
@@ -8991,6 +8991,6 @@ void CMyApplication::DoLaunchSecuriphone()
 #endif
     
     // go to securiphone site
-	UTransport::LaunchURL("\phttp://www.securiphone.info/english/download.html");
+	UTransport::LaunchURL("\x31" "http://www.securiphone.info/english/download.html");
 }
 

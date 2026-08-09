@@ -696,7 +696,7 @@ OSErr _SearchPBCatByName(ConstStr63Param str63Name, short shVRefNum, Boolean boo
 //														search criteria, part 1 & 2
 	CInfoPBRec		cipbrRec_1;
 	CInfoPBRec		cipbrRec_2;
-	Str63			str63FindName = { "\p" };
+	Str63			str63FindName = { "\x00" "" };
 //														each sweep's results storage
 	FSSpec			fsspecHitsArray[ kshSweepMatches ];
 	OSErr			myErr = noErr;
@@ -819,7 +819,7 @@ OSErr _SearchPBCatByName(ConstStr63Param str63Name, short shVRefNum, Boolean boo
 OSErr _AddAppToDesk(FSSpecPtr ptrfsspecApp, OSType ostypeSig)
 {
 	DTPBRec		dtpRec;
-	Str255		str255Dummy = { "\p" };
+	Str255		str255Dummy = { "\x00" "" };
 	OSErr		myErr;
 
 	if (ptrfsspecApp == NULL || ostypeSig <= 0L)
@@ -852,7 +852,7 @@ OSErr _FindFile(ConstStr63Param	str63Name, OSType ostypeCreator, OSType ostypeFi
 	short 		i = 0, 
 				shtHits = 1;
 	VolumeParam	vparamRec;
-	Str63		str63VolName = { "\p" };
+	Str63		str63VolName = { "\x00" "" };
 	Boolean		boolFoundIt = FALSE;
 	OSErr		myErr = noErr,
 				volErr = noErr;
@@ -905,7 +905,7 @@ OSErr _FindApplication(ConstStr63Param 	str63AppName, OSType ostypeCreator, FSSp
 {
 	short 		i = 0;
 	VolumeParam	vparamRec;
-	Str63		str63Name = { "\p" };
+	Str63		str63Name = { "\x00" "" };
 	DTPBRec 		pbdt;
 	long 		lgBytesFree = 0L;
 	OSErr 		myErr = noErr;

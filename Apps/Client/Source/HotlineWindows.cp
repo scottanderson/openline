@@ -16,7 +16,7 @@ CMyOptionsWin::CMyOptionsWin()
 	: CWindow(SRect(0,0,420,336), windowLayer_Modal)
 {
 	// setup window
-	SetTitle("\pOptions");
+	SetTitle("\x07" "Options");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -33,14 +33,14 @@ CMyOptionsWin::CMyOptionsWin()
 
 	// make icons view
 	mViews.iconTab = new CMyOptIconTab(SPoint(40,16));
-	mViews.iconTab->SetText("\pChoose an icon to appear next to your name in user lists:");
+	mViews.iconTab->SetText("\x39" "Choose an icon to appear next to your name in user lists:");
 
 	// add the tabs
-	tabs->AddTab("\pGeneral");
-	tabs->AddTab("\pIcon");
-	tabs->AddTab("\pDisplay");
-	tabs->AddTab("\pSound");
-	tabs->AddTab("\pAdvanced");
+	tabs->AddTab("\x07" "General");
+	tabs->AddTab("\x04" "Icon");
+	tabs->AddTab("\x07" "Display");
+	tabs->AddTab("\x05" "Sound");
+	tabs->AddTab("\x08" "Advanced");
 		
 	// attach views to tabs
 	tabs->SetTabView(1, MakeGeneralTab());
@@ -53,13 +53,13 @@ CMyOptionsWin::CMyOptionsWin()
 
 	// make buttons 	
  	CButtonView *ibh = new CButtonView(vc, SRect(120,302,200,324));
-	ibh->SetTitle("\pHelp");
+	ibh->SetTitle("\x04" "Help");
 	ibh->SetID(viewID_HelpOptions);
 	ibh->Show();
 
 	SButtons btns[] = {
-		{1, "\pSave", btnOpt_Default, nil}, 
-		{2, "\pCancel", btnOpt_Cancel, nil}};
+		{1, "\x04" "Save", btnOpt_Default, nil}, 
+		{2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(210,300,390,326), btns);
 	
 }
@@ -73,7 +73,7 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 	{
 		// make labels
 		CLabelView *lbl = new CLabelView(vc, SRect(20,16,102,32));
-		lbl->SetText("\pYour Name:");
+		lbl->SetText("\x0a" "Your Name:");
 		lbl->Show();
 
 		// make text box
@@ -87,32 +87,32 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make checkboxes
 		CCheckBoxView *chk = new CCheckBoxView(vc, SRect(20,49,370,67));
-		chk->SetTitle("\pQueue File Transfers");
+		chk->SetTitle("\x14" "Queue File Transfers");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
 		mViews.queueTransfers = chk;
 		chk = new CCheckBoxView(vc, SRect(20,69,205,87));
-		chk->SetTitle("\pShow Join/Leave in Chat");
+		chk->SetTitle("\x17" "Show Join/Leave in Chat");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->SetID(4);
 		chk->Show();
 		mViews.showJoinLeave = chk;
 		chk = new CCheckBoxView(vc, SRect(215,69,375,87));
-		chk->SetTitle("\pShow Date/Time");
+		chk->SetTitle("\x0e" "Show Date/Time");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
 		mViews.showDateTime = chk;
 		chk = new CCheckBoxView(vc, SRect(20,89,370,107));
-		chk->SetTitle("\pShow Private Messages at Back");
+		chk->SetTitle("\x1d" "Show Private Messages at Back");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
 		mViews.showPrivMsgAtBack = chk;
 		chk = new CCheckBoxView(vc, SRect(20,109,370,127));
-		chk->SetTitle("\pBrowse folders using a separate window");
+		chk->SetTitle("\x26" "Browse folders using a separate window");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
@@ -123,26 +123,26 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 		box->Show();
 		
 		chk = new CCheckBoxView(vc, SRect(20,147,200,165));
-		chk->SetTitle("\pRefuse private messages");
+		chk->SetTitle("\x17" "Refuse private messages");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
 		mViews.refusePrivateMsg = chk;
 		chk = new CCheckBoxView(vc, SRect(20,167,350,185));
-		chk->SetTitle("\pRefuse private chat");
+		chk->SetTitle("\x13" "Refuse private chat");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
 		mViews.refusePrivateChat = chk;
 		chk = new CCheckBoxView(vc, SRect(20,187,350,205));
-		chk->SetTitle("\pAutomatic response");
+		chk->SetTitle("\x12" "Automatic response");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->SetID(5);
 		chk->Show();
 		mViews.automaticResponse = chk;
 		chk = new CCheckBoxView(vc, SRect(200,147,350,165));
-		chk->SetTitle("\pLog Messages");
+		chk->SetTitle("\x0c" "Log Messages");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
@@ -188,10 +188,10 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 	
 	const SMyFontTableViews fontviews[] =
 	{
-		{	"\pPublic Chat", &mViews.fontChat.size, &mViews.fontChat.col, &mViews.fontChat.backCol				},
-		{	"\pPrivate Chat", &mViews.fontPrivChat.size, &mViews.fontPrivChat.col, &mViews.fontPrivChat.backCol	},
-		{	"\pView Text", &mViews.fontPrev.size, &mViews.fontPrev.col, &mViews.fontPrev.backCol					},
-		{	"\pNews Posts", &mViews.fontNews.size, &mViews.fontNews.col, &mViews.fontNews.backCol				}
+		{	"\x0b" "Public Chat", &mViews.fontChat.size, &mViews.fontChat.col, &mViews.fontChat.backCol				},
+		{	"\x0c" "Private Chat", &mViews.fontPrivChat.size, &mViews.fontPrivChat.col, &mViews.fontPrivChat.backCol	},
+		{	"\x09" "View Text", &mViews.fontPrev.size, &mViews.fontPrev.col, &mViews.fontPrev.backCol					},
+		{	"\x0a" "News Posts", &mViews.fontNews.size, &mViews.fontNews.col, &mViews.fontNews.backCol				}
 	
 	};
 	
@@ -203,10 +203,10 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 	
 	const SColInfo colInf[] =
 	{
-		{ "\p", 120 + 2 * cellHPadding					},
-		{ "\pSize", 35 + 2 * cellHPadding				},
-		{ "\pText Color", 40 + 2 * cellHPadding			},
-		{ "\pBack Color", 40 + 2 * cellHPadding			}
+		{ "\x00" "", 120 + 2 * cellHPadding					},
+		{ "\x04" "Size", 35 + 2 * cellHPadding				},
+		{ "\x0a" "Text Color", 40 + 2 * cellHPadding			},
+		{ "\x0a" "Back Color", 40 + 2 * cellHPadding			}
 	};
 	
 	CContainerView *vc = new CContainerView(nil, SRect(0,0,400,280));
@@ -309,7 +309,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		box->Show();
 
 		CCheckBoxView *chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pToolbar Buttons on Top");
+		chk->SetTitle("\x16" "Toolbar Buttons on Top");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
@@ -319,7 +319,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pMagnetic Windows");
+		chk->SetTitle("\x10" "Magnetic Windows");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
@@ -329,7 +329,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 		
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pShow ToolTips");
+		chk->SetTitle("\x0d" "Show ToolTips");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
@@ -342,11 +342,11 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 		
 		box = new CBoxView(vc, SRect(r.left - 6, nTop - 16, r.right + 6, nTop + 64), boxStyle_Etched);
-		box->SetTitle("\pFiles");
+		box->SetTitle("\x05" "Files");
 		box->Show();
 
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pList");
+		chk->SetTitle("\x04" "List");
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
 		chk->Show();
@@ -356,7 +356,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 	
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pTree");
+		chk->SetTitle("\x04" "Tree");
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
 		chk->Show();
@@ -366,7 +366,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 	
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pPaned");
+		chk->SetTitle("\x05" "Paned");
 						 
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
@@ -384,11 +384,11 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 
 		box = new CBoxView(vc, SRect(r.left - 6, nTop - 16, r.right + 6, nTop + 64), boxStyle_Etched);
-		box->SetTitle("\pNews");
+		box->SetTitle("\x04" "News");
 		box->Show();
 
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pList");
+		chk->SetTitle("\x04" "List");
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
 		chk->Show();
@@ -398,7 +398,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 	
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pTree");
+		chk->SetTitle("\x04" "Tree");
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
 		chk->Show();
@@ -408,7 +408,7 @@ CContainerView *CMyOptionsWin::MakeDisplayTab()
 		r.bottom = r.top + 16;
 	
 		chk = new CCheckBoxView(vc, r);
-		chk->SetTitle("\pPaned");
+		chk->SetTitle("\x05" "Paned");
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
 		chk->Show();
@@ -443,7 +443,7 @@ CContainerView *CMyOptionsWin::MakeIconTab()
 	{
 		// make labels
 		lbl = new CLabelView(vc, SRect(10,10,311,44));
-		lbl->SetText("\pChoose an icon to appear next to your name in user lists:");
+		lbl->SetText("\x39" "Choose an icon to appear next to your name in user lists:");
 		lbl->Show();
 		
 		// make icon pickers
@@ -502,9 +502,9 @@ CContainerView *CMyOptionsWin::MakeSoundTab()
 	{
 		// make checkboxes
 		const Uint8 *checkText[] = {
-			"\pPlay Sounds for:", "\pChat", /*"\pNews",*/
-			"\pFile transfer complete", "\pPrivate Message", "\pJoin",
-			"\pLeave", "\pLogged in", "\pError", "\pChat Invitation", "\pMagnetic Windows"
+			"\x10" "Play Sounds for:", "\x04" "Chat", /*"\x04" "News",*/
+			"\x16" "File transfer complete", "\x0f" "Private Message", "\x04" "Join",
+			"\x05" "Leave", "\x09" "Logged in", "\x05" "Error", "\x0f" "Chat Invitation", "\x10" "Magnetic Windows"
 		};
 		
 		const SRect checkRects[] = {
@@ -559,9 +559,9 @@ CContainerView *CMyOptionsWin::MakeAdvancedTab()
 		box->Show();
 				
 		// make labels
-		CLabelView *lbl = new CLabelView(vc, SRect(20,15,150,31), "\pSOCKS firewall:");
+		CLabelView *lbl = new CLabelView(vc, SRect(20,15,150,31), "\x0f" "SOCKS firewall:");
 		lbl->Show();
-		lbl = new CLabelView(vc, SRect(20,65,370,118), "\pIf your network requires you to connect through a SOCKS firewall, ask your network administrator for the address.  If you're not sure, leave the box empty.");
+		lbl = new CLabelView(vc, SRect(20,65,370,118), "\x9b" "If your network requires you to connect through a SOCKS firewall, ask your network administrator for the address.  If you're not sure, leave the box empty.");
 		lbl->Show();
 
 		// make text boxe
@@ -575,19 +575,19 @@ CContainerView *CMyOptionsWin::MakeAdvancedTab()
 
 		// make check box	
 		CCheckBoxView *chk = new CCheckBoxView(vc, SRect(20,140,230,156));
-		chk->SetTitle("\pTunnel through HTTP proxy");
+		chk->SetTitle("\x19" "Tunnel through HTTP proxy");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
 		mViews.tunnelThroughHttp = chk;
 
 		// make label
-		lbl = new CLabelView(vc, SRect(20,160,370,208), "\pIf your network is behind a firewall, and you use an http proxy server, check this box.  (You will only be able to connect to v1.7 or newer servers)");
+		lbl = new CLabelView(vc, SRect(20,160,370,208), "\x94" "If your network is behind a firewall, and you use an http proxy server, check this box.  (You will only be able to connect to v1.7 or newer servers)");
 		lbl->Show();
 
 		// make check box	
 		chk = new CCheckBoxView(vc, SRect(20,224,170,240));
-		chk->SetTitle("\pDon't save cookies");
+		chk->SetTitle("\x12" "Don't save cookies");
 		chk->SetAutoMark(true);
 		chk->SetStyle(kTickBox);
 		chk->Show();
@@ -806,7 +806,7 @@ CMyLoginWin::CMyLoginWin()
 	CScrollerView *scr;
 
 	// setup window
-	SetTitle("\pConnect");
+	SetTitle("\x07" "Connect");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -826,17 +826,17 @@ CMyLoginWin::CMyLoginWin()
 
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,10,335,60));
-	lbl->SetText("\pEnter the Server address, and if you have an account, your login and password.  If not, leave the login and password blank.");
+	lbl->SetText("\x7b" "Enter the Server address, and if you have an account, your login and password.  If not, leave the login and password blank.");
 	lbl->Show();
 	
 	lbl = new CLabelView(vc, SRect(20,85,96,101));
-	lbl->SetText("\pServer:");
+	lbl->SetText("\x07" "Server:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,115,96,131));
-	lbl->SetText("\pLogin:");
+	lbl->SetText("\x06" "Login:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,145,96,161));
-	lbl->SetText("\pPassword:");
+	lbl->SetText("\x09" "Password:");
 	lbl->Show();
 
 	// make text boxes
@@ -855,11 +855,11 @@ CMyLoginWin::CMyLoginWin()
 	mViews.passwordScr = scr;
 	
 	// make buttons
-	SButtons btnSave = {3, "\pSave...", btnOpt_Regular, &mViews.saveBtn};
+	SButtons btnSave = {3, "\x07" "Save...", btnOpt_Regular, &mViews.saveBtn};
 	CButtonView::BuildButton(vc, SRect(10,190,80,216), &btnSave);
 	mViews.saveBtn->Disable();
 
-	SButtons btns[] = {{1, "\pConnect", btnOpt_Default, &mViews.connectBtn}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x07" "Connect", btnOpt_Default, &mViews.connectBtn}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(150,190,330,216), btns);
 	mViews.connectBtn->Disable();
 }
@@ -994,61 +994,61 @@ CMyFileWin::CMyFileWin(CContainerView *inContainerView, const SRect& inBounds)
 	CIconButtonView *icb = new CIconButtonView(inContainerView, SRect(3,3,27,27));
 	icb->SetIconID(230);
 	icb->SetID(viewID_OpenParent);
-	icb->SetTooltipMsg("\pGo Back");
+	icb->SetTooltipMsg("\x07" "Go Back");
 	icb->Show();
 	mViews.parentFolder = icb;
 	
 	icb = new CIconButtonView(inContainerView, SRect(30,3,54,27));
 	icb->SetIconID(210);
 	icb->SetID(viewID_FileDownload);
-	icb->SetTooltipMsg("\pDownload");
+	icb->SetTooltipMsg("\x08" "Download");
 	icb->Show();
 	mViews.downloadBtn = icb;
 
 	icb = new CIconButtonView(inContainerView, SRect(57,3,81,27));
 	icb->SetIconID(211);
 	icb->SetID(viewID_FileUpload);
-	icb->SetTooltipMsg("\pUpload");
+	icb->SetTooltipMsg("\x06" "Upload");
 	icb->Show();
 	mViews.uploadBtn = icb;
 
 	icb = new CIconButtonView(inContainerView, SRect(84,3,108,27));
 	icb->SetIconID(245);  
 	icb->SetID(viewID_FileView);
-	icb->SetTooltipMsg("\pView");
+	icb->SetTooltipMsg("\x04" "View");
 	icb->Show();
 	mViews.viewBtn = icb;
 
 	icb = new CIconButtonView(inContainerView, SRect(111,3,135,27));
 	icb->SetIconID(215);
 	icb->SetID(viewID_GetInfo);
-	icb->SetTooltipMsg("\pGet Info");
+	icb->SetTooltipMsg("\x08" "Get Info");
 	icb->Show();
 	mViews.infoBtn = icb;
  
 	icb = new CIconButtonView(inContainerView, SRect(138,3,162,27));
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpFiles);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->Show();
 
 	icb = new CIconButtonView(inContainerView, SRect(165,3,189,27));
 	icb->SetIconID(iconID_OpenDloadFolder);
 	icb->SetID(viewID_OpenDloadFolder);
-	icb->SetTooltipMsg("\pOpen Download Folder");
+	icb->SetTooltipMsg("\x14" "Open Download Folder");
 	icb->Show();
 
 
 	icb = new CIconButtonView(inContainerView, SRect(192,3,216,27));
 	icb->SetIconID(401);
 	icb->SetID(viewID_New);
-	icb->SetTooltipMsg("\pNew Folder");
+	icb->SetTooltipMsg("\x0a" "New Folder");
 	icb->Show();
 	mViews.newfolderBtn = icb;
  
 	icb = new CIconButtonView(inContainerView, SRect(219,3,243,27));
 	icb->SetIconID(205);
-	icb->SetTooltipMsg("\pRefresh");
+	icb->SetTooltipMsg("\x07" "Refresh");
 	icb->SetID(viewID_Refresh);
 	icb->Show();
 
@@ -1056,7 +1056,7 @@ CMyFileWin::CMyFileWin(CContainerView *inContainerView, const SRect& inBounds)
 	icb->SetIconID(212);
 	icb->SetID(viewID_Delete);
 	icb->SetSizing(sizing_HorizSticky);
-	icb->SetTooltipMsg("\pDelete");
+	icb->SetTooltipMsg("\x06" "Delete");
 	icb->Show();
 	mViews.deleteBtn = icb;
 }
@@ -1388,7 +1388,7 @@ void CMyFileWin::DownloadDragSendProc(
 	if (!gApp->HasFolderPriv(myAcc_DownloadFile) && 
 		(gApp->mServerVers < 182 || !gApp->HasFolderPriv(myAcc_DownloadFolder)))
 	{
-		Uint8 *psMsg = "\pYou are not allowed to download.";
+		Uint8 *psMsg = "\x20" "You are not allowed to download.";
 		UApplication::PostMessage(1100, psMsg, psMsg[0] + 1);
 
 		Fail(errorType_FileSys, fsError_AccessDenied);
@@ -1403,7 +1403,7 @@ void CMyFileWin::DownloadDragSendProc(
 		if ( gApp->mServerVers >= 182 && 
 			!gApp->HasFolderPriv(myAcc_DownloadFolder))
 		{			
-			Uint8 *psMsg = "\pYou are not allowed to download folders.";
+			Uint8 *psMsg = "\x28" "You are not allowed to download folders.";
 			UApplication::PostMessage(1100, psMsg, psMsg[0] + 1);
 
 			Fail(errorType_FileSys, fsError_AccessDenied);
@@ -1411,7 +1411,7 @@ void CMyFileWin::DownloadDragSendProc(
 	}
 	else if (!gApp->HasFolderPriv(myAcc_DownloadFile))
 	{
-		Uint8 *psMsg = "\pYou are not allowed to download files.";
+		Uint8 *psMsg = "\x26" "You are not allowed to download files.";
 		UApplication::PostMessage(1100, psMsg, psMsg[0] + 1);
 
 		Fail(errorType_FileSys, fsError_AccessDenied);
@@ -1519,7 +1519,7 @@ CMyFileListWin::CMyFileListWin(CWindow *inParent, TPtr inPathData, Uint32 inPath
 	gApp->mFileWinList.AddItem(this);
 		
 	// setup window
-	SetTitle("\pFiles");
+	SetTitle("\x05" "Files");
 	SetLimits(280,150);
 
 	// make scroller view
@@ -1752,7 +1752,7 @@ CMyFileTreeWin::CMyFileTreeWin(CWindow *inParent, TPtr inPathData, Uint32 inPath
 	gApp->mFileWinList.AddItem(this);
 	
 	// setup window
-	SetTitle("\pFiles");
+	SetTitle("\x05" "Files");
 	SetLimits(280,150);
 
 	// make scroller view
@@ -2007,7 +2007,7 @@ CMyFileExplWin::CMyFileExplWin(CWindow *inParent, TPtr inPathData, Uint32 inPath
 	gApp->mFileWinList.AddItem(this);
 	
 	// setup window
-	SetTitle("\pFiles");
+	SetTitle("\x05" "Files");
 	SetLimits(350,200);
 	
 	// make pane view
@@ -2442,7 +2442,7 @@ CMyUserListWin::CMyUserListWin(CWindow *inParent)
 	CLabelView *lbl;
 
 	// setup window
-	SetTitle("\pOnline Users");
+	SetTitle("\x0c" "Online Users");
 	SetLimits(160,150);
 	
 	mSearchTimer = nil;
@@ -2463,28 +2463,28 @@ CMyUserListWin::CMyUserListWin(CWindow *inParent)
 	icb = new CIconButtonView(vc, SRect(3,3,27,27));
 	icb->SetIconID(415);
 	icb->SetID(viewID_OpenPrivateChat);
-	icb->SetTooltipMsg("\pPrivate Chat", "\pCtrl-F4");
+	icb->SetTooltipMsg("\x0c" "Private Chat", "\x07" "Ctrl-F4");
 	icb->Show();
 	mViews.chatBtn = icb;
 	
 	icb = new CIconButtonView(vc, SRect(30,3,54,27));
 	icb->SetIconID(206);
 	icb->SetID(viewID_SendPrivMsg);
-	icb->SetTooltipMsg("\pPrivate Message", "\pCtrl-F9");
+	icb->SetTooltipMsg("\x0f" "Private Message", "\x07" "Ctrl-F9");
 	icb->Show();
 	mViews.msgBtn = icb;
 	
 	icb = new CIconButtonView(vc, SRect(57,3,81,27));
 	icb->SetIconID(215);
 	icb->SetID(viewID_GetInfo);
-	icb->SetTooltipMsg("\pGet Client Info", "\pCtrl-I");
+	icb->SetTooltipMsg("\x0f" "Get Client Info", "\x06" "Ctrl-I");
 	icb->Show();
 	mViews.infoBtn = icb;
 
 	icb = new CIconButtonView(vc, SRect(84,3,108,27));
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpUsers);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->Show();
 	
 	SRect rBounds;
@@ -2493,7 +2493,7 @@ CMyUserListWin::CMyUserListWin(CWindow *inParent)
 	icb->SetIconID(412);
 	icb->SetID(viewID_Delete);
 	icb->SetSizing(sizing_HorizSticky);
-	icb->SetTooltipMsg("\pDisconnect", "\pCtrl-Del");
+	icb->SetTooltipMsg("\x0a" "Disconnect", "\x08" "Ctrl-Del");
 	icb->Show();
 	mViews.discBtn = icb;
 
@@ -2737,7 +2737,7 @@ CMyEnterMsgWin::CMyEnterMsgWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pPost Message");
+	SetTitle("\x0c" "Post Message");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -2751,7 +2751,7 @@ CMyEnterMsgWin::CMyEnterMsgWin()
 
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,10,407,46));
-	lbl->SetText("\pType a message below.  When you click ‘Send’, the message will be posted for discussion.");
+	lbl->SetText("\x58" "Type a message below.  When you click \xd4Send\xd5, the message will be posted for discussion.");
 	lbl->Show();
 	
 	// make text boxes
@@ -2761,8 +2761,8 @@ CMyEnterMsgWin::CMyEnterMsgWin()
 	mViews.msgText->SetFont(fd_Fixed9);
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSend", btnOpt_Default, nil}, 
-					   {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Send", btnOpt_Default, nil}, 
+					   {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(228,220,408,246), btns);
 }
 
@@ -2778,7 +2778,7 @@ CMySendPrivMsgWin::CMySendPrivMsgWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pSend Message");
+	SetTitle("\x0c" "Send Message");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -2793,12 +2793,12 @@ CMySendPrivMsgWin::CMySendPrivMsgWin()
 	CIconButtonView* ibv = new CIconButtonView(vc, SRect(295,10,320,34));
 	ibv->SetIconID(iconID_HelpToolbar);
 	ibv->SetID(viewID_HelpPrivateMessage);
-	ibv->SetTooltipMsg("\pHelp");
+	ibv->SetTooltipMsg("\x04" "Help");
 	ibv->Show();
 	
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,10,294,44));
-	lbl->SetText("\pType a message and click the 'Send' button to send it privately to:");
+	lbl->SetText("\x43" "Type a message and click the 'Send' button to send it privately to:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(50,47,320,63));
 	lbl->Show();
@@ -2823,8 +2823,8 @@ CMySendPrivMsgWin::CMySendPrivMsgWin()
 
 	// make buttons
 	CButtonView *btnSend, *btnCancel;
-	SButtons btns[] = {{1, "\pSend", btnOpt_Default, &btnSend}, 
-					   {2, "\pCancel", btnOpt_Cancel, &btnCancel}};
+	SButtons btns[] = {{1, "\x04" "Send", btnOpt_Default, &btnSend}, 
+					   {2, "\x06" "Cancel", btnOpt_Cancel, &btnCancel}};
 	CButtonView::BuildButtons(vc, SRect(150,230,330,256), btns);
 	btnSend->SetSizing(sizing_VertSticky);
 	btnCancel->SetSizing(sizing_VertSticky);
@@ -2860,7 +2860,7 @@ CMyCouldNotSendPrivMsgWin::CMyCouldNotSendPrivMsgWin(const Uint8 *inUserName, TH
 	CTextView *txt;
 
 	// setup window
-	SetTitle("\pUser has Disconnected");
+	SetTitle("\x15" "User has Disconnected");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -2886,7 +2886,7 @@ CMyCouldNotSendPrivMsgWin::CMyCouldNotSendPrivMsgWin(const Uint8 *inUserName, TH
 	txt->SetTextHandle(inTextHdl);
 
 	// make button
-	SButtons btnOK = {1, "\pOk", btnOpt_Default, &mViews.OKBtn};
+	SButtons btnOK = {1, "\x02" "Ok", btnOpt_Default, &mViews.OKBtn};
 	CButtonView::BuildButton(vc, SRect(244,206,330,132), &btnOK);
 	mViews.OKBtn->Disable();
 	
@@ -2914,7 +2914,7 @@ CMyBroadcastWin::CMyBroadcastWin()
 	: CWindow(SRect(0,0,340,264), windowLayer_Modal)
 {
 	// setup window
-	SetTitle("\pBroadcast");
+	SetTitle("\x09" "Broadcast");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -2930,12 +2930,12 @@ CMyBroadcastWin::CMyBroadcastWin()
 	CIconButtonView* ibv = new CIconButtonView(vc, SRect(295,10,320,34));
 	ibv->SetIconID(iconID_HelpToolbar);
 	ibv->SetID(viewID_HelpBroadcast);
-	ibv->SetTooltipMsg("\pHelp");
+	ibv->SetTooltipMsg("\x04" "Help");
 	ibv->Show();
 
 	// make labels
 	CLabelView *lbl = new CLabelView(vc, SRect(50,10,290,44));
-	lbl->SetText("\pEnter a message to display to all connected users and click the 'Send' button");
+	lbl->SetText("\x4d" "Enter a message to display to all connected users and click the 'Send' button");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(50,47,320,63));
 	lbl->Show();
@@ -2948,8 +2948,8 @@ CMyBroadcastWin::CMyBroadcastWin()
 	mViews.msgText->SetTabSelectText(false);
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSend", btnOpt_Default, nil}, 
-					   {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Send", btnOpt_Default, nil}, 
+					   {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(150,230,330,256), btns);
 }
 
@@ -3013,7 +3013,7 @@ CMyPrivMsgWin::CMyPrivMsgWin(CWindow *inParent, bool bIsAutomaticResponse)
 	icb = new CIconButtonView(vc, SRect(10,128,34,152));
 	icb->SetIconID(415);
 	icb->SetID(viewID_OpenPrivateChat);
-	icb->SetTooltipMsg("\pPrivate Chat", "\pCtrl-F4");
+	icb->SetTooltipMsg("\x0c" "Private Chat", "\x07" "Ctrl-F4");
 	icb->SetSizing(sizing_VertSticky);
 	icb->Show();
 	mViews.chatBtn = icb;
@@ -3021,7 +3021,7 @@ CMyPrivMsgWin::CMyPrivMsgWin(CWindow *inParent, bool bIsAutomaticResponse)
 	icb = new CIconButtonView(vc, SRect(37,128,61,152));
 	icb->SetIconID(215);
 	icb->SetID(viewID_GetInfo);
-	icb->SetTooltipMsg("\pGet Client Info", "\pCtrl-I");
+	icb->SetTooltipMsg("\x0f" "Get Client Info", "\x06" "Ctrl-I");
 	icb->SetSizing(sizing_VertSticky);
 	icb->Show();
 	mViews.infoBtn = icb;
@@ -3029,12 +3029,12 @@ CMyPrivMsgWin::CMyPrivMsgWin(CWindow *inParent, bool bIsAutomaticResponse)
 	mViews.replyBtn=nil;
 	if (!bIsAutomaticResponse) //if is an automatic response don't show Reply button
 	{
-		SButtons btnReplay = {viewID_ReplyPrivMsg, "\pReply...", btnOpt_Regular, &mViews.replyBtn};
+		SButtons btnReplay = {viewID_ReplyPrivMsg, "\x08" "Reply...", btnOpt_Regular, &mViews.replyBtn};
 		CButtonView::BuildButton(vc, SRect(124,128,194,154), &btnReplay);
 		mViews.replyBtn->SetSizing(sizing_HorizSticky + sizing_VertSticky);
 	}
 	
-	SButtons btnDismiss = {viewID_DismissPrivMsg, "\pDismiss", btnOpt_Default, &mViews.dismissBtn};
+	SButtons btnDismiss = {viewID_DismissPrivMsg, "\x07" "Dismiss", btnOpt_Default, &mViews.dismissBtn};
 	CButtonView::BuildButton(vc, SRect(216,128,302,154), &btnDismiss);
 	mViews.dismissBtn->SetSizing(sizing_HorizSticky + sizing_VertSticky);
 	mViews.dismissBtn->Disable();
@@ -3184,7 +3184,7 @@ CMyOldNewsWin::CMyOldNewsWin(CWindow *inParent)
 	CIconButtonView *icb = new CIconButtonView(vc, SRect(3,3,27,27));
 	icb->SetIconID(223);
 	icb->SetID(viewID_OldNewsPost);
-	icb->SetTooltipMsg("\pPost a Message");
+	icb->SetTooltipMsg("\x0e" "Post a Message");
 	icb->Show();
 	
 	// make text scroller
@@ -3265,7 +3265,7 @@ bool CMySaveFileWin::SaveFileAs()
 	}
 	catch(...)
 	{
-		gApp->DisplayStandardMessage("\pSave As", "\pThe file cannot be saved because it is in use.", icon_Stop, 1);
+		gApp->DisplayStandardMessage("\x07" "Save As", "\x2e" "The file cannot be saved because it is in use.", icon_Stop, 1);
 		return false;
 	}
 	
@@ -4126,7 +4126,7 @@ CMyPublicChatWin::CMyPublicChatWin(CWindow *inParent)
 	CScrollerView *scr;
 
 	// setup window
-	SetTitle("\pChat");
+	SetTitle("\x04" "Chat");
 	SetLimits(300, 130);
 
 	// make container view for content
@@ -4171,7 +4171,7 @@ CMyPublicChatWin::CMyPublicChatWin(CWindow *inParent)
 	icb->SetSizing(sizing_HorizSticky);
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpChat);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->Show();
 	
 }
@@ -4213,7 +4213,7 @@ CMyPrivateChatWin::CMyPrivateChatWin(CWindow *inParent)
 	CIconButtonView *icb;
 	
 	// setup window
-	SetTitle("\pPrivate Chat");
+	SetTitle("\x0c" "Private Chat");
 	SetLimits(300, 150);
 	mChatID = 0;
 	mCurrentDrag = nil;
@@ -4266,21 +4266,21 @@ CMyPrivateChatWin::CMyPrivateChatWin(CWindow *inParent)
 	icb = new CIconButtonView(uvc, SRect(0,3,24,27));
 	icb->SetIconID(415);
 	icb->SetID(viewID_OpenPrivateChat);
-	icb->SetTooltipMsg("\pPrivate Chat");
+	icb->SetTooltipMsg("\x0c" "Private Chat");
 	icb->Show();
 	mViews.chatBtn = icb;
 	
 	icb = new CIconButtonView(uvc, SRect(27,3,51,27));
 	icb->SetIconID(206);
 	icb->SetID(viewID_SendPrivMsg);
-	icb->SetTooltipMsg("\pPrivate Message");
+	icb->SetTooltipMsg("\x0f" "Private Message");
 	icb->Show();
 	mViews.msgBtn = icb;
 	
 	icb = new CIconButtonView(uvc, SRect(54,3,78,27));
 	icb->SetIconID(215);
 	icb->SetID(viewID_GetInfo);
-	icb->SetTooltipMsg("\pGet Client Info");
+	icb->SetTooltipMsg("\x0f" "Get Client Info");
 	icb->Show();
 	mViews.infoBtn = icb;
 
@@ -4288,7 +4288,7 @@ CMyPrivateChatWin::CMyPrivateChatWin(CWindow *inParent)
 	icb = new CIconButtonView(uvc, SRect(81,3,105,27));
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpPrivateChat);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->Show();
 
 	// make user list scroller
@@ -4320,7 +4320,7 @@ CMyPrivateChatWin::CMyPrivateChatWin(CWindow *inParent)
 #endif
 	sub->SetSizing(sizing_TopSticky + sizing_RightSticky + sizing_BottomSticky);
 	sub->SetID(viewID_ChatSubject);
-	sub->SetTooltipMsg("\pSet Subject");
+	sub->SetTooltipMsg("\x0b" "Set Subject");
 	sub->Show();
 	mViews.subject = sub;
 	
@@ -4441,13 +4441,13 @@ void CMyPrivateChatWin::SetAccess()
 void CMyPrivateChatWin::SetSubject(const Uint8 *inText)
 {
 	if (inText[0] == 0)
-		SetTitle("\pPrivate Chat");
+		SetTitle("\x0c" "Private Chat");
 	else
 	{
 		enum { maxSize = 64 };
 		Uint8 str[256];
 		
-		pstrcpy(str, "\pPrivate Chat:  ");
+		pstrcpy(str, "\x0f" "Private Chat:  ");
 		pstrcat(str, inText);
 		
 		if (str[0] > maxSize)
@@ -4606,7 +4606,7 @@ CMySecretWin::CMySecretWin()
 	CScrollerView *scr;
 
 	// setup window
-	SetTitle("\pSecret");
+	SetTitle("\x06" "Secret");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -4624,7 +4624,7 @@ CMySecretWin::CMySecretWin()
 
 	// make buttons
 	btn = new CButtonView(vc, SRect(55,80,125,106));
-	btn->SetTitle("\pExecute");
+	btn->SetTitle("\x07" "Execute");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
@@ -4903,7 +4903,7 @@ CMyAgreementWin::CMyAgreementWin()
 	: CMyBannerWin(SRect(0,0,eMinHorizBannerWin,10), windowLayer_Modal)
 {
 	// setup window
-	SetTitle("\pAgreement");
+	SetTitle("\x09" "Agreement");
 
 	// make container view for content
 	mContainerView = new CContainerView(this, SRect(0,0,eMinHorizBannerWin,10));
@@ -4935,12 +4935,12 @@ bool CMyAgreementWin::SetBannerHdl(THdl inData, Uint32 inTypeCode, const Uint8 *
 	Uint16 nMiddle = stWinBounds.GetWidth()/2;
 
 	mAgreeBtn = new CButtonView(mContainerView, SRect(nMiddle-87, stWinBounds.GetHeight()-36, nMiddle-15, stWinBounds.GetHeight()-12));
-	mAgreeBtn->SetTitle("\pAgree");
+	mAgreeBtn->SetTitle("\x05" "Agree");
 	mAgreeBtn->SetID(1);
 	mAgreeBtn->Show();
 	
 	mDisagreeBtn = new CButtonView(mContainerView, SRect(nMiddle+15, stWinBounds.GetHeight()-36, nMiddle+87, stWinBounds.GetHeight()-12));
-	mDisagreeBtn->SetTitle("\pDisagree");
+	mDisagreeBtn->SetTitle("\x08" "Disagree");
 	mDisagreeBtn->SetID(2);
 	mDisagreeBtn->Show();
 	
@@ -4959,7 +4959,7 @@ void CMyAgreementWin::SetTextHdl(THdl inData)
 	
 	// make label
 	CLabelView *lbl = new CLabelView(mContainerView, SRect(50, 8, stWinBounds.GetWidth() - 10, 60));
-	lbl->SetText("\pPlease read this agreement carefully.  By clicking on the “Agree” button, you are agreeing to be bound by the terms of this agreement.");
+	lbl->SetText("\x85" "Please read this agreement carefully.  By clicking on the \xd2Agree\xd3 button, you are agreeing to be bound by the terms of this agreement.");
 	lbl->Show();
 
 	Uint16 nVertDepl = 62;
@@ -5010,7 +5010,7 @@ void CMyAgreementWin::SetTextHdl(THdl inData)
 	Uint16 nMiddle = stWinBounds.GetWidth()/2;
 	
 	mAgreeBtn = new CButtonView(textContainerView, SRect(nMiddle-48, nTextHeight+14, nMiddle+24, nTextHeight+38));
-	mAgreeBtn->SetTitle("\pAgree");
+	mAgreeBtn->SetTitle("\x05" "Agree");
 	mAgreeBtn->SetID(1);
 	mAgreeBtn->Show();
 
@@ -5029,7 +5029,7 @@ void CMyAgreementWin::SetTextHdl(THdl inData)
 	else
 	{
 		mDisagreeBtn = new CButtonView(mContainerView, SRect(nMiddle-36, stWinBounds.GetHeight()-36, nMiddle+36, stWinBounds.GetHeight()-12));
-		mDisagreeBtn->SetTitle("\pDisagree");
+		mDisagreeBtn->SetTitle("\x08" "Disagree");
 		mDisagreeBtn->SetID(2);
 		mDisagreeBtn->Show();
 	}
@@ -5133,7 +5133,7 @@ void CMyToolbar::UpdateInfoBar()
 		SetStatusText(str, true);
 	}
 	else
-		SetStatusText("\p", true);
+		SetStatusText("\x00" "", true);
 }
 
 /* ————————————————————————————————————————————————————————————————————————— */
@@ -5157,7 +5157,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 #endif
 
 	// setup window
-	SetTitle("\pHotline Connect");
+	SetTitle("\x0f" "Hotline Connect");
 	
 	// make container view for content
 	mContainerView = new CContainerView(this, SRect(0, 0, eMinHorizBannerWin, 46));
@@ -5166,9 +5166,9 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 	// make buttons
 	const Uint8 *btnNames[] = 
 	{
-		"\pOptions", "\pServers", "\pUsers", "\pPublic Chat", "\pNews", "\pMsg Board", 
-		"\pFiles", "\pTasks", "\pBroadcast", "\pNew Account", "\pOpen Account", 
-		"\pAdminister Accounts"
+		"\x07" "Options", "\x07" "Servers", "\x05" "Users", "\x0b" "Public Chat", "\x04" "News", "\x09" "Msg Board", 
+		"\x05" "Files", "\x05" "Tasks", "\x09" "Broadcast", "\x0b" "New Account", "\x0c" "Open Account", 
+		"\x13" "Administer Accounts"
 	};
 
 	const Int16 btnIcons[] = 
@@ -5243,7 +5243,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btn->SetCanFocus(true);
 	#endif
 	btn->SetIconID(213);
-	btn->SetTooltipMsg("\pQuit");
+	btn->SetTooltipMsg("\x04" "Quit");
 	btn->SetID(viewID_Quit);
 	btn->Show();
 	mToolbarViews.quitBtn = btn;
@@ -5257,7 +5257,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btn->SetCanFocus(true);
 	#endif
 	btn->SetIconID(iconID_HelpToolbar);
-	btn->SetTooltipMsg("\pHelp");
+	btn->SetTooltipMsg("\x04" "Help");
 	btn->SetID(viewID_HelpToolbar);
 	btn->Show();
 	mToolbarViews.helpBtn = btn;
@@ -5272,7 +5272,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btn->SetCanFocus(true);
 	#endif
 	btn->SetIconID(215);
-	btn->SetTooltipMsg("\pAbout");
+	btn->SetTooltipMsg("\x05" "About");
 	btn->SetID(viewID_ShowAbout);
 	btn->Show();
 	mViews.aboutBtn = btn;
@@ -5290,7 +5290,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btn->SetCanFocus(true);
 	#endif
 	btn->SetIconID(412);
-	btn->SetTooltipMsg("\pDisconnect");
+	btn->SetTooltipMsg("\x0a" "Disconnect");
 	btn->SetID(viewID_Disconnect);
 	mToolbarViews.disconnectBtn = btn;
 
@@ -5303,7 +5303,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btnRect.top = btnRect.bottom - eAdButtonHeight;
 		mViews.adBtns[0] = btn = new CIconButtonView(mContainerView, btnRect);
 		btn->SetIconID(iconID_Securiphone);
-		btn->SetTooltipMsg("\pSecuriphone");
+		btn->SetTooltipMsg("\x0b" "Securiphone");
 		btn->SetID(viewID_Securiphone);
 		btn->Show();
 	}
@@ -5312,7 +5312,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btnRect.top = btnRect.bottom - eAdButtonHeight;
 		mViews.adBtns[1] = btn = new CIconButtonView(mContainerView, btnRect);
 		btn->SetIconID(iconID_ISP);
-		btn->SetTooltipMsg("\pISP");
+		btn->SetTooltipMsg("\x03" "ISP");
 		btn->SetID(viewID_ISP);
 		btn->Show();
 	}
@@ -5321,7 +5321,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 		btnRect.top = btnRect.bottom - eAdButtonHeight;
 		mViews.adBtns[2] = btn = new CIconButtonView(mContainerView, btnRect);
 		btn->SetIconID(iconID_Xsprings);    //iconID_UnusedAD
-		btn->SetTooltipMsg("\pxSprings");
+		btn->SetTooltipMsg("\x08" "xSprings");
 		btn->SetID(viewID_Xsprings);
 		btn->Show();
 		//btn->Disable();
@@ -5330,7 +5330,7 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 
 
 	// make info view
-	mToolbarViews.connectInfo = new CMyConnectedInfoView(mContainerView, SRect(0,31,eMinHorizBannerWin,46), "\pNot Connected", fd_Default9);
+	mToolbarViews.connectInfo = new CMyConnectedInfoView(mContainerView, SRect(0,31,eMinHorizBannerWin,46), "\x0d" "Not Connected", fd_Default9);
 	mToolbarViews.connectInfo->SetID(viewID_ToolbarStatus);
 	mToolbarViews.connectInfo->Show();	
 
@@ -5625,59 +5625,59 @@ CMyEditUserWin::CMyEditUserWin(CWindow *inParent, bool inIsNewUser)
 		Uint8 *name;
 	};
 	const SMyAccessItem accessItems[] = {
-		{ 1, nil, "\pFile System Maintenance" },
-		{ 2, myAcc_DownloadFile, "\pCan Download Files" },			// 0
-		{ 2, myAcc_DownloadFolder, "\pCan Download Folders" },		// 1
-		{ 2, myAcc_UploadFile, "\pCan Upload Files" },				// 2
-		{ 2, myAcc_UploadFolder, "\pCan Upload Folders" },			// 3
-		{ 2, myAcc_UploadAnywhere, "\pCan Upload Anywhere" },		// 4
-		{ 2, myAcc_DeleteFile, "\pCan Delete Files" },				// 5
-		{ 2, myAcc_RenameFile, "\pCan Rename Files" },				// 6
-		{ 2, myAcc_MoveFile, "\pCan Move Files" },					// 7
-		{ 2, myAcc_SetFileComment, "\pCan Comment Files" },			// 8
-		{ 2, myAcc_CreateFolder, "\pCan Create Folders" },			// 9
-		{ 2, myAcc_DeleteFolder, "\pCan Delete Folders" },			// 10
-		{ 2, myAcc_RenameFolder, "\pCan Rename Folders" },			// 11
-		{ 2, myAcc_MoveFolder, "\pCan Move Folders" },				// 12
-		{ 2, myAcc_SetFolderComment, "\pCan Comment Folders" },		// 13
-		{ 2, myAcc_ViewDropBoxes, "\pCan View Drop Boxes" },		// 14
-		{ 2, myAcc_MakeAlias, "\pCan Make Aliases" },				// 15
+		{ 1, nil, "\x17" "File System Maintenance" },
+		{ 2, myAcc_DownloadFile, "\x12" "Can Download Files" },			// 0
+		{ 2, myAcc_DownloadFolder, "\x14" "Can Download Folders" },		// 1
+		{ 2, myAcc_UploadFile, "\x10" "Can Upload Files" },				// 2
+		{ 2, myAcc_UploadFolder, "\x12" "Can Upload Folders" },			// 3
+		{ 2, myAcc_UploadAnywhere, "\x13" "Can Upload Anywhere" },		// 4
+		{ 2, myAcc_DeleteFile, "\x10" "Can Delete Files" },				// 5
+		{ 2, myAcc_RenameFile, "\x10" "Can Rename Files" },				// 6
+		{ 2, myAcc_MoveFile, "\x0e" "Can Move Files" },					// 7
+		{ 2, myAcc_SetFileComment, "\x11" "Can Comment Files" },			// 8
+		{ 2, myAcc_CreateFolder, "\x12" "Can Create Folders" },			// 9
+		{ 2, myAcc_DeleteFolder, "\x12" "Can Delete Folders" },			// 10
+		{ 2, myAcc_RenameFolder, "\x12" "Can Rename Folders" },			// 11
+		{ 2, myAcc_MoveFolder, "\x10" "Can Move Folders" },				// 12
+		{ 2, myAcc_SetFolderComment, "\x13" "Can Comment Folders" },		// 13
+		{ 2, myAcc_ViewDropBoxes, "\x13" "Can View Drop Boxes" },		// 14
+		{ 2, myAcc_MakeAlias, "\x10" "Can Make Aliases" },				// 15
 
-		{ 1, nil, "\pUser Maintenance" },
-		{ 2, myAcc_CreateUser, "\pCan Create Accounts" },			// 16
-		{ 2, myAcc_DeleteUser, "\pCan Delete Accounts" },			// 17
-		{ 2, myAcc_OpenUser, "\pCan Read Accounts" },				// 18
-		{ 2, myAcc_ModifyUser, "\pCan Modify Accounts" },			// 19
-		{ 2, myAcc_GetClientInfo, "\pCan Get User Info" },			// 20
-		{ 2, myAcc_DisconUser, "\pCan Disconnect Users" },			// 21
-		{ 2, myAcc_CannotBeDiscon, "\pCannot be Disconnected" },	// 22
+		{ 1, nil, "\x10" "User Maintenance" },
+		{ 2, myAcc_CreateUser, "\x13" "Can Create Accounts" },			// 16
+		{ 2, myAcc_DeleteUser, "\x13" "Can Delete Accounts" },			// 17
+		{ 2, myAcc_OpenUser, "\x11" "Can Read Accounts" },				// 18
+		{ 2, myAcc_ModifyUser, "\x13" "Can Modify Accounts" },			// 19
+		{ 2, myAcc_GetClientInfo, "\x11" "Can Get User Info" },			// 20
+		{ 2, myAcc_DisconUser, "\x14" "Can Disconnect Users" },			// 21
+		{ 2, myAcc_CannotBeDiscon, "\x16" "Cannot be Disconnected" },	// 22
 
-		{ 1, nil, "\pMessaging" },
-		{ 2, myAcc_SendMessage, "\pCan Send Messages" },			// 23
-		{ 2, myAcc_Broadcast, "\pCan Broadcast" },					// 24
+		{ 1, nil, "\x09" "Messaging" },
+		{ 2, myAcc_SendMessage, "\x11" "Can Send Messages" },			// 23
+		{ 2, myAcc_Broadcast, "\x0d" "Can Broadcast" },					// 24
 
-		{ 1, nil, "\pNews" },
-		{ 2, myAcc_NewsReadArt, "\pCan Read Articles" },			// 25
-		{ 2, myAcc_NewsPostArt, "\pCan Post Articles" },			// 26
-		{ 2, myAcc_NewsDeleteArt, "\pCan Delete Articles" },		// 27
-		{ 2, myAcc_NewsCreateCat, "\pCan Create Categories" },		// 28
-		{ 2, myAcc_NewsDeleteCat, "\pCan Delete Categories" },		// 29
-		{ 2, myAcc_NewsCreateFldr, "\pCan Create News Bundles" },	// 30
-		{ 2, myAcc_NewsDeleteFldr, "\pCan Delete News Bundles" },	// 31
+		{ 1, nil, "\x04" "News" },
+		{ 2, myAcc_NewsReadArt, "\x11" "Can Read Articles" },			// 25
+		{ 2, myAcc_NewsPostArt, "\x11" "Can Post Articles" },			// 26
+		{ 2, myAcc_NewsDeleteArt, "\x13" "Can Delete Articles" },		// 27
+		{ 2, myAcc_NewsCreateCat, "\x15" "Can Create Categories" },		// 28
+		{ 2, myAcc_NewsDeleteCat, "\x15" "Can Delete Categories" },		// 29
+		{ 2, myAcc_NewsCreateFldr, "\x17" "Can Create News Bundles" },	// 30
+		{ 2, myAcc_NewsDeleteFldr, "\x17" "Can Delete News Bundles" },	// 31
 		
-		{ 1, nil, "\pChat" },
-		{ 2, myAcc_CreateChat, "\pCan Initiate Private Chat" },		// 32
-		{ 2, myAcc_ReadChat, "\pCan Read Chat" },					// 33
-		{ 2, myAcc_SendChat, "\pCan Send Chat" },					// 34
+		{ 1, nil, "\x04" "Chat" },
+		{ 2, myAcc_CreateChat, "\x19" "Can Initiate Private Chat" },		// 32
+		{ 2, myAcc_ReadChat, "\x0d" "Can Read Chat" },					// 33
+		{ 2, myAcc_SendChat, "\x0d" "Can Send Chat" },					// 34
 
-		{ 1, nil, "\pMiscellaneous" },
-		{ 2, myAcc_AnyName, "\pCan Use Any Name" },					// 35
-		{ 2, myAcc_NoAgreement, "\pDon't Show Agreement" }//,		// 36
+		{ 1, nil, "\x0d" "Miscellaneous" },
+		{ 2, myAcc_AnyName, "\x10" "Can Use Any Name" },					// 35
+		{ 2, myAcc_NoAgreement, "\x14" "Don't Show Agreement" }//,		// 36
 	#if BETAVERS		
-		{ 1, nil, "\pLivestock" },
-		{ 2, 63, "\pCan Slaughter Sheep" },
-		{ 2, 63, "\pCan Tip Cows" },
-		{ 2, 63, "\pCan Juggle Chickens" }
+		{ 1, nil, "\x09" "Livestock" },
+		{ 2, 63, "\x13" "Can Slaughter Sheep" },
+		{ 2, 63, "\x0c" "Can Tip Cows" },
+		{ 2, 63, "\x13" "Can Juggle Chickens" }
 	#endif
 		// remember to update size of mAccessChecks if we add checks to this
 	};
@@ -5691,7 +5691,7 @@ CMyEditUserWin::CMyEditUserWin(CWindow *inParent, bool inIsNewUser)
 	Uint32 wid;
 
 	// setup window
-	SetTitle("\pEdit Account");
+	SetTitle("\x0c" "Edit Account");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 	mIsNewUser = (inIsNewUser != 0);
 	
@@ -5707,16 +5707,16 @@ CMyEditUserWin::CMyEditUserWin(CWindow *inParent, bool inIsNewUser)
 
 	// make labels
 	lbl = new CLabelView(vc, SRect(20,25,95,41));
-	lbl->SetText("\pName:");
+	lbl->SetText("\x05" "Name:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,55,95,71));
-	lbl->SetText("\pLogin:");
+	lbl->SetText("\x06" "Login:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,85,95,101));
-	lbl->SetText("\pPassword:");
+	lbl->SetText("\x09" "Password:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,120,95,136));
-	lbl->SetText("\pAccess:");
+	lbl->SetText("\x07" "Access:");
 	lbl->Show();
 	
 	// make text boxes
@@ -5756,18 +5756,18 @@ CMyEditUserWin::CMyEditUserWin(CWindow *inParent, bool inIsNewUser)
 
 	// make buttons
 	btn = new CButtonView(vc, SRect(224,350,300,376));
-	btn->SetTitle("\pSave");
+	btn->SetTitle("\x04" "Save");
 	btn->SetDefault(true);
 	btn->SetID(viewID_SaveEditUser);
 	btn->Show();
 	vc->SetDefaultView(btn);
 	btn = new CButtonView(vc, SRect(140,353,210,373));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(viewID_CancelEditUser);
 	btn->Show();
 	vc->SetCancelView(btn);
 	btn = new CButtonView(vc, SRect(10,353,80,373));
-	btn->SetTitle("\pDelete");
+	btn->SetTitle("\x06" "Delete");
 	btn->SetID(viewID_DeleteEditUser);
 	btn->Show();
 	mViews.deleteBtn = btn;
@@ -5903,7 +5903,7 @@ bool CMyEditUserWin::GetInfo(Uint8 *outName, Uint8 *outLogin, Uint8 *outPass)
 
 			mViews.containerView->SetFocusView(mViews.passwordScr);
 			
-			gApp->DisplayStandardMessage("\pPassword too long", "\pPlease select a password that is no longer than 31 characters.", icon_Stop, 1);
+			gApp->DisplayStandardMessage("\x11" "Password too long", "\x3e" "Please select a password that is no longer than 31 characters.", icon_Stop, 1);
 			return false;
 		}
 
@@ -5931,7 +5931,7 @@ CMyTasksWin::CMyTasksWin(CWindow *inParent)
 	CBoxView *box;
 
 	// setup window
-	SetTitle("\pTasks");
+	SetTitle("\x05" "Tasks");
 	SetLimits(270, 100);
 
 	// make container view for content
@@ -5948,7 +5948,7 @@ CMyTasksWin::CMyTasksWin(CWindow *inParent)
 	// make buttons
 	mViews.stopTaskIcon = new CIconButtonView(vc, SRect(3,3,27,27));
 	mViews.stopTaskIcon->SetIconID(412);
-	mViews.stopTaskIcon->SetTooltipMsg("\pKill Task");
+	mViews.stopTaskIcon->SetTooltipMsg("\x09" "Kill Task");
 	mViews.stopTaskIcon->Disable();
 	mViews.stopTaskIcon->Show();
 	mViews.stopTaskIcon->SetID(viewID_StopTask);
@@ -5956,7 +5956,7 @@ CMyTasksWin::CMyTasksWin(CWindow *inParent)
 	mViews.startTaskIcon = new CIconButtonView(vc, SRect(30,3,54,27));
 	mViews.startTaskIcon->SetIconID(216);
 	mViews.startTaskIcon->SetID(viewID_StartTask);
-	mViews.startTaskIcon->SetTooltipMsg("\pBegin Task");
+	mViews.startTaskIcon->SetTooltipMsg("\x0a" "Begin Task");
 	mViews.startTaskIcon->Disable();
 	mViews.startTaskIcon->Show();
 
@@ -5964,7 +5964,7 @@ CMyTasksWin::CMyTasksWin(CWindow *inParent)
 	CIconButtonView *icb = new CIconButtonView(vc, SRect(57,3,81,27));
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpTasks);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->Show();
 
 
@@ -6046,7 +6046,7 @@ CMyOpenUserWin::CMyOpenUserWin()
 	CBoxView *box;
 
 	// setup window
-	SetTitle("\pOpen Account");
+	SetTitle("\x0c" "Open Account");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -6060,7 +6060,7 @@ CMyOpenUserWin::CMyOpenUserWin()
 	
 	// make label
 	lbl = new CLabelView(vc, SRect(50,10,265,44));
-	lbl->SetText("\pEnter the login name of the account:");
+	lbl->SetText("\x24" "Enter the login name of the account:");
 	lbl->Show();
 
 	// make box
@@ -6077,7 +6077,7 @@ CMyOpenUserWin::CMyOpenUserWin()
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(194,110,270,136));
-	btn->SetTitle("\pOpen");
+	btn->SetTitle("\x04" "Open");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Disable();
@@ -6085,7 +6085,7 @@ CMyOpenUserWin::CMyOpenUserWin()
 	vc->SetDefaultView(btn);
 	mViews.openBtn = btn;
 	btn = new CButtonView(vc, SRect(104,113,174,133));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
@@ -6139,7 +6139,7 @@ CMyNewFolderWin::CMyNewFolderWin(const Uint8 inMsg[])
 	mViews.nameText->SetID(3);
 	
 	// make buttons
-	SButtons btns[] = {{1, "\pCreate", btnOpt_Default, &mViews.createBtn}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x06" "Create", btnOpt_Default, &mViews.createBtn}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(110,110,290,136), btns);
 	mViews.createBtn->Disable();
 }
@@ -6165,7 +6165,7 @@ CMyChatInviteWin::CMyChatInviteWin(CWindow *inParent)
 	CLabelView *lbl;
 
 	// setup window
-	SetTitle("\pChat Invitation");
+	SetTitle("\x0f" "Chat Invitation");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -6179,13 +6179,13 @@ CMyChatInviteWin::CMyChatInviteWin(CWindow *inParent)
 	
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,10,270,26));
-	lbl->SetText("\pYou are invited to chat with:");
+	lbl->SetText("\x1d" "You are invited to chat with:");
 	lbl->Show();
 	mNameLabel = new CLabelView(vc, SRect(50,28,270,44));
 	mNameLabel->Show();
 
 	// make buttons
-	SButtons btns[] = {{viewID_AcceptChatInvite, "\pChat", btnOpt_Default, nil}, {viewID_RejectChatInvite, "\pDecline", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{viewID_AcceptChatInvite, "\x04" "Chat", btnOpt_Default, nil}, {viewID_RejectChatInvite, "\x07" "Decline", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(90,60,270,86), btns);
 }
 
@@ -6205,7 +6205,7 @@ CMyChatSubjectWin::CMyChatSubjectWin()
 	CScrollerView *scr;
 	
 	// setup window
-	SetTitle("\pChat Subject");
+	SetTitle("\x0c" "Chat Subject");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 	
 	// make container view for content
@@ -6219,7 +6219,7 @@ CMyChatSubjectWin::CMyChatSubjectWin()
 	
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,17,245,33));
-	lbl->SetText("\pEnter a subject for this chat:");
+	lbl->SetText("\x1e" "Enter a subject for this chat:");
 	lbl->Show();
 	
 	// make text boxes
@@ -6229,7 +6229,7 @@ CMyChatSubjectWin::CMyChatSubjectWin()
 	vc->SetFocusView(scr);
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSet", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x03" "Set", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(130,100,310,126), btns);
 }
 
@@ -6267,21 +6267,21 @@ CMyUserInfoWin::CMyUserInfoWin(CWindow *inParent)
 	icb = new CIconButtonView(vc, SRect(3,3,27,27));
 	icb->SetIconID(415);
 	icb->SetID(viewID_OpenPrivateChat);
-	icb->SetTooltipMsg("\pPrivate Chat");
+	icb->SetTooltipMsg("\x0c" "Private Chat");
 	icb->Show();
 	mViews.chatBtn = icb;
 	
 	icb = new CIconButtonView(vc, SRect(30,3,54,27));
 	icb->SetIconID(206);
 	icb->SetID(viewID_SendPrivMsg);
-	icb->SetTooltipMsg("\pPrivate Message");
+	icb->SetTooltipMsg("\x0f" "Private Message");
 	icb->Show();
 	mViews.msgBtn = icb;
 	
 	icb = new CIconButtonView(vc, SRect(57,3,81,27));
 	icb->SetIconID(205);
 	icb->SetID(viewID_Refresh);
-	icb->SetTooltipMsg("\pRefresh");
+	icb->SetTooltipMsg("\x07" "Refresh");
 	icb->Show();
 	mViews.refreshBtn = icb;
 	
@@ -6292,7 +6292,7 @@ CMyUserInfoWin::CMyUserInfoWin(CWindow *inParent)
 	icb->SetIconID(418);
 	icb->SetID(viewID_UserInfoOpenUser);
 	icb->SetSizing(sizing_HorizSticky);
-	icb->SetTooltipMsg("\pOpen Account");
+	icb->SetTooltipMsg("\x0c" "Open Account");
 	icb->Show();
 	mViews.openUserBtn = icb;
 
@@ -6300,7 +6300,7 @@ CMyUserInfoWin::CMyUserInfoWin(CWindow *inParent)
 	icb->SetIconID(412);
 	icb->SetID(viewID_Delete);
 	icb->SetSizing(sizing_HorizSticky);
-	icb->SetTooltipMsg("\pDisconnect");
+	icb->SetTooltipMsg("\x0a" "Disconnect");
 	icb->Show();
 	mViews.discBtn = icb;
 
@@ -6341,7 +6341,7 @@ void CMyUserInfoWin::SetContent(Uint16 inUserID, const Uint8 *inUserName, TField
 		// set window title
 		Uint8 psUserName[64];
 		inData->GetPString(myField_UserName, psUserName, sizeof(psUserName));
-		SetTitle(psUserName[0] == 0 ? "\pUnnamed User" : psUserName);
+		SetTitle(psUserName[0] == 0 ? "\x0c" "Unnamed User" : psUserName);
 			
 		if (inData)
 		{
@@ -6479,7 +6479,7 @@ CMyFileInfoWin::CMyFileInfoWin(CWindow *inParent, bool inIsFolder)
 	
 	// make titles label
 	lbl = new CLabelView(vc, SRect(10,40,75,130));
-	lbl->SetText("\pType:\rCreator:\rSize:\rCreated:\rModified:\r\rComments:");
+	lbl->SetText("\x32" "Type:\rCreator:\rSize:\rCreated:\rModified:\r\rComments:");
 	lbl->SetFont(fd_Default9BoldRight);
 	lbl->Show();
 
@@ -6506,7 +6506,7 @@ CMyFileInfoWin::CMyFileInfoWin(CWindow *inParent, bool inIsFolder)
 	
 	// make button
 	btn = new CButtonView(vc, SRect(210,208,268,232));
-	btn->SetTitle("\pSave");
+	btn->SetTitle("\x04" "Save");
 	btn->SetID(viewID_FileSaveInfo);
 	btn->Disable();
 	btn->Show();
@@ -6547,7 +6547,7 @@ CMyConfirmDisconnectWin::CMyConfirmDisconnectWin(const Uint8 *inServerName, Uint
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pConfirm Disconnect");
+	SetTitle("\x12" "Confirm Disconnect");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -6561,7 +6561,7 @@ CMyConfirmDisconnectWin::CMyConfirmDisconnectWin(const Uint8 *inServerName, Uint
 
 	// make label
 	Uint8 psMessage[256];
-	psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "You are currently connected to \"%#s\" with %lu transfer task%#s in progress.  Disconnecting will cancel your transfer task%#s.  Are you sure you want to disconnect from this Server?", inServerName, inTaskCount, inTaskCount > 1 ? "\ps" : "\p", inTaskCount > 1 ? "\ps" : "\p");
+	psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "You are currently connected to \"%#s\" with %lu transfer task%#s in progress.  Disconnecting will cancel your transfer task%#s.  Are you sure you want to disconnect from this Server?", inServerName, inTaskCount, inTaskCount > 1 ? "\x01" "s" : "\x00" "", inTaskCount > 1 ? "\x01" "s" : "\x00" "");
 
 	lbl = new CLabelView(vc, SRect(50,10,380,74));
 	lbl->SetText(psMessage);
@@ -6569,18 +6569,18 @@ CMyConfirmDisconnectWin::CMyConfirmDisconnectWin(const Uint8 *inServerName, Uint
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(10,83,94,103));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
 
 	btn = new CButtonView(vc, SRect(104,83,284,103));
-	btn->SetTitle("\pDisconnect when Complete");
+	btn->SetTitle("\x18" "Disconnect when Complete");
 	btn->SetID(3);
 	btn->Show();
 
 	btn = new CButtonView(vc, SRect(294,80,380,106));
-	btn->SetTitle("\pDisconnect");
+	btn->SetTitle("\x0a" "Disconnect");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
@@ -6599,7 +6599,7 @@ CMyConfirmQuitWin::CMyConfirmQuitWin(const Uint8 *inServerName, Uint32 inTaskCou
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pConfirm Quit");
+	SetTitle("\x0c" "Confirm Quit");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -6614,7 +6614,7 @@ CMyConfirmQuitWin::CMyConfirmQuitWin(const Uint8 *inServerName, Uint32 inTaskCou
 	// make label
 	Uint8 psMessage[256];
 	if (inTaskCount)
-		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "You are currently connected to \"%#s\" with %lu task%#s in progress.  Quitting will cancel your active task%#s.  Are you sure you want to quit and disconnect from this Server?", inServerName, inTaskCount, inTaskCount > 1 ? "\ps" : "\p", inTaskCount > 1 ? "\ps" : "\p");
+		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "You are currently connected to \"%#s\" with %lu task%#s in progress.  Quitting will cancel your active task%#s.  Are you sure you want to quit and disconnect from this Server?", inServerName, inTaskCount, inTaskCount > 1 ? "\x01" "s" : "\x00" "", inTaskCount > 1 ? "\x01" "s" : "\x00" "");
 	else
 		psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "You are currently connected to \"%#s\".  Are you sure you want to quit and disconnect from this Server?", inServerName);
 
@@ -6628,7 +6628,7 @@ CMyConfirmQuitWin::CMyConfirmQuitWin(const Uint8 *inServerName, Uint32 inTaskCou
 	else
 		btn = new CButtonView(vc, SRect(156,83,240,103));
 
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
@@ -6636,13 +6636,13 @@ CMyConfirmQuitWin::CMyConfirmQuitWin(const Uint8 *inServerName, Uint32 inTaskCou
 	if (inTaskCount)
 	{
 		btn = new CButtonView(vc, SRect(106,83,244,103));
-		btn->SetTitle("\pQuit when Complete");
+		btn->SetTitle("\x12" "Quit when Complete");
 		btn->SetID(3);
 		btn->Show();
 	}
 
 	btn = new CButtonView(vc, SRect(256,80,340,106));
-	btn->SetTitle("\pQuit");
+	btn->SetTitle("\x04" "Quit");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
@@ -6661,7 +6661,7 @@ CMyWaitDisconnectWin::CMyWaitDisconnectWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pWaiting for Tasks to Complete");
+	SetTitle("\x1d" "Waiting for Tasks to Complete");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -6680,13 +6680,13 @@ CMyWaitDisconnectWin::CMyWaitDisconnectWin()
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(112,73,198,93));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
 
 	btn = new CButtonView(vc, SRect(214,70,340,96));
-	btn->SetTitle("\pDisconnect Now");
+	btn->SetTitle("\x0e" "Disconnect Now");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
@@ -6743,7 +6743,7 @@ CMyWaitQuitWin::CMyWaitQuitWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pWaiting for Tasks to Complete");
+	SetTitle("\x1d" "Waiting for Tasks to Complete");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -6762,13 +6762,13 @@ CMyWaitQuitWin::CMyWaitQuitWin()
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(132,73,218,93));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
 
 	btn = new CButtonView(vc, SRect(234,70,340,96));
-	btn->SetTitle("\pQuit Now");
+	btn->SetTitle("\x08" "Quit Now");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();

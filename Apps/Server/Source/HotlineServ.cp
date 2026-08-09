@@ -4,30 +4,30 @@
 #include "HotlineServIDTranslate.h"
 
 
-#define kServerVersion	"\p1.9"
+#define kServerVersion	"\x03" "1.9"
 
 
 #if WIN32
-const Uint8 *kDefaultTrackerAddr = "\ppc.hltracker.com";
+const Uint8 *kDefaultTrackerAddr = "\x10" "pc.hltracker.com";
 #else
-const Uint8 *kDefaultTrackerAddr = "\phltracker.com";
+const Uint8 *kDefaultTrackerAddr = "\x0d" "hltracker.com";
 #endif
 
-const Uint8 *kMsgBoardFileName =			"\pMessageBoard.txt";
-const Uint8 *kMyAgreementTextFileName =		"\pAgreement.txt";
+const Uint8 *kMsgBoardFileName =			"\x10" "MessageBoard.txt";
+const Uint8 *kMyAgreementTextFileName =		"\x0d" "Agreement.txt";
 
 #if USES_FILE_EXTENSIONS
-const Uint8 *kMyErrorLogFileName = 			"\pError Log.txt";
-const Uint8 *kMyDownloadLogFileName =		"\pDownload Log.txt";
-const Uint8 *kMyUploadLogFileName =			"\pUpload Log.txt";
-const Uint8 *kMyConnectLogFileName =		"\pConnect Log.txt";
-const Uint8 *kMyAccountLogFileName =		"\pAccount Log.txt";
+const Uint8 *kMyErrorLogFileName = 			"\x0d" "Error Log.txt";
+const Uint8 *kMyDownloadLogFileName =		"\x10" "Download Log.txt";
+const Uint8 *kMyUploadLogFileName =			"\x0e" "Upload Log.txt";
+const Uint8 *kMyConnectLogFileName =		"\x0f" "Connect Log.txt";
+const Uint8 *kMyAccountLogFileName =		"\x0f" "Account Log.txt";
 #else
-const Uint8 *kMyErrorLogFileName = 			"\pError Log";
-const Uint8 *kMyDownloadLogFileName =		"\pDownload Log";
-const Uint8 *kMyUploadLogFileName =			"\pUpload Log";
-const Uint8 *kMyConnectLogFileName =		"\pConnect Log";
-const Uint8 *kMyAccountLogFileName =		"\pAccount Log";
+const Uint8 *kMyErrorLogFileName = 			"\x09" "Error Log";
+const Uint8 *kMyDownloadLogFileName =		"\x0c" "Download Log";
+const Uint8 *kMyUploadLogFileName =			"\x0a" "Upload Log";
+const Uint8 *kMyConnectLogFileName =		"\x0b" "Connect Log";
+const Uint8 *kMyAccountLogFileName =		"\x0b" "Account Log";
 #endif
 
 #if WIN32
@@ -61,8 +61,8 @@ void AppMain()
 	#endif
 	
 	#if WIN32
-		try { URez::AddProgramFileToSearchChain("\pData//hls19.dat"); } catch(...){ }
-		//try { URez::AddProgramFileToSearchChain("\phlserver.dat"); } catch(...){ }
+		try { URez::AddProgramFileToSearchChain("\x0f" "Data//hls19.dat"); } catch(...){ }
+		//try { URez::AddProgramFileToSearchChain("\x0c" "hlserver.dat"); } catch(...){ }
 	#endif
 		
 		gApp = new CMyApplication;
@@ -157,10 +157,10 @@ void CMyApplication::StartUp()
 
 	// make log window - must be created first since some functions below might log errors
 	mLogWin = new CMyTextWin;
-	mLogWin->SetTitle("\pHotline Server Log");
+	mLogWin->SetTitle("\x12" "Hotline Server Log");
 	
 #if !FACELESS
-	LogText("\pHotline Server", kServerVersion);
+	LogText("\x0e" "Hotline Server", kServerVersion);
 #endif
 
 
@@ -168,15 +168,15 @@ void CMyApplication::StartUp()
 	Uint32 winVis;
 	SRect winRect[3];
 	
-	mUsersFolder = UFS::New(kProgramFolder, nil, "\pUsers", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
+	mUsersFolder = UFS::New(kProgramFolder, nil, "\x05" "Users", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
 	if (type == fsItemType_NonExistant)
 		mUsersFolder->CreateFolder();
 	
-	mFilesFolder = UFS::New(kProgramFolder, nil, "\pFiles", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
+	mFilesFolder = UFS::New(kProgramFolder, nil, "\x05" "Files", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
 	if (type == fsItemType_NonExistant)
 		mFilesFolder->CreateFolder();
 	
-	mNewsFolder = UFS::New(kProgramFolder, nil, "\pNews", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
+	mNewsFolder = UFS::New(kProgramFolder, nil, "\x04" "News", fsOption_FailIfNotFolder + fsOption_ResolveAliases, &type);
 	if (type == fsItemType_NonExistant)
 		mNewsFolder->CreateFolder();
 	
@@ -268,10 +268,10 @@ void CMyApplication::StartUp()
 	catch(...)
 	{
 	#if !FACELESS
-		LogText("\pServer Error", "\pPlease change the \"Server IP\" or \"Server port number\" from \"Options/General\" and restart the server");
+		LogText("\x0c" "Server Error", "\x63" "Please change the \"Server IP\" or \"Server port number\" from \"Options/General\" and restart the server");
 	#endif
 	
-		DisplayStandardMessage("\pServer Error", "\pCannot bind to the specified address because it is incorrect or it is already in use. Please change the \"Server IP\" or \"Server port number\" from \"Options/General\" and restart the server.", icon_Stop, 1);
+		DisplayStandardMessage("\x0c" "Server Error", "\xba" "Cannot bind to the specified address because it is incorrect or it is already in use. Please change the \"Server IP\" or \"Server port number\" from \"Options/General\" and restart the server.", icon_Stop, 1);
 		return;
 	}
 	
@@ -289,7 +289,7 @@ void CMyApplication::StartUp()
 			psLocalAddr[0] += UText::IntegerToText(psLocalAddr + psLocalAddr[0] + 1, 10, mOptions.nBasePortNum);
 		}
 	
-		LogText(psLocalAddr, "\pHotline Server started");
+		LogText(psLocalAddr, "\x16" "Hotline Server started");
 	}
 	catch(...)
 	{
@@ -368,7 +368,7 @@ void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inD
 			break;
 				
 		case 1107:
-			DisplayStandardMessage("\pRestart the server", "\pChanges of the Server IP or Port Number will only take effect after the server is restarted.", icon_Stop, 1);
+			DisplayStandardMessage("\x12" "Restart the server", "\x5c" "Changes of the Server IP or Port Number will only take effect after the server is restarted.", icon_Stop, 1);
 			break;
 
 	
@@ -384,7 +384,7 @@ void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inD
 
 	#if NETWORK_SERVER
 		case 1111:
-			DisplayStandardMessage("\pInvalid Serial Number", "\pThe Serial Number you entered is not valid.", icon_Stop, 1);
+			DisplayStandardMessage("\x15" "Invalid Serial Number", "\x2b" "The Serial Number you entered is not valid.", icon_Stop, 1);
 			break;
 	#endif
 	
@@ -612,11 +612,11 @@ bool CMyApplication::DisplayCreateAdmin()
 	psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "The Admin account \"%#s\" does not exist. Would you like to create it?", mAdminLogin);
 
 	mb.icon = icon_Stop;
-	mb.title = "\pCreate Admin Account";
+	mb.title = "\x14" "Create Admin Account";
 	mb.messageSize = psMessage[0];
 	mb.messageData = psMessage + 1;
-	mb.button1 = "\pCreate";
-	mb.button2 = "\pCancel";
+	mb.button1 = "\x06" "Create";
+	mb.button2 = "\x06" "Cancel";
 	
 	if (MsgBox(mb) != 1)
 		return false;
@@ -636,11 +636,11 @@ bool CMyApplication::DisplayAccountExists(const Uint8 *inLogin)
 	psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "The account \"%#s\" already exists. Would you like to set this account as the head Admin account?", inLogin);
 
 	mb.icon = icon_Stop;
-	mb.title = "\pAccount Already Exists";
+	mb.title = "\x16" "Account Already Exists";
 	mb.messageSize = psMessage[0];
 	mb.messageData = psMessage + 1;
-	mb.button1 = "\pOK";
-	mb.button2 = "\pCancel";
+	mb.button1 = "\x02" "OK";
+	mb.button2 = "\x06" "Cancel";
 			
 	if (MsgBox(mb) != 1)
 		return false;
@@ -1016,11 +1016,11 @@ void CMyApplication::DoAdminConnect()
 	}
 
 	// check if the Hotline protocol is registered
-	if (!UTransport::IsRegisteredProtocol("\photline"))
+	if (!UTransport::IsRegisteredProtocol("\x07" "hotline"))
 	{
 		if (DisplayDownloadClient())
 		{
-			const Uint8 *psUrl = "\phttp://www.BigRedH.com/download/";
+			const Uint8 *psUrl = "\x20" "http://www.BigRedH.com/download/";
 			UTransport::LaunchURL(psUrl + 1, psUrl[0]);
 		}	
 		
@@ -1047,7 +1047,7 @@ void CMyApplication::DoAdminConnect()
 	{
 		if (DisplayDownloadClient())
 		{
-			const Uint8 *psUrl = "\phttp://www.BigRedH.com/download/";
+			const Uint8 *psUrl = "\x20" "http://www.BigRedH.com/download/";
 			UTransport::LaunchURL(psUrl + 1, psUrl[0]);
 		}	
 	}
@@ -1319,7 +1319,7 @@ bool CMyApplication::LoadAgreement(const Uint8 *inAgreementFileName, bool inRelo
 	if (!fp)
 	{		
 	#if !FACELESS
-		Log("Could not find file “%#s”", inAgreementFileName);
+		Log("Could not find file \xd2%#s\xd3", inAgreementFileName);
 	#endif
 	
 		return false;
@@ -1355,7 +1355,7 @@ bool CMyApplication::LoadAgreement(const Uint8 *inAgreementFileName, bool inRelo
 			Uint8 psMsg[128];
 			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "<%#s> is larger that %lu bytes and cannot be used as agreement.", inAgreementFileName, nMaxSize);
 		
-			DisplayStandardMessage("\pAttention", psMsg, icon_Note, 132);			
+			DisplayStandardMessage("\x09" "Attention", psMsg, icon_Note, 132);			
 			return false;
 		}
 	}
@@ -1368,7 +1368,7 @@ bool CMyApplication::LoadAgreement(const Uint8 *inAgreementFileName, bool inRelo
 		}
 
 	#if !FACELESS
-		Log("Could not load file “%#s”", inAgreementFileName);	
+		Log("Could not load file \xd2%#s\xd3", inAgreementFileName);	
 	#endif
 	
 		throw;
@@ -1376,9 +1376,9 @@ bool CMyApplication::LoadAgreement(const Uint8 *inAgreementFileName, bool inRelo
 	
 #if !FACELESS	
 	if (inReload)
-		Log("Reloaded file “%#s”", inAgreementFileName);
+		Log("Reloaded file \xd2%#s\xd3", inAgreementFileName);
 	else
-		Log("Loaded file “%#s”", inAgreementFileName);
+		Log("Loaded file \xd2%#s\xd3", inAgreementFileName);
 #else
 
 	#pragma unused(inReload)
@@ -1469,7 +1469,7 @@ Uint32 CMyApplication::AddToMsgBoard(TFieldData inData, const Uint8 inUserName[]
 	Require(mMsgData);
 
 	const Int8 kHeaderFormat[] = "From %#s (%s%2.2hu %2.2hu:%2.2hu):\r\r";
-	const Uint8 kFooterText[] = "\p\r__________________________________________________________\r";
+	const Uint8 kFooterText[] = "\x3c" "\r__________________________________________________________\r";
 
 	Uint8 hdr[256];
 	Int8 *month;
@@ -2209,7 +2209,7 @@ void CMyApplication::DeleteOnlineAccount(const Uint8 *inLogin, SMyClient *inClie
 		return;
 	
 	StFieldData data;
-	data->AddPString(myField_Data, "\pYou are logged in with an account which was deleted.");
+	data->AddPString(myField_Data, "\x34" "You are logged in with an account which was deleted.");
 
 	SMyClient *pClient = (SMyClient *)mClientList.GetFirst();
 
@@ -2234,7 +2234,7 @@ void CMyApplication::DeleteOnlineAccount(const Uint8 *inLogin, SMyClient *inClie
 			}
 
 		#if !FACELESS
-			Log(inClient, "Disconnect “%#s”", p);	
+			Log(inClient, "Disconnect \xd2%#s\xd3", p);	
 		#endif
 		}
 		
@@ -2342,7 +2342,7 @@ void CMyApplication::RemoveOldTempBans()
 void CMyApplication::DisconnectPermBan()
 {
 	StFieldData data;
-	data->AddPString(myField_Data, "\pYou are permanently banned on this server.");
+	data->AddPString(myField_Data, "\x2a" "You are permanently banned on this server.");
 
 	SMyClient *client = (SMyClient *)mClientList.GetFirst();
 	
@@ -2367,7 +2367,7 @@ void CMyApplication::DisconnectPermBan()
 			}
 
 		#if !FACELESS
-			Log(client, "Disconnect & permanent ban “%#s”", p);
+			Log(client, "Disconnect & permanent ban \xd2%#s\xd3", p);
 		#endif
 		}
 		
@@ -2451,14 +2451,14 @@ void CMyApplication::Log(const Int8 inFormat[], ...)
 	str[0] = UText::FormatArg(str+1, sizeof(str)-1, inFormat, va);
 	va_end(va);
 	
-	LogText("\p", str);
+	LogText("\x00" "", str);
 }
 
 void CMyApplication::Log(SMyClient *inClient, const Int8 inFormat[], ...)
 {
 	Uint8 ip[256];
 	Uint8 str[256];
-	Uint8 *p = "\p";
+	Uint8 *p = "\x00" "";
 	
 	va_list va;
 	va_start(va, inFormat);
@@ -2494,7 +2494,7 @@ void CMyApplication::Log(TTransport inTpt, const Int8 inFormat[], ...)
 		LogText(ip, str);
 	}
 	else
-		LogText("\p", str);
+		LogText("\x00" "", str);
 }
 
 void CMyApplication::Log(SMyDownloadWaitingData *inDownloadWaiting, const Int8 inText[])
@@ -2580,7 +2580,7 @@ void CMyApplication::LogDownload(SMyClient *inClient, const Uint8 inFileName[])
 		s = logFile->GetSize();
 		if (s == 0)
 		{
-			const Uint8 *titleStr = "\pDate/time\tAddress\tAccount\tName\tFile Name\r";
+			const Uint8 *titleStr = "\x29" "Date/time\tAddress\tAccount\tName\tFile Name\r";
 			s = titleStr[0];
 			logFile->Write(0, titleStr+1, s);
 		}
@@ -2612,7 +2612,7 @@ void CMyApplication::LogUpload(SMyClient *inClient, const Uint8 inFileName[])
 		s = logFile->GetSize();
 		if (s == 0)
 		{
-			const Uint8 *titleStr = "\pDate/time\tAddress\tAccount\tName\tFile Name\r";
+			const Uint8 *titleStr = "\x29" "Date/time\tAddress\tAccount\tName\tFile Name\r";
 			s = titleStr[0];
 			logFile->Write(0, titleStr+1, s);
 		}
@@ -2644,7 +2644,7 @@ void CMyApplication::LogConnect(SMyClient *inClient)
 		s = logFile->GetSize();
 		if (s == 0)
 		{
-			const Uint8 *titleStr = "\pDate/time\tAddress\tAccount\tName\r";
+			const Uint8 *titleStr = "\x1f" "Date/time\tAddress\tAccount\tName\r";
 			s = titleStr[0];
 			logFile->Write(0, titleStr+1, s);
 		}
@@ -2676,7 +2676,7 @@ void CMyApplication::LogAccountChange(SMyClient *inClient, const Uint8 *inAction
 		s = logFile->GetSize();
 		if (s == 0)
 		{
-			const Uint8 *titleStr = "\pDate/time\tAddress\tAccount\tName\tAction\tAffected Account\r";
+			const Uint8 *titleStr = "\x37" "Date/time\tAddress\tAccount\tName\tAction\tAffected Account\r";
 			s = titleStr[0];
 			logFile->Write(0, titleStr+1, s);
 		}
@@ -2716,7 +2716,7 @@ void CMyApplication::NewUser(const SMyUserDataFile& inUserInfo)
 	try
 	{
 		// create data file
-		dataFile = UFS::New(folder, nil, "\pUserData");
+		dataFile = UFS::New(folder, nil, "\x08" "UserData");
 		dataFile->CreateFile('HTud', 'HTLS');
 		
 		// write data file
@@ -2760,7 +2760,7 @@ void CMyApplication::GetUser(const Uint8 *inLogin, SMyUserDataFile& outUserInfo)
 	if (folder->IsHidden()) 
 		Fail(errorType_FileSys, fsError_NoSuchItem);
 	
-	StFileSysRef dataFile(folder, nil, "\pUserData", fsOption_RequireExistingFile);
+	StFileSysRef dataFile(folder, nil, "\x08" "UserData", fsOption_RequireExistingFile);
 	
 	dataFile->Open(perm_Read);
 	if (dataFile->Read(0, &outUserInfo, sizeof(SMyUserDataFile)) != sizeof(SMyUserDataFile))
@@ -2795,7 +2795,7 @@ void CMyApplication::SetUser(const SMyUserDataFile& inUserInfo)
 	loginName[0] = FB(inUserInfo.loginSize);
 	UMemory::Copy(loginName+1, inUserInfo.loginData, loginName[0]);
 
-	StFileSysRef dataFile(mUsersFolder, loginName, "\pUserData", fsOption_RequireExistingFile);
+	StFileSysRef dataFile(mUsersFolder, loginName, "\x08" "UserData", fsOption_RequireExistingFile);
 	
 	dataFile->Open(perm_ReadWrite);
 	dataFile->SetSize(sizeof(SMyUserDataFile));
@@ -2899,7 +2899,7 @@ TFSRefObj* CMyApplication::GetClientRootFolder(SMyClient *inClient)
 {
 	TFSRefObj* ref;
 	
-	ref = UFS::New(mUsersFolder, inClient->accountLogin, "\pFiles", fsOption_PreferExistingFolder);
+	ref = UFS::New(mUsersFolder, inClient->accountLogin, "\x05" "Files", fsOption_PreferExistingFolder);
 	if (ref) return ref;
 	
 	return mFilesFolder->Clone();
@@ -2909,7 +2909,7 @@ TFSRefObj* CMyApplication::GetClientRootNewsFolder(SMyClient *inClient)
 {
 	TFSRefObj* ref;
 	
-	ref = UFS::New(mUsersFolder, inClient->accountLogin, "\pNews", fsOption_PreferExistingFolder);
+	ref = UFS::New(mUsersFolder, inClient->accountLogin, "\x04" "News", fsOption_PreferExistingFolder);
 	if (ref) return ref;
 	
 	return mNewsFolder->Clone();
@@ -2943,7 +2943,7 @@ bool CMyApplication::SetAdminAccount()
 	Uint32 nMessageSize = UText::Format(bufMessage, sizeof(bufMessage), "The Admin account \"%#s\" does not have a password assigned. This account has full access to all controls of the Server and you should not reveal this password to anyone to whom you do not want to give control of the Server. Please enter a new password for this account. If you do not set a password, your Server will not be secure.", mAdminLogin);
 
 	// setup window
-	win.SetTitle("\pSet Admin Password");
+	win.SetTitle("\x12" "Set Admin Password");
 	win.SetInfo(mAdminLogin, bufMessage, nMessageSize);
 
 	win.Show();
@@ -3058,7 +3058,7 @@ bool CMyApplication::CreatePasswordAdminAccount(Uint8 *outAdminPassword)
 	Uint32 nMessageSize = UText::Format(bufMessage, sizeof(bufMessage), "The Admin account \"%#s\" does not exist. Please enter a password for this account so that it can be created. This account has full access to all controls of the Server and you should not reveal this password to anyone to whom you do not want to give control of the Server. Please enter a new password for this account. If you do not set a password, your Server will not be secure.", mAdminLogin);
 
 	// setup window
-	win.SetTitle("\pSet Admin Password");
+	win.SetTitle("\x12" "Set Admin Password");
 	win.SetInfo(mAdminLogin, bufMessage, nMessageSize);
 
 	win.Show();
@@ -3099,7 +3099,7 @@ bool CMyApplication::ResetAdminAccount(const Uint8 *inAdminLogin)
 	const Int8 *csMessage = "Resetting the Admin account will enable all access privileges for the Admin account and set a new password. Please enter a new password below.";
 
 	// setup window
-	win.SetTitle("\pReset Admin Account");
+	win.SetTitle("\x13" "Reset Admin Account");
 	win.SetInfo(inAdminLogin, csMessage, strlen(csMessage));
 
 	win.Show();
@@ -3137,7 +3137,7 @@ bool CMyApplication::ValidateAdminAccount(Uint8 *ioAdminLogin)
 	if (UText::CompareInsensitive(ioAdminLogin + 1, ioAdminLogin[0], psValidatedLogin + 1, psValidatedLogin[0]))
 	{
 		UMemory::Copy(ioAdminLogin, psValidatedLogin, psValidatedLogin[0] + 1);
-		DisplayStandardMessage("\pInvalid Login", "\pYou have used invalid characters in your account login. It has been changed to a valid alternative.", icon_Caution, 1);
+		DisplayStandardMessage("\x0d" "Invalid Login", "\x63" "You have used invalid characters in your account login. It has been changed to a valid alternative.", icon_Caution, 1);
 		
 		return true;
 	}
@@ -3166,7 +3166,7 @@ bool CMyApplication::HasBundlePriv(const SMyClient *inClient, const Uint32 inPri
 
 TFSRefObj* CMyApplication::GetPrefsSpec()
 {
-	return UFS::New(kProgramFolder, nil, "\pPrefs");
+	return UFS::New(kProgramFolder, nil, "\x05" "Prefs");
 }
 
 void CMyApplication::WritePrefs()
@@ -3441,7 +3441,7 @@ void CMyApplication::ReadPrefs(SRect *outWinRects, Uint32 *outWinVis)
 	
 	// use "admin" like admin account if none specified
 	if (mAdminLogin[0] == 0)
-		pstrcpy(mAdminLogin, "\padmin");	
+		pstrcpy(mAdminLogin, "\x05" "admin");	
 }
 
 
@@ -3608,12 +3608,12 @@ void BanRecord::IPrangeToString(Uint8 str[64])
 
 TFSRefObj* CMyApplication::GetPermBanSpec()
 {
-	return UFS::New(kProgramFolder, nil, "\pBanned");
+	return UFS::New(kProgramFolder, nil, "\x06" "Banned");
 }
 
 void CMyApplication::MakePermBanBackup()
 {
-	TFSRefObj* fpb = UFS::New(kProgramFolder, nil, "\pBanned.bak");
+	TFSRefObj* fpb = UFS::New(kProgramFolder, nil, "\x0a" "Banned.bak");
 	scopekill(TFSRefObj, fpb);
 	
 	if (fpb->Exists())
@@ -3623,7 +3623,7 @@ void CMyApplication::MakePermBanBackup()
 	scopekill(TFSRefObj, fpo);
 	
 	if (fpo->Exists())
-		fpo->SetName("\pBanned.bak");
+		fpo->SetName("\x0a" "Banned.bak");
 }
 
 void CMyApplication::WritePermBanInfo(CPtrList<BanRecord> *inPermBanList)
@@ -5505,7 +5505,7 @@ switchAgain:
 								{
 									// put the .hpf extension
 									uf->file->GetName(str);
-									pstrcat(str, "\p.hpf");
+									pstrcat(str, "\x04" ".hpf");
 									uf->file->SetRefName(str);
 								}
 							}
@@ -5907,7 +5907,7 @@ bool CMyApplication::FindResumableFile(TFSRefObj* inRef)
 	fp->GetName(psFileName);
 
 #if WIN32
-	pstrcat(psFileName, "\p.hpf");
+	pstrcat(psFileName, "\x04" ".hpf");
 	fp->SetRefName(psFileName);
 
 	if (fp->Exists())

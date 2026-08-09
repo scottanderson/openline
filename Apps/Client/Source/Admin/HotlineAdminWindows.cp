@@ -16,7 +16,7 @@ CMyAdminWin::CMyAdminWin(CWindow *inParent)
 	: CWindow(SRect(0, 0, ADMIN_WIN_WIDTH, ADMIN_WIN_HEIGHT), windowLayer_Standard, windowOption_Sizeable + windowOption_CloseBox + windowOption_ZoomBox, 0, inParent)
 {
 	// setup window
-	SetTitle("\pHotline Administrator");
+	SetTitle("\x15" "Hotline Administrator");
 	SetLimits(400, 250);
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
@@ -44,22 +44,22 @@ CMyAdminWin::CMyAdminWin(CWindow *inParent)
 	CIconButtonView *icb = new CIconButtonView(vc, SRect(3,3,27,27));
 	icb->SetIconID(234);
 	icb->SetID(viewID_AdminNewUser);
-	icb->SetTooltipMsg("\pNew Account");
+	icb->SetTooltipMsg("\x0b" "New Account");
 	icb->Show();
 	mViews.pNewUserBtn = icb;
 	
 	icb = new CIconButtonView(vc, SRect(30,3,54,27));
 	icb->SetIconID(418);
 	icb->SetID(viewID_AdminOpenUser);
-	icb->SetTooltipMsg("\pOpen Account");
+	icb->SetTooltipMsg("\x0c" "Open Account");
 	icb->Show();
 	mViews.pOpenUserBtn = icb;
 
 	// make buttons
 	CButtonView *btn = new CButtonView(vc, SRect(ADMIN_WIN_WIDTH - 340, ADMIN_WIN_HEIGHT - 32, ADMIN_WIN_WIDTH - 250, ADMIN_WIN_HEIGHT - 6));
 	btn->SetSizing(sizing_HorizSticky | sizing_VertSticky);
-	btn->SetTitle("\pSave");
-	btn->SetTooltipMsg("\pSave all changes");
+	btn->SetTitle("\x04" "Save");
+	btn->SetTooltipMsg("\x10" "Save all changes");
 	btn->SetID(viewID_AdminSaveUsers);
 	btn->SetEnable(false);
 	btn->SetDefault(true);
@@ -69,8 +69,8 @@ CMyAdminWin::CMyAdminWin(CWindow *inParent)
 
 	btn = new CButtonView(vc, SRect(ADMIN_WIN_WIDTH - 230, ADMIN_WIN_HEIGHT - 32, ADMIN_WIN_WIDTH - 140, ADMIN_WIN_HEIGHT - 6));
 	btn->SetSizing(sizing_HorizSticky | sizing_VertSticky);
-	btn->SetTitle("\pRevert");
-	btn->SetTooltipMsg("\pRevert all changes");
+	btn->SetTitle("\x06" "Revert");
+	btn->SetTooltipMsg("\x12" "Revert all changes");
 	btn->SetID(viewID_AdminRevertUsers);
 	btn->SetEnable(false);
 	btn->Show();
@@ -78,8 +78,8 @@ CMyAdminWin::CMyAdminWin(CWindow *inParent)
 
 	btn = new CButtonView(vc, SRect(ADMIN_WIN_WIDTH - 120, ADMIN_WIN_HEIGHT - 32, ADMIN_WIN_WIDTH - 30, ADMIN_WIN_HEIGHT - 6));
 	btn->SetSizing(sizing_HorizSticky | sizing_VertSticky);
-	btn->SetTitle("\pClose");
-	btn->SetTooltipMsg("\pClose");
+	btn->SetTitle("\x05" "Close");
+	btn->SetTooltipMsg("\x05" "Close");
 	btn->SetID(viewID_AdminClose);
 	vc->SetCancelView(btn);	
 	btn->Show();
@@ -97,7 +97,7 @@ CMyAdminWin::CMyAdminWin(CWindow *inParent)
 	icb->SetIconID(212);
 	icb->SetID(viewID_AdminDeleteUser);
 	icb->SetSizing(sizing_HorizSticky);
-	icb->SetTooltipMsg("\pDelete Accounts");
+	icb->SetTooltipMsg("\x0f" "Delete Accounts");
 	icb->Show();
 	mViews.pDeleteUserBtn = icb;
 
@@ -291,9 +291,9 @@ CMyAdminEditUserWin::CMyAdminEditUserWin(bool inIsNewUser, bool inDisable)
 {
 	// setup window
 	if (inIsNewUser)
-		SetTitle("\pNew Account");
+		SetTitle("\x0b" "New Account");
 	else
-		SetTitle("\pEdit Account");
+		SetTitle("\x0c" "Edit Account");
 
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 	
@@ -309,13 +309,13 @@ CMyAdminEditUserWin::CMyAdminEditUserWin(bool inIsNewUser, bool inDisable)
 
 	// make labels
 	CLabelView *lbl = new CLabelView(vc, SRect(20,25,95,41));
-	lbl->SetText("\pName:");
+	lbl->SetText("\x05" "Name:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,55,95,71));
-	lbl->SetText("\pLogin:");
+	lbl->SetText("\x06" "Login:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(20,85,95,101));
-	lbl->SetText("\pPassword:");
+	lbl->SetText("\x09" "Password:");
 	lbl->Show();
 	
 	// make text boxes
@@ -353,7 +353,7 @@ CMyAdminEditUserWin::CMyAdminEditUserWin(bool inIsNewUser, bool inDisable)
 	
 	// make buttons
 	CButtonView *pSaveBtn;
-	SButtons btns[] = {{1, "\pSave", btnOpt_Default, &pSaveBtn}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Save", btnOpt_Default, &pSaveBtn}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(120,126,300,152), btns);
 	
 	if (inDisable)
@@ -400,7 +400,7 @@ bool CMyAdminEditUserWin::GetInfo(Uint8 *outName, Uint8 *outLogin, Uint8 *outPas
 
 			mViews.pContainerView->SetFocusView(mViews.pPasswordScr);
 			
-			gApp->DisplayStandardMessage("\pPassword too long", "\pPlease select a password that is no longer than 31 characters.", icon_Stop, 1);
+			gApp->DisplayStandardMessage("\x11" "Password too long", "\x3e" "Please select a password that is no longer than 31 characters.", icon_Stop, 1);
 			return false;
 		}
 

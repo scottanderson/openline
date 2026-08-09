@@ -1845,7 +1845,7 @@ bool URegularTransport::LaunchURL(const void *inText, Uint32 inTextSize, Uint32 
 		{
 			long st = 0;
 			long en = inTextSize;
-			OSErr err = ICLaunchURL(inst, "\p", 
+			OSErr err = ICLaunchURL(inst, "\x00" "", 
 									(Ptr)inText, inTextSize, 
 									ioSelStart ? (long *)ioSelStart : &st, 
 									ioSelEnd ? (long *)ioSelEnd : &en);

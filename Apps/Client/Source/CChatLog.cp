@@ -30,14 +30,14 @@ void CChatLog::OpenLog()
 	if (mRef != 0)
 		return;
 
-	const Uint8 kFolderName[] = "\pData";
+	const Uint8 kFolderName[] = "\x04" "Data";
 	TFSRefObj* folder = UFS::New(kProgramFolder, nil, kFolderName);
 	scopekill(TFSRefObj, folder);
 	
 	if (!folder->Exists())
 		folder->CreateFolder();
 	
-	const Uint8 kFileName[] = "\pChatLog.xml";
+	const Uint8 kFileName[] = "\x0b" "ChatLog.xml";
 	mRef = UFS::New(folder, nil, kFileName);
 	if (!mRef->Exists()) 
 		mRef->CreateFile('TEXT', 'ttxt');
@@ -46,9 +46,9 @@ void CChatLog::OpenLog()
 	mPos = mRef->GetSize();
 
 	#if MACINTOSH
-	const Uint8 header[] = "\p<?xml version=\"1.0\"?>\r<ChatLog>\r</ChatLog>";
+	const Uint8 header[] = "\x2a" "<?xml version=\"1.0\"?>\r<ChatLog>\r</ChatLog>";
 	#elif WIN32
-	const Uint8 header[] = "\p<?xml version=\"1.0\"?>\r\n<ChatLog>\r\n</ChatLog>";
+	const Uint8 header[] = "\x2c" "<?xml version=\"1.0\"?>\r\n<ChatLog>\r\n</ChatLog>";
 	#endif
 
 	if (mPos <= header[0])
@@ -62,7 +62,7 @@ void CChatLog::CloseLog()
 	if (mRef == 0)
 		return;
 
-	const Uint8 header[] = "\p</ChatLog>";
+	const Uint8 header[] = "\x0a" "</ChatLog>";
 	mPos += mRef->Write(mPos, header+1, header[0]);
     mRef->SetSize(mPos);
     mRef->Close();

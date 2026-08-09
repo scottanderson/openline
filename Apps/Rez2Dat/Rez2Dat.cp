@@ -1130,39 +1130,39 @@ public:
 	void ImportFromFiles(UInt8* folderName, UInt8* dstDatName)
 	{
 		HL_DatFile datFile(folderName, dstDatName, false);
-//		datFile.ImportFromFile('ICON', 428, folderName, "\phelpToolbar");
-//		datFile.ImportFromFile('ICON', 429, "\pmsgBoard", folderName, "\pMsgBoard#429.HLpixmap");
-//		datFile.ImportFromFile('ICON', 430, folderName, "\popenDloadFolder");
-//		datFile.ImportFromFile('MooV', 128, "\p19BannerISP.mov", folderName, "\p19BannerISP.mov");
-//		datFile.ImportFromFile('GIFf', 128, "\p19BannerISP.gif", folderName, "\p19BannerISP.gif");
-//		datFile.ImportFromFile('PIXM', 130, "\pSplash", folderName, "\p19SplashISP.HLpixmap");
-		datFile.ImportFromFile('ICON', 429, "\pmsgBoard", folderName, "\pMsgBoard#429.HLpixmap");
-		datFile.ImportFromFile('ICON', 432, "\pSecuriphone", folderName, "\pSecuriphone#432.HLpixmap");
-		datFile.ImportFromFile('ICON', 433, "\pHL-ISP2", folderName, "\pHL-ISP2#433.HLpixmap");
-		datFile.ImportFromFile('ICON', 434, "\pXsprings", folderName, "\pXsprings#434.HLpixmap");
+//		datFile.ImportFromFile('ICON', 428, folderName, "\x0b" "helpToolbar");
+//		datFile.ImportFromFile('ICON', 429, "\x08" "msgBoard", folderName, "\x15" "MsgBoard#429.HLpixmap");
+//		datFile.ImportFromFile('ICON', 430, folderName, "\x0f" "openDloadFolder");
+//		datFile.ImportFromFile('MooV', 128, "\x0f" "19BannerISP.mov", folderName, "\x0f" "19BannerISP.mov");
+//		datFile.ImportFromFile('GIFf', 128, "\x0f" "19BannerISP.gif", folderName, "\x0f" "19BannerISP.gif");
+//		datFile.ImportFromFile('PIXM', 130, "\x06" "Splash", folderName, "\x14" "19SplashISP.HLpixmap");
+		datFile.ImportFromFile('ICON', 429, "\x08" "msgBoard", folderName, "\x15" "MsgBoard#429.HLpixmap");
+		datFile.ImportFromFile('ICON', 432, "\x0b" "Securiphone", folderName, "\x18" "Securiphone#432.HLpixmap");
+		datFile.ImportFromFile('ICON', 433, "\x07" "HL-ISP2", folderName, "\x14" "HL-ISP2#433.HLpixmap");
+		datFile.ImportFromFile('ICON', 434, "\x08" "Xsprings", folderName, "\x15" "Xsprings#434.HLpixmap");
 	}
 	void ImportFromFilesToMacRez(UInt8* folderName, UInt8* rsrcName)
 	{
 		MacResourceFile rsrcFile(folderName, rsrcName);
-//		datFile.ImportFromFile('ICON', 428, folderName, "\phelpToolbar");
-//		datFile.ImportFromFile('ICON', 429, folderName, "\pmsgBoard");
-//		datFile.ImportFromFile('ICON', 430, folderName, "\popenDloadFolder");
-//		datFile.ImportFromFile('ICON', 431, folderName, "\pHL-ISP");
-//		datFile.ImportFromFile('ICON', 432, folderName, "\pSecuriphone");
-//		rsrcFile.AddFromFile('MooV', 128, "\p19Banner.mov", folderName, "\p19Banner.mov");
-//		rsrcFile.AddFromFile('GIFf', 128, "\p19Banner.gif", folderName, "\p19Banner.gif");
+//		datFile.ImportFromFile('ICON', 428, folderName, "\x0b" "helpToolbar");
+//		datFile.ImportFromFile('ICON', 429, folderName, "\x08" "msgBoard");
+//		datFile.ImportFromFile('ICON', 430, folderName, "\x0f" "openDloadFolder");
+//		datFile.ImportFromFile('ICON', 431, folderName, "\x06" "HL-ISP");
+//		datFile.ImportFromFile('ICON', 432, folderName, "\x0b" "Securiphone");
+//		rsrcFile.AddFromFile('MooV', 128, "\x0c" "19Banner.mov", folderName, "\x0c" "19Banner.mov");
+//		rsrcFile.AddFromFile('GIFf', 128, "\x0c" "19Banner.gif", folderName, "\x0c" "19Banner.gif");
 	}    
 
 	void StartUp()
 	{
-//		Rez2Dat("\pClient", "\photline_old.dat", "\pHotlineClient(M-Carbon)", "\photline.dat");
+//		Rez2Dat("\x06" "Client", "\x0f" "hotline_old.dat", "\x17" "HotlineClient(M-Carbon)", "\x0b" "hotline.dat");
 
-//		ExportFromDat("\pClient", "\photline.dat");		
-		ImportFromFiles("\pImages", "\phlci19.dat");
-		ImportFromFiles("\pImages", "\phlc19.dat");
-//		ImportFromFilesToMacRez("\pClient", "\photline.rsrc");
+//		ExportFromDat("\x06" "Client", "\x0b" "hotline.dat");		
+		ImportFromFiles("\x06" "Images", "\x0a" "hlci19.dat");
+		ImportFromFiles("\x06" "Images", "\x09" "hlc19.dat");
+//		ImportFromFilesToMacRez("\x06" "Client", "\x0c" "hotline.rsrc");
 		
-		ShowMessage("\pAll Done, closing now");
+		ShowMessage("\x15" "All Done, closing now");
 	} // Startup
 }; // class CMyApplication
 

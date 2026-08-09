@@ -14,7 +14,7 @@ CMyOptionsWin::CMyOptionsWin()
 	: CWindow(SRect(0,0,480,336), windowLayer_Modal)
 {
 	// setup window
-	SetTitle("\pOptions");
+	SetTitle("\x07" "Options");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -26,15 +26,15 @@ CMyOptionsWin::CMyOptionsWin()
 	mViews.tabs->SetFont(UFontDesc::New(kDefaultFont, nil, 10));
 	
 	// add the tabs
-	mViews.tabs->AddTab("\pGeneral");
-	mViews.tabs->AddTab("\pInfo");
+	mViews.tabs->AddTab("\x07" "General");
+	mViews.tabs->AddTab("\x04" "Info");
 #if BANNER_SERVER
-	mViews.tabs->AddTab("\pBanner");
+	mViews.tabs->AddTab("\x06" "Banner");
 #endif
-	mViews.tabs->AddTab("\pBan");
-	mViews.tabs->AddTab("\pTrackers");
-	mViews.tabs->AddTab("\pAdmin");
-	mViews.tabs->AddTab("\pIP");
+	mViews.tabs->AddTab("\x03" "Ban");
+	mViews.tabs->AddTab("\x08" "Trackers");
+	mViews.tabs->AddTab("\x05" "Admin");
+	mViews.tabs->AddTab("\x02" "IP");
 	
 	// attach views to tabs
 	Uint16 nTabNum = 1; 
@@ -53,7 +53,7 @@ CMyOptionsWin::CMyOptionsWin()
 
 	// make buttons
 
-	SButtons btns[] = {{1, "\pSave", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Save", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(mViews.vc, SRect(270,300,450,326), btns);
 }
 
@@ -76,16 +76,16 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make labels
 		lbl = new CLabelView(vc, SRect(20,23,300,39));
-		lbl->SetText("\pServer port number:");
+		lbl->SetText("\x13" "Server port number:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(20,51,300,67));
-		lbl->SetText("\pMaximum simultaneous downloads:");
+		lbl->SetText("\x1f" "Maximum simultaneous downloads:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(20,79,300,95));
-		lbl->SetText("\pMaximum simultaneous downloads/client:");
+		lbl->SetText("\x26" "Maximum simultaneous downloads/client:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(20,107,300,123));
-		lbl->SetText("\pMaximum simultaneous connections/IP:");
+		lbl->SetText("\x24" "Maximum simultaneous connections/IP:");
 		lbl->Show();
 
 		// make text boxes
@@ -104,34 +104,34 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make checkboxes
 		chk = new CCheckBoxView(vc, SRect(20,156,230,174));
-		chk->SetTitle("\pLog Downloads to file");
+		chk->SetTitle("\x15" "Log Downloads to file");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.logDownloads = chk;
 		chk = new CCheckBoxView(vc, SRect(20,176,230,194));
-		chk->SetTitle("\pLog Uploads to file");
+		chk->SetTitle("\x13" "Log Uploads to file");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.logUploads = chk;
 		chk = new CCheckBoxView(vc, SRect(20,196,230,214));
-		chk->SetTitle("\pLog Connects to file");
+		chk->SetTitle("\x14" "Log Connects to file");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.logConnects = chk;
 		chk = new CCheckBoxView(vc, SRect(20,216,230,234));
-		chk->SetTitle("\pLog Account Changes to file");
+		chk->SetTitle("\x1b" "Log Account Changes to file");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.logAccountChanges = chk;
 		
 		chk = new CCheckBoxView(vc, SRect(290,156,400,174));
-		chk->SetTitle("\pPlay Sounds");
+		chk->SetTitle("\x0b" "Play Sounds");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.playSounds = chk;
 		
 		chk = new CCheckBoxView(vc, SRect(290,176,400,194));
-		chk->SetTitle("\pConfirm Quit");
+		chk->SetTitle("\x0c" "Confirm Quit");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.confirmQuit = chk;
@@ -160,17 +160,17 @@ CContainerView *CMyOptionsWin::MakeServInfoTab()
 	{
 		// make labels
 		lbl = new CLabelView(vc, SRect(20,20,320,36));
-		lbl->SetText("\pInformation about this Server (for Trackers):");
+		lbl->SetText("\x2d" "Information about this Server (for Trackers):");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(20,55,116,71));
-		lbl->SetText("\pName:");
+		lbl->SetText("\x05" "Name:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(20,116,116,132));
-		lbl->SetText("\pDescription:");
+		lbl->SetText("\x0c" "Description:");
 		lbl->Show();
 	#if NETWORK_SERVER
 		lbl = new CLabelView(vc, SRect(20,183,116,199));
-		lbl->SetText("\pSerial Number:");
+		lbl->SetText("\x0e" "Serial Number:");
 		lbl->Show();
 	#endif
 		
@@ -213,7 +213,7 @@ CContainerView *CMyOptionsWin::MakeBannerTab()
 		chk = new CCheckBoxView(vc, SRect(30,36,110,54));
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
-		chk->SetTitle("\pLocal");
+		chk->SetTitle("\x05" "Local");
 		chk->SetID(4);
 		chk->Show();
 		mViews.agreemLocal = chk;
@@ -230,7 +230,7 @@ CContainerView *CMyOptionsWin::MakeBannerTab()
 		chk = new CCheckBoxView(vc, SRect(30,140,110,158));
 		chk->SetStyle(kRoundCheckBox);
 		chk->SetAutoMark(true);
-		chk->SetTitle("\pRemote");
+		chk->SetTitle("\x06" "Remote");
 		chk->SetID(5);
 		chk->Show();
 		mViews.agreemRemote = chk;
@@ -245,13 +245,13 @@ CContainerView *CMyOptionsWin::MakeBannerTab()
 
 		// make labels
 		lbl = new CLabelView(vc, SRect(64,65,120,81));
-		lbl->SetText("\pBanner:");
+		lbl->SetText("\x07" "Banner:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(64,95,120,111));
-		lbl->SetText("\pLink:");
+		lbl->SetText("\x05" "Link:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(64,169,120,185));
-		lbl->SetText("\pURL:");
+		lbl->SetText("\x04" "URL:");
 		lbl->Show();		
 	}
 	catch(...)
@@ -279,11 +279,11 @@ CContainerView *CMyOptionsWin::MakeBanTab()
 	{	
 		// make labels view
 		lbl = new CLabelView(vc, SRect(10,193,32,209));
-		lbl->SetText("\pIP:");
+		lbl->SetText("\x03" "IP:");
 		lbl->Show();
 
 		lbl = new CLabelView(vc, SRect(170,193,204,209));
-		lbl->SetText("\pInfo:");
+		lbl->SetText("\x05" "Info:");
 		lbl->Show();
 
 		// make list scroller view
@@ -306,11 +306,11 @@ CContainerView *CMyOptionsWin::MakeBanTab()
 
 		// make buttons
 		btn = new CButtonView(vc, SRect(32,222,108,244));
-		btn->SetTitle("\pAdd");
+		btn->SetTitle("\x03" "Add");
 		btn->SetID(6);
 		btn->Show();
 		btn = new CButtonView(vc, SRect(122,222,198,244));
-		btn->SetTitle("\pDelete");
+		btn->SetTitle("\x06" "Delete");
 		btn->SetID(7);
 		btn->Show();
 	}
@@ -338,7 +338,7 @@ CContainerView *CMyOptionsWin::MakeTrackersTab()
 	{
 		// make checkboxes
 		chk = new CCheckBoxView(vc, SRect(10,20,240,38));
-		chk->SetTitle("\pList with Hotline Trackers:");
+		chk->SetTitle("\x1b" "List with Hotline Trackers:");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.useTracker = chk;
@@ -346,20 +346,20 @@ CContainerView *CMyOptionsWin::MakeTrackersTab()
 		// make labels
 	#if NEW_TRACKER
 		lbl = new CLabelView(vc, SRect(10,60,220,76));
-		lbl->SetText("\pAddress");
+		lbl->SetText("\x07" "Address");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(230,60,330,76));
-		lbl->SetText("\pLogin");
+		lbl->SetText("\x05" "Login");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(340,60,440,76));
-		lbl->SetText("\pPassword");
+		lbl->SetText("\x08" "Password");
 		lbl->Show();
 	#else
 		lbl = new CLabelView(vc, SRect(10,60,300,76));
-		lbl->SetText("\pAddress");
+		lbl->SetText("\x07" "Address");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(310,60,440,76));
-		lbl->SetText("\pPassword");
+		lbl->SetText("\x08" "Password");
 		lbl->Show();
 	#endif
 
@@ -472,7 +472,7 @@ CContainerView *CMyOptionsWin::MakeAdminTab()
 
 		// make admin labels view
 		lbl = new CLabelView(vc, SRect(20,119,160,135));
-		lbl->SetText("\pAdmin Account Login:");
+		lbl->SetText("\x14" "Admin Account Login:");
 		lbl->Show();
 		lbl = new CLabelView(vc, SRect(164,119,344,135));
 		lbl->Show();
@@ -480,7 +480,7 @@ CContainerView *CMyOptionsWin::MakeAdminTab()
 	
 		// make select button
 		btn = new CButtonView(vc, SRect(350,114,430,140));
-		btn->SetTitle("\pSelect...");
+		btn->SetTitle("\x09" "Select...");
 		btn->SetID(8);
 		btn->Show();
 
@@ -490,12 +490,12 @@ CContainerView *CMyOptionsWin::MakeAdminTab()
 
 		// make label view
 		lbl = new CLabelView(vc, SRect(20,162,430,214));
-		lbl->SetText("\pIf you forgot the password to this account, you can reset it here. This button also resets all the privileges for this account providing the administrator with full access.");
+		lbl->SetText("\xac" "If you forgot the password to this account, you can reset it here. This button also resets all the privileges for this account providing the administrator with full access.");
 		lbl->Show();
 	
 		// make reset button
 		btn = new CButtonView(vc, SRect(20,214,186,240));
-		btn->SetTitle("\pReset Admin Account...");
+		btn->SetTitle("\x16" "Reset Admin Account...");
 		btn->SetID(9);
 		btn->Show();
 	}
@@ -522,31 +522,31 @@ CContainerView *CMyOptionsWin::MakeAdvancedTab()
 	{
 		// make label view
 		lbl = new CLabelView(vc, SRect(20,20,180,36));
-		lbl->SetText("\pServer IP:");
+		lbl->SetText("\x0a" "Server IP:");
 		lbl->Show();
 
 		// make IP text views
 		scr = MakeTextBoxView(vc, SRect(240,15,280,41), scrollerOption_Border, &mViews.ip1Text);
 		scr->Show();
 		lbl = new CLabelView(vc, SRect(282,25,288,41));
-		lbl->SetText("\p.");
+		lbl->SetText("\x01" ".");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(290,15,330,41), scrollerOption_Border, &mViews.ip2Text);
 		scr->Show();
 		lbl = new CLabelView(vc, SRect(332,25,338,41));
-		lbl->SetText("\p.");
+		lbl->SetText("\x01" ".");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(340,15,380,41), scrollerOption_Border, &mViews.ip3Text);
 		scr->Show();
 		lbl = new CLabelView(vc, SRect(382,25,388,41));
-		lbl->SetText("\p.");
+		lbl->SetText("\x01" ".");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(390,15,430,41), scrollerOption_Border, &mViews.ip4Text);
 		scr->Show();
 		
 		// make label view
 		lbl = new CLabelView(vc, SRect(20,55,430,200));
-		lbl->SetText("\pIf you have multihoming/IP-aliasing configured on your computer, you can specify which address to bind to here.\r\rIf you have only set up a single IP address, or if you wish to use your default address, leave the IP set to 0.0.0.0.");
+		lbl->SetText("\xe6" "If you have multihoming/IP-aliasing configured on your computer, you can specify which address to bind to here.\r\rIf you have only set up a single IP address, or if you wish to use your default address, leave the IP set to 0.0.0.0.");
 		lbl->Show();
 	}
 	catch(...)
@@ -851,7 +851,7 @@ void CMyOptionsWin::GetAdminInfo(Uint8 *outAdminLogin)
 	 	outAdminLogin[0] = mViews.adminLbl->GetText(outAdminLogin + 1, 31);
 	 	
 	 	if (outAdminLogin[0] == 0)
-	 		pstrcpy(outAdminLogin, "\padmin");
+	 		pstrcpy(outAdminLogin, "\x05" "admin");
 	}
 }
 
@@ -893,14 +893,14 @@ CMyToolbarWin::CMyToolbarWin()
 	SRect r;
 
 	// setup window
-	SetTitle("\pHotline Server");
+	SetTitle("\x0e" "Hotline Server");
 
 	// make container view for content
 	vc = new CContainerView(this, SRect(0,0,200,200));
 	vc->Show();
 	
 	const Uint8 *btnNames[] = {
-		"\pOptions", "\pBroadcast", "\pConnect as Admin", "\pReload", "\pLog", "\pStatistics", "\pQuit"
+		"\x07" "Options", "\x09" "Broadcast", "\x10" "Connect as Admin", "\x06" "Reload", "\x03" "Log", "\x0a" "Statistics", "\x04" "Quit"
 	};
 	const Int16 btnIcons[] = {
 		301, 302, 410, 205, 300, 300, 303
@@ -995,7 +995,7 @@ CMySelectAdminWin::CMySelectAdminWin()
 	CButtonView *btn;
 
 	// setup window
-	SetTitle("\pSelect Head Admin Account");
+	SetTitle("\x19" "Select Head Admin Account");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1004,7 +1004,7 @@ CMySelectAdminWin::CMySelectAdminWin()
 	
 	// make text label
 	lbl = new CLabelView(vc, SRect(10,10,310,46));
-	lbl->SetText("\pSelect the account you wish to set as the head Admin account.");
+	lbl->SetText("\x3d" "Select the account you wish to set as the head Admin account.");
 	lbl->Show();
 
 	// make list scroller
@@ -1024,11 +1024,11 @@ CMySelectAdminWin::CMySelectAdminWin()
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(10,236,110,262));
-	btn->SetTitle("\pCreate New...");
+	btn->SetTitle("\x0d" "Create New...");
 	btn->SetID(3);
 	btn->Show();
 
-	SButtons btns[] = {{1, "\pOK", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x02" "OK", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(130,264,310,290), btns);
 }
 
@@ -1054,7 +1054,7 @@ CMyNewAdminAccountWin::CMyNewAdminAccountWin()
 	CLabelView *lbl;
 
 	// setup window
-	SetTitle("\pCreate New Admin Account");
+	SetTitle("\x18" "Create New Admin Account");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1064,7 +1064,7 @@ CMyNewAdminAccountWin::CMyNewAdminAccountWin()
 	
 	// make text label
 	lbl = new CLabelView(vc, SRect(10,10,380,46));
-	lbl->SetText("\pPlease enter a login and password for the new head Admin account.");
+	lbl->SetText("\x41" "Please enter a login and password for the new head Admin account.");
 	lbl->Show();
 
 	// make box
@@ -1075,7 +1075,7 @@ CMyNewAdminAccountWin::CMyNewAdminAccountWin()
 
 	// make admin text
 	lbl = new CLabelView(vc, SRect(20,63,134,79));
-	lbl->SetText("\pLogin:");
+	lbl->SetText("\x06" "Login:");
 	lbl->Show();
 	scr = MakeTextBoxView(vc, SRect(138,58,366,84), scrollerOption_Border, &mViews.loginText);
 	mViews.loginText->SetID(10);
@@ -1084,7 +1084,7 @@ CMyNewAdminAccountWin::CMyNewAdminAccountWin()
 
 	// make pasword boxes
 	lbl = new CLabelView(vc, SRect(20,93,134,109));
-	lbl->SetText("\pPassword:");
+	lbl->SetText("\x09" "Password:");
 	lbl->Show();
 	scr = MakePasswordBoxView(vc, SRect(138,88,366,114), scrollerOption_Border, &mViews.passwordText1);
 	mViews.passwordText1->SetID(10);
@@ -1092,14 +1092,14 @@ CMyNewAdminAccountWin::CMyNewAdminAccountWin()
 	mViews.passwordScr1 = scr;
 	
 	lbl = new CLabelView(vc, SRect(20,123,134,139));
-	lbl->SetText("\pVerify Password:");
+	lbl->SetText("\x10" "Verify Password:");
 	lbl->Show();
 	scr = MakePasswordBoxView(vc, SRect(138,118,366,144), scrollerOption_Border, &mViews.passwordText2);
 	mViews.passwordText2->SetID(10);
 	scr->Show();
 	
 	// make buttons
-	SButtons btns[] = {{1, "\pCreate", btnOpt_Default, &mViews.createBtn}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x06" "Create", btnOpt_Default, &mViews.createBtn}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(200,168,380,194), btns);
 	mViews.createBtn->Disable();
 }
@@ -1130,7 +1130,7 @@ bool CMyNewAdminAccountWin::GetInfo(Uint8 *outAdminLogin, Uint8 *outAdminPasswor
 			mViews.containerView->SetFocusView(mViews.passwordScr1);
 			mViews.createBtn->Disable();
 
-			gApp->DisplayStandardMessage("\pPassword too long", "\pPlease select a password that is no longer than 31 characters.", icon_Stop, 1);
+			gApp->DisplayStandardMessage("\x11" "Password too long", "\x3e" "Please select a password that is no longer than 31 characters.", icon_Stop, 1);
 			
 			outAdminPassword[0] = 0;
 			return false;
@@ -1210,7 +1210,7 @@ CMySetAdminPassWin::CMySetAdminPassWin()
 
 	// make admin label
 	lbl = new CLabelView(vc, SRect(20,59,170,75));
-	lbl->SetText("\pAdmin Account Login:");
+	lbl->SetText("\x14" "Admin Account Login:");
 	lbl->SetSizing(sizing_VertSticky);
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(174,59,366,75));
@@ -1220,7 +1220,7 @@ CMySetAdminPassWin::CMySetAdminPassWin()
 
 	// make pasword boxes
 	lbl = new CLabelView(vc, SRect(20,89,170,105));
-	lbl->SetText("\pNew Admin Password:");
+	lbl->SetText("\x13" "New Admin Password:");
 	lbl->SetSizing(sizing_VertSticky);
 	lbl->Show();
 	scr = MakePasswordBoxView(vc, SRect(174,84,366,110), scrollerOption_Border, &mViews.passwordText1);
@@ -1231,7 +1231,7 @@ CMySetAdminPassWin::CMySetAdminPassWin()
 	vc->SetFocusView(scr);
 	
 	lbl = new CLabelView(vc, SRect(20,119,170,135));
-	lbl->SetText("\pVerify New Password:");
+	lbl->SetText("\x14" "Verify New Password:");
 	lbl->SetSizing(sizing_VertSticky);
 	lbl->Show();
 	scr = MakePasswordBoxView(vc, SRect(174,114,366,140), scrollerOption_Border, &mViews.passwordText2);
@@ -1240,7 +1240,7 @@ CMySetAdminPassWin::CMySetAdminPassWin()
 	scr->Show();
 	
 	// make buttons
-	SButtons btns[] = {{1, "\pOK", btnOpt_Default, &mViews.saveBtn}, {2, "\pCancel", btnOpt_Cancel, &btn}};
+	SButtons btns[] = {{1, "\x02" "OK", btnOpt_Default, &mViews.saveBtn}, {2, "\x06" "Cancel", btnOpt_Cancel, &btn}};
 	CButtonView::BuildButtons(vc, SRect(200,164,380,190), btns);
 	
 	btn->SetSizing(sizing_VertSticky);
@@ -1295,7 +1295,7 @@ bool CMySetAdminPassWin::GetInfo(Uint8 *outAdminPassword)
 			mViews.containerView->SetFocusView(mViews.passwordScr1);
 			mViews.saveBtn->Disable();
 			
-			gApp->DisplayStandardMessage("\pPassword too long", "\pPlease select a password that is no longer than 31 characters.", icon_Stop, 1);
+			gApp->DisplayStandardMessage("\x11" "Password too long", "\x3e" "Please select a password that is no longer than 31 characters.", icon_Stop, 1);
 			
 			outAdminPassword[0] = 0;
 			return false;
@@ -1352,7 +1352,7 @@ CMySetAdminPrivsWin::CMySetAdminPrivsWin(const Uint8 *inLogin)
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pUpdate Privileges");
+	SetTitle("\x11" "Update Privileges");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1373,7 +1373,7 @@ CMySetAdminPrivsWin::CMySetAdminPrivsWin(const Uint8 *inLogin)
 	lbl->Show();
 	
 	// make buttons
-	SButtons btns[] = {{1, "\pUpdate", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x06" "Update", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(210,224,390,250), btns);
 }
 
@@ -1419,7 +1419,7 @@ CMyBroadcastWin::CMyBroadcastWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pBroadcast");
+	SetTitle("\x09" "Broadcast");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1433,7 +1433,7 @@ CMyBroadcastWin::CMyBroadcastWin()
 
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,10,345,44));
-	lbl->SetText("\pEnter a message to display to all connected users and click the ‘Send’ button.");
+	lbl->SetText("\x4e" "Enter a message to display to all connected users and click the \xd4Send\xd5 button.");
 	lbl->Show();
 	
 	// make text boxes
@@ -1443,13 +1443,13 @@ CMyBroadcastWin::CMyBroadcastWin()
 
 	// make buttons
 	btn = new CButtonView(vc, SRect(220,183,280,203));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
 
 	btn = new CButtonView(vc, SRect(294,180,360,206));
-	btn->SetTitle("\pSend");
+	btn->SetTitle("\x04" "Send");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
@@ -1468,7 +1468,7 @@ CMyDownloadClientWin::CMyDownloadClientWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pHotline Client Not Installed");
+	SetTitle("\x1c" "Hotline Client Not Installed");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1482,18 +1482,18 @@ CMyDownloadClientWin::CMyDownloadClientWin()
 
 	// make label
 	lbl = new CLabelView(vc, SRect(50,10,340,64));
-	lbl->SetText("\pHotline Client is not installed on this system.\rYou can download it at:\rhttp://www.BigRedH.com/download/");
+	lbl->SetText("\x68" "Hotline Client is not installed on this system.\rYou can download it at:\rhttp://www.BigRedH.com/download/");
 	lbl->Show();
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(124,73,208,93));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);
 
 	btn = new CButtonView(vc, SRect(224,70,340,96));
-	btn->SetTitle("\pDownload Now");
+	btn->SetTitle("\x0c" "Download Now");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
@@ -1518,7 +1518,7 @@ CMyStatsWin::CMyStatsWin()
 	mStatValues.connected = mStatValues.downloading = mStatValues.uploading = mStatValues.waiting = mStatValues.connPeak = mStatValues.connCounter = mStatValues.dlCounter = mStatValues.ulCounter = 0;
 
 	// setup window
-	SetTitle("\pStatistics");
+	SetTitle("\x0a" "Statistics");
 
 	// make container view for content
 	vc = new CContainerView(this, SRect(0,0,240,200));
@@ -1526,8 +1526,8 @@ CMyStatsWin::CMyStatsWin()
 
 	// make labels
 	const Uint8 *labelText[] = {
-		"\pCurrently Connected:", "\pDownloads in progress:", "\pUploads in progress:", "\pWaiting downloads:", "\pConnection Peak:",
-		"\pConnection Counter:", "\pDownload Counter:", "\pUpload Counter:", "\pSince:"
+		"\x14" "Currently Connected:", "\x16" "Downloads in progress:", "\x14" "Uploads in progress:", "\x12" "Waiting downloads:", "\x10" "Connection Peak:",
+		"\x13" "Connection Counter:", "\x11" "Download Counter:", "\x0f" "Upload Counter:", "\x06" "Since:"
 	};
 
 	const SRect labelRects[] = {
@@ -1553,42 +1553,42 @@ CMyStatsWin::CMyStatsWin()
 		// make value labels
 		lbl = new CLabelView(vc, SRect(168,10,224,26));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.connected = lbl;
 		lbl = new CLabelView(vc, SRect(168,30,224,46));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.downloading = lbl;
 		lbl = new CLabelView(vc, SRect(168,50,224,66));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.uploading = lbl;
 		lbl = new CLabelView(vc, SRect(168,70,224,86));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.waiting = lbl;
 		lbl = new CLabelView(vc, SRect(168,100,224,116));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.connPeak = lbl;
 		lbl = new CLabelView(vc, SRect(168,120,224,136));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.connCounter = lbl;
 		lbl = new CLabelView(vc, SRect(168,140,224,156));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.dlCounter = lbl;
 		lbl = new CLabelView(vc, SRect(168,160,224,176));
 		lbl->SetFont(fnt->Clone());
-		lbl->SetText("\p0");
+		lbl->SetText("\x01" "0");
 		lbl->Show();
 		mStatLabels.ulCounter = lbl;
 		
@@ -1682,7 +1682,7 @@ CMyQuittingWin::CMyQuittingWin()
 	CButtonView *btn;
 
 	// setup window
-	SetTitle("\pQuitting");
+	SetTitle("\x08" "Quitting");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1691,16 +1691,16 @@ CMyQuittingWin::CMyQuittingWin()
 	
 	// make labels
 	lbl = new CLabelView(vc, SRect(10,10,250,26));
-	lbl->SetText("\pWaiting for clients to disconnect...");
+	lbl->SetText("\x24" "Waiting for clients to disconnect...");
 	lbl->Show();
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(130,40,210,60));
-	btn->SetTitle("\pQuit Now");
+	btn->SetTitle("\x08" "Quit Now");
 	btn->SetID(viewID_QuitNow);
 	btn->Show();
 	btn = new CButtonView(vc, SRect(40,40,120,60));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(viewID_CancelQuit);
 	btn->Show();
 	vc->SetCancelView(btn);
@@ -1719,7 +1719,7 @@ CMyQuitWin::CMyQuitWin()
 	CIconView *icn;
 
 	// setup window
-	SetTitle("\pQuit");
+	SetTitle("\x04" "Quit");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1733,7 +1733,7 @@ CMyQuitWin::CMyQuitWin()
 
 	// make labels
 	lbl = new CLabelView(vc, SRect(50,10,337,76));
-	lbl->SetText("\pThere are people connected to this server.  If you quit, they will be disconnected.  To disconnect them with a message, click “Polite Quit”.");
+	lbl->SetText("\x8c" "There are people connected to this server.  If you quit, they will be disconnected.  To disconnect them with a message, click \xd2Polite Quit\xd3.");
 	lbl->Show();
 	
 	// make text boxes
@@ -1743,17 +1743,17 @@ CMyQuitWin::CMyQuitWin()
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(244,160,340,186));
-	btn->SetTitle("\pPolite Quit");
+	btn->SetTitle("\x0b" "Polite Quit");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Show();
 	vc->SetDefaultView(btn);
 	btn = new CButtonView(vc, SRect(141,163,231,183));
-	btn->SetTitle("\pQuit Now");
+	btn->SetTitle("\x08" "Quit Now");
 	btn->SetID(2);
 	btn->Show();
 	btn = new CButtonView(vc, SRect(40,163,130,183));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(3);
 	btn->Show();
 	vc->SetCancelView(btn);

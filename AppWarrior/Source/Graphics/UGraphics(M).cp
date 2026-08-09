@@ -2519,7 +2519,7 @@ bool UGraphics::UserSelectColor(SColor& ioColor, const Uint8 *inPrompt, Uint32 /
 	Point where = { 0, 0 };		// center
 	Int16 ref = ::CurResFile();	// get around bug (?) in toolbox
 
-	bool b = ::GetColor(where, inPrompt ? inPrompt : "\pChoose a color:", (RGBColor *)&ioColor, (RGBColor *)&ioColor);
+	bool b = ::GetColor(where, inPrompt ? inPrompt : "\x0f" "Choose a color:", (RGBColor *)&ioColor, (RGBColor *)&ioColor);
 	
 	::UseResFile(ref);
 	return b;
@@ -4916,20 +4916,20 @@ static Int16 _FontNameToMacNum(const Uint8 *inName)
 	else if (inName == kSansFont)
 	{
 	#if TARGET_API_MAC_CARBON
-		macNum = ::FMGetFontFamilyFromName("\pHelvetica");
+		macNum = ::FMGetFontFamilyFromName("\x09" "Helvetica");
 		if (macNum == kInvalidFontFamily) macNum = 1;	// if not available, use geneva
 	#else
-		::GetFNum("\pHelvetica", &macNum);
+		::GetFNum("\x09" "Helvetica", &macNum);
 		if (macNum == 0) macNum = 1;					// if not available, use geneva
 	#endif
 	}
 	else if (inName == kSerifFont)
 	{
 	#if TARGET_API_MAC_CARBON
-		macNum = ::FMGetFontFamilyFromName("\pTimes");
+		macNum = ::FMGetFontFamilyFromName("\x05" "Times");
 		if (macNum == kInvalidFontFamily) macNum = 1;	// if not available, use geneva
 	#else
-		::GetFNum("\pTimes", &macNum);
+		::GetFNum("\x05" "Times", &macNum);
 		if (macNum == 0) macNum = 1;					// if not available, use geneva
 	#endif
 	}
@@ -5221,7 +5221,7 @@ void UFontDesc::EnumFontNames(TEnumFontNamesProc inProc, void *inRef)
 	Str255 str;
 	short i, n;
 	
-	menu = ::NewMenu(22684, "\p");
+	menu = ::NewMenu(22684, "\x00" "");
 	if (menu == nil) Fail(errorType_Memory, memError_NotEnough);
 	
 	::AppendResMenu(menu, 'FONT');

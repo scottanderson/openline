@@ -21,7 +21,7 @@ CWizard::CWizard()
 	// cancel button
 	r.Set(10, 3, 90, 25);
 	
-	btn = new CButtonView(vc, r, 0, "\pCancel");
+	btn = new CButtonView(vc, r, 0, "\x06" "Cancel");
 	btn->SetSizing(sizing_VertSticky);
 	btn->SetID(1);
 	vc->SetCancelView(btn);
@@ -32,7 +32,7 @@ CWizard::CWizard()
 	r.right = 190;
 	r.left = 110;
 	
-	btn = new CButtonView(vc, r, 0, "\pBack");
+	btn = new CButtonView(vc, r, 0, "\x04" "Back");
 	btn->SetSizing(sizing_VertSticky | sizing_HorizSticky);
 	btn->SetID(2);
 	btn->Show();
@@ -41,7 +41,7 @@ CWizard::CWizard()
 	// next button
 	r.Set(210, 0, 290, 28);
 	
-	btn = new CButtonView(vc, r, 0, "\pNext");
+	btn = new CButtonView(vc, r, 0, "\x04" "Next");
 	btn->SetSizing(sizing_VertSticky | sizing_HorizSticky);
 	btn->SetID(3);
 	btn->SetDefault(true);
@@ -50,7 +50,7 @@ CWizard::CWizard()
 	mNextBtn = btn;
 	
 	// finish button
-	btn = new CButtonView(vc, r, 0, "\pFinish");
+	btn = new CButtonView(vc, r, 0, "\x06" "Finish");
 	btn->SetSizing(sizing_VertSticky | sizing_HorizSticky);
 	btn->SetID(4);
 	btn->SetDefault(true);

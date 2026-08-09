@@ -48,11 +48,11 @@ CMyGroupListView1::CMyGroupListView1(CViewHandler *inHandler, const SRect &inBou
 	: CMyListStatusView(inHandler, inBounds), CMyGroupArticle(true)
 {
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 80);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 80);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
 
 	// set status
-	SetStatus("\pClick the \"Select News Server\" button or type the address and hit \"Enter\" to connect to a News Server.");
+	SetStatus("\x66" "Click the \"Select News Server\" button or type the address and hit \"Enter\" to connect to a News Server.");
 }
 
 CMyGroupListView1::~CMyGroupListView1()
@@ -368,15 +368,15 @@ CMyArticleTreeView1::CMyArticleTreeView1(CViewHandler *inHandler, const SRect &i
 	: CMyGroupArticle(false), CMyTreeStatusView(inHandler, inBounds)
 {
 	// set headers
-	AddTab("\pTitle", 80, 80);
-	AddTab("\pPoster", 1, 1, align_CenterHoriz);
-	AddTab("\pEmail");
-	AddTab("\pDate", 1, 1, align_CenterHoriz);
-	AddTab("\pTime", 1, 1, align_CenterHoriz);
+	AddTab("\x05" "Title", 80, 80);
+	AddTab("\x06" "Poster", 1, 1, align_CenterHoriz);
+	AddTab("\x05" "Email");
+	AddTab("\x04" "Date", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Time", 1, 1, align_CenterHoriz);
 	SetTabs(35,20,15,15,15);
 
 	// set status
-	SetStatus("\p0 items in list.");
+	SetStatus("\x10" "0 items in list.");
 }
 
 CMyArticleTreeView1::~CMyArticleTreeView1()
@@ -745,11 +745,11 @@ CMyGroupListView2::CMyGroupListView2(CViewHandler *inHandler, const SRect &inBou
 	: CMyListStatusView(inHandler, inBounds), CMyGroupArticle(true)
 {
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 80);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 80);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
 
 	// set status
-	SetStatus("\pClick the \"Select Hotline Server\" or \"Select Hotline Bundle\" button to select a bundle.");
+	SetStatus("\x57" "Click the \"Select Hotline Server\" or \"Select Hotline Bundle\" button to select a bundle.");
 }
 
 CMyGroupListView2::~CMyGroupListView2()
@@ -1065,15 +1065,15 @@ CMyArticleTreeView2::CMyArticleTreeView2(CViewHandler *inHandler, const SRect &i
 	: CMyGroupArticle(false), CMyTreeStatusView(inHandler, inBounds)
 {
 	// set headers
-	AddTab("\pTitle", 80, 80);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
-	AddTab("\pPoster");
-	AddTab("\pDate", 1, 1, align_CenterHoriz);
-	AddTab("\pTime", 1, 1, align_CenterHoriz);
+	AddTab("\x05" "Title", 80, 80);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
+	AddTab("\x06" "Poster");
+	AddTab("\x04" "Date", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Time", 1, 1, align_CenterHoriz);
 	SetTabs(40,5,25,15,15);
 
 	// set status
-	SetStatus("\p0 items in list.");
+	SetStatus("\x10" "0 items in list.");
 }
 
 CMyArticleTreeView2::~CMyArticleTreeView2()
@@ -1703,13 +1703,13 @@ void CMySynchListView::ItemDraw(Uint32 inItem, TImage inImage, const SRect& inBo
 	rBounds.left = rBounds.right + 3;
 	rBounds.right = rBounds.left + 25;
 	
-	Uint8 *pSynchType = "\p";
+	Uint8 *pSynchType = "\x00" "";
 	if (pSynchInfo->nSynchType == myOpt_SynchNewsHotline)
-		pSynchType = "\p--->";
+		pSynchType = "\x04" "--->";
 	else if (pSynchInfo->nSynchType == myOpt_SynchNewsServer)
-		pSynchType = "\p<---";
+		pSynchType = "\x04" "<---";
 	else if (pSynchInfo->nSynchType == myOpt_SynchNewsBoth)
-		pSynchType = "\p<-->";
+		pSynchType = "\x04" "<-->";
 	
 	inImage->DrawText(rBounds, pSynchType + 1, pSynchType[0], nil, textAlign_Center);
 
@@ -1736,9 +1736,9 @@ CMyLogListView::CMyLogListView(CViewHandler *inHandler, const SRect& inBounds)
 	nLogCount = 0;
 
 	// set headers
-	AddTab("\pLog", 80, 80);
-	AddTab("\pDate", 1, 1, align_CenterHoriz);
-	AddTab("\pTime", 1, 1, align_CenterHoriz);
+	AddTab("\x03" "Log", 80, 80);
+	AddTab("\x04" "Date", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Time", 1, 1, align_CenterHoriz);
 	SetTabs(80,10,10);
 }
 

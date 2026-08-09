@@ -4,17 +4,17 @@
 
 
 #if USES_FILE_EXTENSIONS
-	const Uint8 *kMyErrorLogFileName = 		"\pError Log.txt";
-	const Uint8 *kMyBannedFileName = 		"\pBanned.txt";
-	const Uint8 *kMyPasswordsFileName = 	"\pPasswords.txt";
-	const Uint8 *kMyTrackerIPFileName = 	"\pTrackerIP.txt";
-	const Uint8 *kMyServersPerIPFileName = 	"\pServersPerIP.txt";
+	const Uint8 *kMyErrorLogFileName = 		"\x0d" "Error Log.txt";
+	const Uint8 *kMyBannedFileName = 		"\x0a" "Banned.txt";
+	const Uint8 *kMyPasswordsFileName = 	"\x0d" "Passwords.txt";
+	const Uint8 *kMyTrackerIPFileName = 	"\x0d" "TrackerIP.txt";
+	const Uint8 *kMyServersPerIPFileName = 	"\x10" "ServersPerIP.txt";
 #else
-	const Uint8 *kMyErrorLogFileName = 		"\pError Log";
-	const Uint8 *kMyBannedFileName = 		"\pBanned";
-	const Uint8 *kMyPasswordsFileName = 	"\pPasswords";
-	const Uint8 *kMyTrackerIPFileName = 	"\pTrackerIP";
-	const Uint8 *kMyServersPerIPFileName = 	"\pServersPerIP";
+	const Uint8 *kMyErrorLogFileName = 		"\x09" "Error Log";
+	const Uint8 *kMyBannedFileName = 		"\x06" "Banned";
+	const Uint8 *kMyPasswordsFileName = 	"\x09" "Passwords";
+	const Uint8 *kMyTrackerIPFileName = 	"\x09" "TrackerIP";
+	const Uint8 *kMyServersPerIPFileName = 	"\x0c" "ServersPerIP";
 #endif
 
 
@@ -292,10 +292,10 @@ void CMyApplication::StartUp()
 		{
 			Uint8 bufMsg[256];
 			bufMsg[0] = UText::Format(bufMsg + 1, sizeof(bufMsg) - 1, "Cannot bind to the address %d.%d.%d.%d because it is incorrect or it is already in use.", mIPAddress.un_IP.stB_IP.nB_IP1, mIPAddress.un_IP.stB_IP.nB_IP2, mIPAddress.un_IP.stB_IP.nB_IP3, mIPAddress.un_IP.stB_IP.nB_IP4);
-			DisplayMessage("\pTracker error", bufMsg, icon_Stop, 1);
+			DisplayMessage("\x0d" "Tracker error", bufMsg, icon_Stop, 1);
 		}
 		else
-			DisplayMessage("\pTracker error", "\pCannot bind to the default address because it is already in use.", icon_Stop, 1);
+			DisplayMessage("\x0d" "Tracker error", "\x40" "Cannot bind to the default address because it is already in use.", icon_Stop, 1);
 	}
 
 	// make stats window
@@ -304,14 +304,14 @@ void CMyApplication::StartUp()
 	
 #if USE_LOG_WIN
 	mLogWin = new CMyTextWin;
-	mLogWin->SetTitle("\pServer Log");
+	mLogWin->SetTitle("\x0a" "Server Log");
 	mLogWin->SetAutoBounds(windowPos_TopLeft, windowPosOn_MainScreen);
 	mLogWin->Show();
 	
 	// check if our log file exists
 	try
 	{
-		StFileSysRef logFile(kProgramFolder, nil, "\pServerReg Log.txt");
+		StFileSysRef logFile(kProgramFolder, nil, "\x11" "ServerReg Log.txt");
 		if (!logFile->Exists())
 			logFile->CreateFile('TEXT', 'ttxt');
 	}
@@ -357,7 +357,7 @@ void CMyApplication::HandleMessage(void *inObject, Uint32 inMsg, const void *inD
 			break;
 		
 		case 1100:
-			DisplayMessage("\pRestart the tracker", "\pChanges of the Tracker IP will only take effect after the tracker is restarted.", icon_Stop, 1);
+			DisplayMessage("\x13" "Restart the tracker", "\x4f" "Changes of the Tracker IP will only take effect after the tracker is restarted.", icon_Stop, 1);
 			break;
 	
 		default:
@@ -1708,7 +1708,7 @@ void CMyApplication::Log(const Uint8 *inName, const SInternetAddress& inAddr, co
 	// also log to log file
 	try
 	{
-		StFileSysRef logFile(kProgramFolder, nil, "\pServerReg Log.txt");
+		StFileSysRef logFile(kProgramFolder, nil, "\x11" "ServerReg Log.txt");
 		StFileOpener open(logFile);
 		logFile->Write(logFile->GetSize(), data, s);
 	}

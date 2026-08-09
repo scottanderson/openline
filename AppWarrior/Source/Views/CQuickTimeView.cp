@@ -111,7 +111,7 @@ bool CQuickTimeView::SetMovie(void *inData, Uint32 inDataSize, Uint32 inTypeCode
 	CloseMovie();
 	
 	mTempFile = new CTempFile();
-	mTempFile->SetTempFile("\pMovie", inTypeCode, 'HTLC', false);
+	mTempFile->SetTempFile("\x05" "Movie", inTypeCode, 'HTLC', false);
 	
 	try
 	{
@@ -659,12 +659,12 @@ bool CQuickTimeView::MakeCustomMenu(EventRecord *inEvent)
 		return false;
 		
 	// create de the menu
-	hCustomMenu = ::NewMenu(139, "\pSave As...");
+	hCustomMenu = ::NewMenu(139, "\x0a" "Save As...");
 	if (!hCustomMenu)
 		return false;
 
 	// add items to the menu
-	::MacAppendMenu(hCustomMenu, "\pSave As...");
+	::MacAppendMenu(hCustomMenu, "\x0a" "Save As...");
 	
 	// insert the menu into the menu list
 	::MacInsertMenu(hCustomMenu, hierMenu);

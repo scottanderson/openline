@@ -1522,7 +1522,7 @@ OSErr ReadPrefData(void)
 			   kCreateFolder,
 			   &file.vRefNum,
 			   &file.parID);
-	BlockMove((Ptr)"\pUUIDLib Preferences",(Ptr)file.name,20);
+	BlockMove((Ptr)"\x13" "UUIDLib Preferences",(Ptr)file.name,20);
 	
 	/*
 	 *	Now read the data
@@ -1612,7 +1612,7 @@ void WritePrefData(void)
 			   kCreateFolder,
 			   &file.vRefNum,
 			   &file.parID);
-	BlockMove((Ptr)"\pUUIDLib Preferences",(Ptr)file.name,20);
+	BlockMove((Ptr)"\x13" "UUIDLib Preferences",(Ptr)file.name,20);
 
 	/*
 	 *	And save the data
@@ -2204,7 +2204,7 @@ static OSStatus GetPCIBuiltInEnetAddr(UInt8 *enetaddr)
 	OSStatus				err = noErr;
     RegEntryIter            cookie;
     RegEntryID              theFoundEntry;
-    unsigned char          	enetAddrStr[32] = "\plocal-mac-address";
+    unsigned char          	enetAddrStr[32] = "\x11" "local-mac-address";
     RegCStrEntryNamePtr     enetAddrCStr = p2cstr( enetAddrStr );
     RegEntryIterationOp     iterOp;
     UInt8					enetAddr[6];
@@ -2253,7 +2253,7 @@ OSStatus GetPCIComm2EnetAddr(UInt8 *enetaddr)
 	OSStatus				err = noErr;
     RegEntryIter            cookie;
     RegEntryID              theFoundEntry;
-    unsigned char          	enetAddrStr[32] = "\pASNT,ethernet-address";
+    unsigned char          	enetAddrStr[32] = "\x15" "ASNT,ethernet-address";
     RegCStrEntryNamePtr     enetAddrCStr = p2cstr( enetAddrStr );
     RegEntryIterationOp     iterOp;
     UInt8					*enetAddr;
@@ -2404,7 +2404,7 @@ OSErr GetEthernetAddr(uuid_address_t *addr)
 	sp.spSlot = 0;
 	
 	while ((err = SNextTypeSRsrc(&sp)) == noErr) {
-		pb.slotDevParam.ioNamePtr = "\p.ENET";
+		pb.slotDevParam.ioNamePtr = "\x05" ".ENET";
 		pb.slotDevParam.ioSPermssn = fsCurPerm;
 		pb.slotDevParam.ioSlot = sp.spSlot;
 		pb.slotDevParam.ioID = sp.spID;
@@ -2419,7 +2419,7 @@ OSErr GetEthernetAddr(uuid_address_t *addr)
 		 *	non-NuBUS and slot-managed ethernet devices.
 		 */
 		
-		err = OpenDriver("\p.ENET0",&refNum);
+		err = OpenDriver("\x06" ".ENET0",&refNum);
 		if (err) return err;
 	} else {
 		refNum = pb.slotDevParam.ioSRefNum;

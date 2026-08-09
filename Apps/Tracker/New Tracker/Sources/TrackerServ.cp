@@ -5,14 +5,14 @@
 
 #include "TrackerServ.h"
 
-const Uint8 kTrackerServVers[] = "\pv1.3";
+const Uint8 kTrackerServVers[] = "\x04" "v1.3";
 
 #if USES_FILE_EXTENSIONS
-	const Uint8 *kRezDataFileName = 		"\phltracker.dat";
-	const Uint8 *kMyErrorLogFileName = 		"\pError Log.txt";
+	const Uint8 *kRezDataFileName = 		"\x0d" "hltracker.dat";
+	const Uint8 *kMyErrorLogFileName = 		"\x0d" "Error Log.txt";
 #else
-	const Uint8 *kRezDataFileName = 		"\pHotlineTrack Data";
-	const Uint8 *kMyErrorLogFileName = 		"\pError Log";
+	const Uint8 *kRezDataFileName = 		"\x11" "HotlineTrack Data";
+	const Uint8 *kMyErrorLogFileName = 		"\x09" "Error Log";
 #endif
 
 
@@ -110,7 +110,7 @@ CMyTracker::CMyTracker(TFSRefObj* inTrackerFolder)
 	if (winVis & myWinVis_Servers) mServersWin->Show();
 
 	UpdateTitles();
-	LogText("\pHotline Tracker", kTrackerServVers);
+	LogText("\x0f" "Hotline Tracker", kTrackerServVers);
 	
 	if (IsActive())
 		StartTracker();	
@@ -173,7 +173,7 @@ void CMyTracker::StartTracker()
 		{
 			Uint8 bufMsg[256];
 			bufMsg[0] = UText::Format(bufMsg + 1, sizeof(bufMsg) - 1, "Cannot bind to the address %d.%d.%d.%d because it is incorrect or it is already in use.", mIPAddress.un_IP.stB_IP.nB_IP1, mIPAddress.un_IP.stB_IP.nB_IP2, mIPAddress.un_IP.stB_IP.nB_IP3, mIPAddress.un_IP.stB_IP.nB_IP4);
-			DisplayMessage("\pTracker error", bufMsg, icon_Stop, 1);
+			DisplayMessage("\x0d" "Tracker error", bufMsg, icon_Stop, 1);
 		}
 		
 		return;
@@ -327,13 +327,13 @@ bool CMyTracker::EditTracker(bool inNewTracker)
 			SIPAddress stIPAddress = win->GetIPAddress();
 			if (!stIPAddress.un_IP.stDW_IP.nDW_IP)
 			{
-				DisplayMessage("\pTracker error", "\pInvalid IP address.", icon_Stop, 1);
+				DisplayMessage("\x0d" "Tracker error", "\x13" "Invalid IP address.", icon_Stop, 1);
 				continue;
 			}
 
 			if (inNewTracker && gApp->IsInTrackerList(stIPAddress))
 			{
-				DisplayMessage("\pTracker error", "\pThis IP address already exists in tracker list.", icon_Stop, 1);
+				DisplayMessage("\x0d" "Tracker error", "\x2f" "This IP address already exists in tracker list.", icon_Stop, 1);
 				continue;
 			}
 			
@@ -1061,7 +1061,7 @@ void CMyTracker::SendServerList(TTransport inTpt)
 	{
 		Uint8 psIPAddress[256];
 		psIPAddress[0] = inTpt->GetRemoteAddressText(psIPAddress + 1, sizeof(psIPAddress) - 1);
-		LogText(psIPAddress, "\pClient Connection");
+		LogText(psIPAddress, "\x11" "Client Connection");
 	}
 
 	Uint8 buf[8192];
@@ -1427,7 +1427,7 @@ void CMyTracker::Log(const Uint8 *inData, Uint32 inSize)
 		// also log to log file
 		try
 		{
-			StFileSysRef logFile(mTrackerFolder, nil, "\pServerReg Log.txt");
+			StFileSysRef logFile(mTrackerFolder, nil, "\x11" "ServerReg Log.txt");
 			if (!logFile->Exists())
 				logFile->CreateFile('TEXT', 'ttxt');
 			
@@ -1470,7 +1470,7 @@ void CMyTracker::LogRejectServerConnect(const SInternetAddress& inAddr)
 
 	psAddr[0] = UText::Format(psAddr + 1, sizeof(psAddr) - 1, "%d.%d.%d.%d:%lu", inAddr.host[0], inAddr.host[1], inAddr.host[2], inAddr.host[3], inAddr.port);
 	psDate[0] = UDateTime::DateToText(psDate + 1, sizeof(psDate) - 1, kShortDateFullYearText + kTimeWithSecsText);
-	Uint32 nSize = UText::Format(bufData, sizeof(bufData), "\r%#-22.22s %#-20.20s %#s", psDate, psAddr, "\pServer Rejected");
+	Uint32 nSize = UText::Format(bufData, sizeof(bufData), "\r%#-22.22s %#-20.20s %#s", psDate, psAddr, "\x0f" "Server Rejected");
 	
 	Log(bufData, nSize);			
 }
@@ -1483,9 +1483,9 @@ void CMyTracker::LogStartStop(bool inStartStop)
 
 	Uint8 *psStartStop;
 	if (inStartStop)
-		psStartStop = "\pHotline Tracker started";
+		psStartStop = "\x17" "Hotline Tracker started";
 	else
-		psStartStop = "\pHotline Tracker stopped";
+		psStartStop = "\x17" "Hotline Tracker stopped";
 
 	psDate[0] = UDateTime::DateToText(psDate + 1, sizeof(psDate) - 1, kShortDateFullYearText + kTimeWithSecsText);
 	psAddr[0] = UText::Format(psAddr + 1, sizeof(psAddr) - 1, "%d.%d.%d.%d", mIPAddress.un_IP.stB_IP.nB_IP1, mIPAddress.un_IP.stB_IP.nB_IP2, mIPAddress.un_IP.stB_IP.nB_IP3, mIPAddress.un_IP.stB_IP.nB_IP4);
@@ -1502,7 +1502,7 @@ void CMyTracker::LogReset()
 
 	psDate[0] = UDateTime::DateToText(psDate + 1, sizeof(psDate) - 1, kShortDateFullYearText + kTimeWithSecsText);
 	psAddr[0] = UText::Format(psAddr + 1, sizeof(psAddr) - 1, "%d.%d.%d.%d", mIPAddress.un_IP.stB_IP.nB_IP1, mIPAddress.un_IP.stB_IP.nB_IP2, mIPAddress.un_IP.stB_IP.nB_IP3, mIPAddress.un_IP.stB_IP.nB_IP4);
-	Uint32 nSize = UText::Format(bufData, sizeof(bufData), "\r%#-22.22s %#-20.20s %#s", psDate, psAddr, "\pTRACKER RESET - too many errors");
+	Uint32 nSize = UText::Format(bufData, sizeof(bufData), "\r%#-22.22s %#-20.20s %#s", psDate, psAddr, "\x1f" "TRACKER RESET - too many errors");
 
 	Log(bufData, nSize);
 }
@@ -1563,7 +1563,7 @@ Uint32 CMyTracker::GetServerInfoSize(const SMyServerInfo *inInfo)
 
 TFSRefObj* CMyTracker::GetPrefsRef()
 {
-	const Uint8 kMyPrefsFileName[] = "\pPrefs";
+	const Uint8 kMyPrefsFileName[] = "\x05" "Prefs";
 	
 	if (!mTrackerFolder)
 	{
@@ -1706,7 +1706,7 @@ TFSRefObj* CMyTracker::GetLoginRef()
 	if (!mTrackerFolder)
 		return nil;
 	
-	return UFS::New(mTrackerFolder, nil, "\pLogin");
+	return UFS::New(mTrackerFolder, nil, "\x05" "Login");
 }
 
 void CMyTracker::MakeLoginBackup()
@@ -1714,7 +1714,7 @@ void CMyTracker::MakeLoginBackup()
 	if (!mTrackerFolder)
 		return;
 	
-	TFSRefObj* fpb = UFS::New(mTrackerFolder, nil, "\pLogin.bak");
+	TFSRefObj* fpb = UFS::New(mTrackerFolder, nil, "\x09" "Login.bak");
 	scopekill(TFSRefObj, fpb);
 	
 	if (fpb->Exists())
@@ -1724,7 +1724,7 @@ void CMyTracker::MakeLoginBackup()
 	scopekill(TFSRefObj, fpo);
 	
 	if (fpo->Exists())
-		fpo->SetName("\pLogin.bak");
+		fpo->SetName("\x09" "Login.bak");
 }
 
 void CMyTracker::WriteLoginInfo(CPtrList<SMyLoginInfo> *inLoginList)
@@ -1940,7 +1940,7 @@ TFSRefObj* CMyTracker::GetPermBanRef()
 	if (!mTrackerFolder)
 		return nil;
 	
-	return UFS::New(mTrackerFolder, nil, "\pBanned");
+	return UFS::New(mTrackerFolder, nil, "\x06" "Banned");
 }
 
 void CMyTracker::MakePermBanBackup()
@@ -1948,7 +1948,7 @@ void CMyTracker::MakePermBanBackup()
 	if (!mTrackerFolder)
 		return;
 	
-	TFSRefObj* fpb = UFS::New(mTrackerFolder, nil, "\pBanned.bak");
+	TFSRefObj* fpb = UFS::New(mTrackerFolder, nil, "\x0a" "Banned.bak");
 	scopekill(TFSRefObj, fpb);
 	
 	if (fpb->Exists())
@@ -1958,7 +1958,7 @@ void CMyTracker::MakePermBanBackup()
 	scopekill(TFSRefObj, fpo);
 	
 	if (fpo->Exists())
-		fpo->SetName("\pBanned.bak");
+		fpo->SetName("\x0a" "Banned.bak");
 }
 
 void CMyTracker::WritePermBanInfo(CPtrList<SMyPermBanInfo> *inPermBanList)
@@ -2512,11 +2512,11 @@ void CMyApplication::DoDeleteTracker()
 	psMessage[0] = UText::Format(psMessage + 1, sizeof(psMessage) - 1, "Are you sure you want to delete the tracker %d.%d.%d.%d?", stIPAddress.un_IP.stB_IP.nB_IP1, stIPAddress.un_IP.stB_IP.nB_IP2, stIPAddress.un_IP.stB_IP.nB_IP3, stIPAddress.un_IP.stB_IP.nB_IP4);
 
 	mb.icon = icon_Caution;
-	mb.title = "\pDelete Tracker";
+	mb.title = "\x0e" "Delete Tracker";
 	mb.messageSize = psMessage[0];
 	mb.messageData = psMessage + 1;
-	mb.button1 = "\pCancel";
-	mb.button2 = "\pDelete";
+	mb.button1 = "\x06" "Cancel";
+	mb.button2 = "\x06" "Delete";
 	
 	if (MsgBox(mb) != 2)
 		return;
@@ -2635,7 +2635,7 @@ void CMyApplication::ResetTrackerServ()
 
 TFSRefObj* CMyApplication::GetPrefsRef()
 {
-	const Uint8 kMyPrefsFileName[] = "\pPrefs";
+	const Uint8 kMyPrefsFileName[] = "\x05" "Prefs";
 	
 	return UFS::New(kProgramFolder, nil, kMyPrefsFileName);
 }

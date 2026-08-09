@@ -57,8 +57,8 @@ void UError::Init()
 
 Uint32 UError::GetMessage(const SError& inError, void *outText, Uint32 inMaxSize)
 {
-	const Uint8 *kUnknownErrorMsg = "\pAn unknown error has occured.";
-	const Uint8 *kNotEnoughMemMsg = "\pNot enough memory.  Try closing windows.";
+	const Uint8 *kUnknownErrorMsg = "\x1d" "An unknown error has occured.";
+	const Uint8 *kNotEnoughMemMsg = "\x28" "Not enough memory.  Try closing windows.";
 	
 	Uint32 s = 0;
 	Handle h;

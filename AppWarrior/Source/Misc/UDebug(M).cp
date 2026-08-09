@@ -114,7 +114,7 @@ void DebugLog(const Int8 msg[], ...)
 void DebugLogFile(const Int8 inMsg[], ...)
 {
 	#pragma unused(inMsg)
-	BreakStrToCurrentDebugger("\pDebugLogFile not implemented");
+	BreakStrToCurrentDebugger("\x1c" "DebugLogFile not implemented");
 }
 #endif
 

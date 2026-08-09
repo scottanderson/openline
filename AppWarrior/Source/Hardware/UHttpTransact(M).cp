@@ -50,12 +50,12 @@ bool UHttpTransact::AddExternalHttpCookie(const Uint8 *inHost, const Uint8 *inDo
 
 static bool _IsDefaultBrowser_InternetExplorer()
 {
-	return _IsDefaultBrowser("\pInternet Explorer");
+	return _IsDefaultBrowser("\x11" "Internet Explorer");
 }
 
 static bool _IsDefaultBrowser_NetscapeNavigator()
 {
-	return _IsDefaultBrowser("\pNetscape Communicator");
+	return _IsDefaultBrowser("\x15" "Netscape Communicator");
 }
 
 static bool _IsDefaultBrowser(const Uint8 *inBrowserName)
@@ -88,7 +88,7 @@ static bool _IsDefaultBrowser(const Uint8 *inBrowserName)
 			if (ICBegin(inst, icReadOnlyPerm) == noErr)
 			{
 				ICMapEntry stMapEntry;
-				if (ICMapFilename(inst, "\p.html", &stMapEntry) != icPrefNotFoundErr)
+				if (ICMapFilename(inst, "\x05" ".html", &stMapEntry) != icPrefNotFoundErr)
 				{
 					ICEnd(inst);
 					ICStop(inst);
@@ -112,7 +112,7 @@ static bool _IsDefaultBrowser(const Uint8 *inBrowserName)
 static void *_GetExternalCookie_InternetExplorer(const Uint8 *inHost, const Uint8 *inDomain, Uint32& outDataSize)
 {
 	Uint8 key[256];
-	pstrcpy(key, "\pHTTP Cookies");
+	pstrcpy(key, "\x0c" "HTTP Cookies");
 
 	ICInstance inst;
 	FourCharCode signature;
@@ -253,7 +253,7 @@ bool _AddExternalCookie_InternetExplorer(const Uint8 *inHost, const Uint8 *inDom
 		return false;
 
 	Uint8 key[256];
-	pstrcpy(key, "\pHTTP Cookies");
+	pstrcpy(key, "\x0c" "HTTP Cookies");
 
 	ICInstance inst;
 	FourCharCode signature;
@@ -528,7 +528,7 @@ Uint32 _SetCookie__InternetExplorer(const Uint8 *inHost, const Uint8 *inDomain, 
 static TFSRefObj* _GetCookiesRef_NetscapeNavigator()
 {
 	// make Netscape folder ref
-	TFSRefObj* pNetscapeRef = UFileSys::New(kPrefsFolder, nil, "\pNetscape Users");
+	TFSRefObj* pNetscapeRef = UFileSys::New(kPrefsFolder, nil, "\x0e" "Netscape Users");
 	scopekill(TFSRefObj, pNetscapeRef);
 		
 	bool bIsFolder;
@@ -556,7 +556,7 @@ static TFSRefObj* _GetCookiesRef_NetscapeNavigator()
 				continue;
 
 			// make file ref
-			pCookiesRef = UFileSys::New(pUserRef, nil, "\pMagicCookie");
+			pCookiesRef = UFileSys::New(pUserRef, nil, "\x0b" "MagicCookie");
 			if (!pCookiesRef->Exists(&bIsFolder) || bIsFolder)
 			{
 				UFileSys::Dispose(pCookiesRef);

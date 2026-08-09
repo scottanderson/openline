@@ -49,12 +49,12 @@ bool UHttpTransact::AddExternalHttpCookie(const Uint8 *inHost, const Uint8 *inDo
 
 static bool _IsDefaultBrowser_InternetExplorer()
 {
-	return _IsDefaultBrowser("\pIExplore");
+	return _IsDefaultBrowser("\x08" "IExplore");
 }
 
 static bool _IsDefaultBrowser_NetscapeNavigator()
 {
-	return _IsDefaultBrowser("\pNSShell");
+	return _IsDefaultBrowser("\x07" "NSShell");
 }
 
 static bool _IsDefaultBrowser(const Uint8 *inBrowserName)

@@ -379,7 +379,7 @@ TFSRefObj* UApplication::GetDocumentToOpen()
 		return nil;
 	
 	::BlockMoveData(*h, &spec, sizeof(spec));
-	::Munger(h, 0, nil, sizeof(FSSpec), "\p", 0);
+	::Munger(h, 0, nil, sizeof(FSSpec), "\x00" "", 0);
 	
 	if (::GetHandleSize(h) == 0)
 	{
@@ -853,7 +853,7 @@ static DialogPtr _APMakeLowMemAlert()
 	if (itemList == nil) return nil;
 	::BlockMoveData(itemListData, *itemList, sizeof(itemListData));
 	
-	DialogPtr dlg = ::NewDialog(nil, &bounds, "\p", false, dBoxProc, (WindowPtr)-1, false, 0, itemList);
+	DialogPtr dlg = ::NewDialog(nil, &bounds, "\x00" "", false, dBoxProc, (WindowPtr)-1, false, 0, itemList);
 	if (dlg == nil)
 	{
 		::DisposeHandle(itemList);

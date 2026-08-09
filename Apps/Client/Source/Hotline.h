@@ -192,8 +192,8 @@ enum
 	listStat_Custom				= 100
 };
 
-const Uint8 statTxt_UserlistNotOnline[] 	= "\pYou are not connected.\r\rClick the \"Connect\" or \"Servers\" button to connect to a Server";
-const Uint8 statTxt_ServersList0Items[]		= "\p0 items in list.\r\rClick the \"Refresh\" button to retrieve Server listings from the enabled Trackers.\r\rYou can enable existing Trackers or add new Trackers by clicking the \"Edit Tracker List\" button.";
+const Uint8 statTxt_UserlistNotOnline[] 	= "\x56" "You are not connected.\r\rClick the \"Connect\" or \"Servers\" button to connect to a Server";
+const Uint8 statTxt_ServersList0Items[]		= "\xc5" "0 items in list.\r\rClick the \"Refresh\" button to retrieve Server listings from the enabled Trackers.\r\rYou can enable existing Trackers or add new Trackers by clicking the \"Edit Tracker List\" button.";
 
 enum {
 	optWindow_List				= 0,
@@ -890,19 +890,19 @@ template<class T> void CMyTreeStatusView<T>::Draw(TImage inImage, const SRect& i
 		switch(mStatus)
 		{
 			case listStat_Loading:
-				statTxt = "\pLoading...";
+				statTxt = "\x0a" "Loading...";
 				break;
 			
 			case listStat_0Items:
-				statTxt = "\p0 items in list";
+				statTxt = "\x0f" "0 items in list";
 				break;
 						
 			case listStat_Custom:
-				statTxt = mCustStatMsg ? BPTR(mCustStatMsg) : "\p";
+				statTxt = mCustStatMsg ? BPTR(mCustStatMsg) : "\x00" "";
 				break;
 			
 			default:	// listStat_Hide
-				statTxt = "\p";
+				statTxt = "\x00" "";
 				break;
 		}
 		
@@ -3214,7 +3214,7 @@ class CMyPostNewsTextArticle : public CMyTransactTask
 class CMyNewsDeleteArticTask : public CMyTransactTask
 {
 	public:
-		CMyNewsDeleteArticTask(const void *inPathData, Uint32 inPathSize, Uint32 inArticID, Uint8 inTitle[] = "\p", bool inDeleteChildren = false);
+		CMyNewsDeleteArticTask(const void *inPathData, Uint32 inPathSize, Uint32 inArticID, Uint8 inTitle[] = "\x00" "", bool inDeleteChildren = false);
 
 		virtual Uint32 GetShortDesc(Uint8 *outText, Uint32 inMaxSize);
 		virtual void Process();

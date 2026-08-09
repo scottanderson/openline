@@ -54,7 +54,7 @@ CMyApplication::~CMyApplication()
 void CMyApplication::StartUp()
 {
 #if WIN32
-	try { URez::AddProgramFileToSearchChain("\pNewsSynch.dat"); } catch(...){ }
+	try { URez::AddProgramFileToSearchChain("\x0d" "NewsSynch.dat"); } catch(...){ }
 #endif
 
 	mSynchWin = new CMySynchWin();
@@ -1266,7 +1266,7 @@ void CMyApplication::LogToFile(const void *inData, Uint32 inSize)
 	// log to log file
 	try
 	{
-		StFileSysRef logFile(kProgramFolder, nil, "\pNewsSynch Log.txt");
+		StFileSysRef logFile(kProgramFolder, nil, "\x11" "NewsSynch Log.txt");
 		if (!logFile->Exists())
 			logFile->CreateFile('TEXT', 'ttxt');
 			
@@ -1566,7 +1566,7 @@ void CMyApplication::KillAllTasks()
 
 TFSRefObj* CMyApplication::GetPrefsRef()
 {
-	return UFS::New(kProgramFolder, nil, "\pPrefs");
+	return UFS::New(kProgramFolder, nil, "\x05" "Prefs");
 }
 
 bool CMyApplication::WritePrefs()
@@ -1691,12 +1691,12 @@ bool CMyApplication::ReadPrefs(SRect& outWinRect, SRect outViewsRect[14], Uint8 
 
 TFSRefObj* CMyApplication::GetSynchRef()
 {
-	return UFS::New(kProgramFolder, nil, "\pSynch");
+	return UFS::New(kProgramFolder, nil, "\x05" "Synch");
 }
 
 void CMyApplication::MakeSynchBackup()
 {
-	TFSRefObj* fpb = UFS::New(kProgramFolder, nil, "\pSynch.bak");
+	TFSRefObj* fpb = UFS::New(kProgramFolder, nil, "\x09" "Synch.bak");
 	scopekill(TFSRefObj, fpb);
 	
 	if (fpb->Exists())
@@ -1706,7 +1706,7 @@ void CMyApplication::MakeSynchBackup()
 	scopekill(TFSRefObj, fpo);
 	
 	if (fpo->Exists())
-		fpo->SetName("\pSynch.bak");
+		fpo->SetName("\x09" "Synch.bak");
 }
 
 void CMyApplication::WriteSynchInfo(CPtrList<SMySynchInfo> *inSynchList)

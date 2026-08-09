@@ -2953,17 +2953,17 @@ bool _FontExists(LPCTSTR inFamily)
 static Uint32 _FontNameToWinName(const Uint8 *inName, Int8 *outName, Uint32 inBufferSize)
 {
 	if (inName == kDefaultFont || inName == nil)
-		inName = "\pMS Sans Serif";
+		inName = "\x0d" "MS Sans Serif";
 	else if (inName == kSystemFont)
-		inName = "\pMS Sans Serif";
+		inName = "\x0d" "MS Sans Serif";
 	else if (inName == kFixedFont)
-		//inName = _FontExists("Monaco") ? "\pMonaco" : "\pFixedsys";
-		//inName = "\pFixedsys";
-		inName = "\pCourier New";
+		//inName = _FontExists("Monaco") ? "\x06" "Monaco" : "\x08" "Fixedsys";
+		//inName = "\x08" "Fixedsys";
+		inName = "\x0b" "Courier New";
 	else if (inName == kSansFont)
-		inName = "\pArial";
+		inName = "\x05" "Arial";
 	else if (inName == kSerifFont)
-		inName = "\pTimes New Roman";
+		inName = "\x0f" "Times New Roman";
 	
 	Uint32 s = inName[0];
 	inBufferSize--;

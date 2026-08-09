@@ -278,7 +278,7 @@ CWindow *MakeMsgBoxWin(Int32 inID, Int32 *outSound, void *inArgs)
 
 CWindow *MakeMsgBoxWin(const SMsgBox& inInfo)
 {
-	const Uint8 kDefaultButtonTitle[] = "\pOK";
+	const Uint8 kDefaultButtonTitle[] = "\x02" "OK";
 	const Uint16 kButtonWidth					= 84;
 	const Uint16 kButtonHeight					= 20;
 	const Uint16 kDefButtonExtraSize			= 3;

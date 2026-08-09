@@ -133,21 +133,21 @@ CMySynchWin::CMySynchWin()
 	box->Show();
 
 	CLabelView *lbl = new CLabelView(vc, SRect(36,8,84,24));
-	lbl->SetText("\pServer:");
+	lbl->SetText("\x07" "Server:");
 	lbl->Show();
 
 	lbl = new CLabelView(vc, SRect(36,34,84,50));
-	lbl->SetText("\pLogin:");
+	lbl->SetText("\x06" "Login:");
 	lbl->Show();
 
 	lbl = new CLabelView(vc, SRect(123,34,159,50));
 	lbl->SetSizing(sizing_HorizSticky);
-	lbl->SetText("\pPass:");
+	lbl->SetText("\x05" "Pass:");
 	lbl->Show();
 
 	lbl = new CLabelView(vc, SRect(375,8,427,24));
 	lbl->SetSizing(sizing_HorizSticky);
-	lbl->SetText("\pServer:");
+	lbl->SetText("\x07" "Server:");
 	lbl->Show();
 
 	box = new CBoxView(vc, SRect(427,5,572,27), boxStyle_Sunken);
@@ -166,7 +166,7 @@ CMySynchWin::CMySynchWin()
 
 	lbl = new CLabelView(vc, SRect(375,34,427,50));
 	lbl->SetSizing(sizing_HorizSticky);
-	lbl->SetText("\pBundle:");
+	lbl->SetText("\x07" "Bundle:");
 	lbl->Show();
 
 	box = new CBoxView(vc, SRect(427,31,572,53), boxStyle_Sunken);
@@ -209,35 +209,35 @@ CMySynchWin::CMySynchWin()
 	CIconButtonView *icb = new CIconButtonView(vc, SRect(237,4,261,28));
 	icb->SetIconID(205);
 	icb->SetID(viewID_Refresh);
-	icb->SetTooltipMsg("\pRefresh");
+	icb->SetTooltipMsg("\x07" "Refresh");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
 //	icb = new CIconButtonView(vc, SRect(264,4,288,28));
 //	icb->SetIconID(223);
 //	icb->SetID(viewID_AddSynch);
-//	icb->SetTooltipMsg("\pAdd Synch");
+//	icb->SetTooltipMsg("\x09" "Add Synch");
 //	icb->SetSizing(sizing_HorizSticky);
 //	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(291,4,315,28));
 	icb->SetIconID(411);
 	icb->SetID(viewID_Synch);
-	icb->SetTooltipMsg("\pSynch");
+	icb->SetTooltipMsg("\x05" "Synch");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(318,4,342,28));
 	icb->SetIconID(419);
 	icb->SetID(viewID_Options);
-	icb->SetTooltipMsg("\pOptions");
+	icb->SetTooltipMsg("\x07" "Options");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(345,4,369,28));
 	icb->SetIconID(412);
 	icb->SetID(viewID_StopTask);
-	icb->SetTooltipMsg("\pKill Task");
+	icb->SetTooltipMsg("\x09" "Kill Task");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
@@ -245,20 +245,20 @@ CMySynchWin::CMySynchWin()
 	icb = new CIconButtonView(vc, SRect(4,4,28,28));
 	icb->SetIconID(232);
 	icb->SetID(viewID_SelectServer1);
-	icb->SetTooltipMsg("\pSelect News Server");
+	icb->SetTooltipMsg("\x12" "Select News Server");
 	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(578,4,602,28));
 	icb->SetIconID(232);
 	icb->SetID(viewID_SelectServer2);
-	icb->SetTooltipMsg("\pSelect Hotline Server");
+	icb->SetTooltipMsg("\x15" "Select Hotline Server");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
 	icb = new CIconButtonView(vc, SRect(578,30,602,54));
 	icb->SetIconID(231);
 	icb->SetID(viewID_SelectBundle2);
-	icb->SetTooltipMsg("\pSelect Hotline Bundle");
+	icb->SetTooltipMsg("\x15" "Select Hotline Bundle");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 
@@ -311,7 +311,7 @@ CMySynchWin::CMySynchWin()
 	// make filter label
 	lbl = new CLabelView(mViews.pGroupVc1, SRect(8,8,58,24));
 	lbl->SetFont(kDefaultFont, nil, 9);
-	lbl->SetText("\pSearch:");
+	lbl->SetText("\x07" "Search:");
 	lbl->Show();
 	
 	// make filter text box
@@ -369,14 +369,14 @@ CMySynchWin::CMySynchWin()
 	mViews.pSortArticlesBtn1 = new CButtonView(mViews.pArticleVc1, SRect(182,0,292,16));
 	mViews.pSortArticlesBtn1->SetID(viewID_SortArticles1);
 	mViews.pSortArticlesBtn1->SetSizing(sizing_HorizSticky);
-	mViews.pSortArticlesBtn1->SetTooltipMsg("\pSort Articles");
+	mViews.pSortArticlesBtn1->SetTooltipMsg("\x0d" "Sort Articles");
 	mViews.pSortArticlesBtn1->Show();
 	
 	// make attachment menu
 	mViews.pAttachmentButton1 = MakePopupMenuView(mViews.pArticleVc1, SRect(2,0,20,16), &mViews.pAttachmentList1);
 	mViews.pAttachmentList1->SetID(viewID_Attachment1);
 	mViews.pAttachmentButton1->Disable();
-	mViews.pAttachmentButton1->SetTooltipMsg("\pShow Attachments");
+	mViews.pAttachmentButton1->SetTooltipMsg("\x10" "Show Attachments");
 #if NEW_NEWS_FORMAT
 	mViews.pAttachmentButton1->Show();
 #endif
@@ -412,7 +412,7 @@ CMySynchWin::CMySynchWin()
 	// make filter label
 	lbl = new CLabelView(mViews.pGroupVc2, SRect(2,8,52,24));
 	lbl->SetFont(kDefaultFont, nil, 9);
-	lbl->SetText("\pSearch:");
+	lbl->SetText("\x07" "Search:");
 	lbl->Show();
 	
 	// make filter text box
@@ -470,14 +470,14 @@ CMySynchWin::CMySynchWin()
 	mViews.pSortArticlesBtn2 = new CButtonView(mViews.pArticleVc2, SRect(182,0,292,16));
 	mViews.pSortArticlesBtn2->SetID(viewID_SortArticles2);
 	mViews.pSortArticlesBtn2->SetSizing(sizing_HorizSticky);
-	mViews.pSortArticlesBtn2->SetTooltipMsg("\pSort Articles");
+	mViews.pSortArticlesBtn2->SetTooltipMsg("\x0d" "Sort Articles");
 	mViews.pSortArticlesBtn2->Show();
 
 	// make attachment menu
 	mViews.pAttachmentButton2 = MakePopupMenuView(mViews.pArticleVc2, SRect(2,0,20,16), &mViews.pAttachmentList2);
 	mViews.pAttachmentList2->SetID(viewID_Attachment2);
 	mViews.pAttachmentButton2->Disable();
-	mViews.pAttachmentButton2->SetTooltipMsg("\pShow Attachments");
+	mViews.pAttachmentButton2->SetTooltipMsg("\x10" "Show Attachments");
 #if NEW_NEWS_FORMAT
 	mViews.pAttachmentButton2->Show();
 #endif
@@ -554,7 +554,7 @@ CLabelView *CMySynchWin::MakeGroupCount(CContainerView *inContainerView, const S
 	CLabelView *lbl = new CLabelView(inContainerView, SRect(inBounds.left + 4, inBounds.top + 4, inBounds.right - 4, inBounds.bottom - 4));
 	lbl->SetSizing(sizing_HorizSticky);
 	lbl->SetFont(pFontDesc);	// takes ownership of the pFontDesc
-	lbl->SetText("\p0/0");
+	lbl->SetText("\x03" "0/0");
 	lbl->Show();
 
 	return lbl;
@@ -673,7 +673,7 @@ void CMySynchWin::FilterGroupList1(bool inFilter)
 void CMySynchWin::DeleteAllGroup1()
 {
 	mViews.pGroupList1->DeleteAll(mViews.pGroupCount1);
-	mViews.pGroupList1->SetStatus("\p0 items in list.");
+	mViews.pGroupList1->SetStatus("\x10" "0 items in list.");
 }
 
 void CMySynchWin::AddGroup2(SMyGroupInfo2 *inGroupInfo, Uint8 *inFilterText)
@@ -694,35 +694,35 @@ void CMySynchWin::FilterGroupList2(bool inFilter)
 void CMySynchWin::DeleteAllGroup2()
 {
 	mViews.pGroupList2->DeleteAll(mViews.pGroupCount2);
-	mViews.pGroupList2->SetStatus("\p0 items in list.");
+	mViews.pGroupList2->SetStatus("\x10" "0 items in list.");
 }
 
 void CMySynchWin::UpdateSortBtn1(bool inDescending)
 {
 	if (inDescending)
-		mViews.pSortArticlesBtn1->SetTitle("\p>     Descending");
+		mViews.pSortArticlesBtn1->SetTitle("\x10" ">     Descending");
 	else
-		mViews.pSortArticlesBtn1->SetTitle("\p<      Ascending");	
+		mViews.pSortArticlesBtn1->SetTitle("\x10" "<      Ascending");	
 }
 
 void CMySynchWin::UpdateSortBtn2(bool inDescending)
 {
 	if (inDescending)
-		mViews.pSortArticlesBtn2->SetTitle("\p>     Descending");
+		mViews.pSortArticlesBtn2->SetTitle("\x10" ">     Descending");
 	else
-		mViews.pSortArticlesBtn2->SetTitle("\p<      Ascending");	
+		mViews.pSortArticlesBtn2->SetTitle("\x10" "<      Ascending");	
 }
 
 void CMySynchWin::DeleteAllArticle1()
 {
 	mViews.pArticleTree1->DeleteAll();
-	mViews.pArticleTree1->SetStatus("\p0 items in list.");
+	mViews.pArticleTree1->SetStatus("\x10" "0 items in list.");
 }
 
 void CMySynchWin::DeleteAllArticle2()
 {
 	mViews.pArticleTree2->DeleteAll();
-	mViews.pArticleTree2->SetStatus("\p0 items in list.");
+	mViews.pArticleTree2->SetStatus("\x10" "0 items in list.");
 }
 
 void CMySynchWin::AddAttachment1(SArticleData *inAttachmentData)
@@ -1153,7 +1153,7 @@ CMyOptionsWin::CMyOptionsWin()
 	CContainerView *vc;
 	
 	// setup window
-	SetTitle("\pOptions");
+	SetTitle("\x07" "Options");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -1165,8 +1165,8 @@ CMyOptionsWin::CMyOptionsWin()
 	mViews.tabs->SetFont(UFontDesc::New(kDefaultFont, nil, 10));
 	
 	// add the tabs
-	mViews.tabs->AddTab("\pGeneral");
-	mViews.tabs->AddTab("\pSynchronization");
+	mViews.tabs->AddTab("\x07" "General");
+	mViews.tabs->AddTab("\x0f" "Synchronization");
 	
 	// attach views to tabs
 	mViews.tabs->SetTabView(1, MakeGeneralTab());
@@ -1175,7 +1175,7 @@ CMyOptionsWin::CMyOptionsWin()
 	mViews.tabs->Show();
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSave", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Save", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(340,418,520,444), btns);
 
 	mSynchList = nil;
@@ -1207,7 +1207,7 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 	{
 		// make e-mail label
 		lbl = new CLabelView(vc, SRect(10,19,120,35));
-		lbl->SetText("\pE-mail address:");
+		lbl->SetText("\x0f" "E-mail address:");
 		lbl->Show();
 
 		// make e-mail text
@@ -1216,7 +1216,7 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make organization label
 		lbl = new CLabelView(vc, SRect(10,53,120,69));
-		lbl->SetText("\pOrganization:");
+		lbl->SetText("\x0d" "Organization:");
 		lbl->Show();
 
 		// make organization text
@@ -1225,7 +1225,7 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make add text label
 		lbl = new CLabelView(vc, SRect(10,143,120,159));
-		lbl->SetText("\pAdd text:");
+		lbl->SetText("\x09" "Add text:");
 		lbl->Show();
 
 		// make add text
@@ -1234,11 +1234,11 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make purge days labels
 		lbl = new CLabelView(vc, SRect(10,245,120,261));
-		lbl->SetText("\pPurge after:");
+		lbl->SetText("\x0c" "Purge after:");
 		lbl->Show();
 
 		lbl = new CLabelView(vc, SRect(174,245,210,261));
-		lbl->SetText("\pdays");
+		lbl->SetText("\x04" "days");
 		lbl->Show();
 
 		// make purge days text
@@ -1247,7 +1247,7 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make max articles label
 		lbl = new CLabelView(vc, SRect(10,277,120,293));
-		lbl->SetText("\pMax articles:");
+		lbl->SetText("\x0d" "Max articles:");
 		lbl->Show();
 
 		// make max articles text
@@ -1256,13 +1256,13 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make checkboxes
 		chk = new CCheckBoxView(vc, SRect(280,248,515,266));
-		chk->SetTitle("\pLog to file");
+		chk->SetTitle("\x0b" "Log to file");
 		chk->SetAutoMark(true);
 		chk->Show();
 		mViews.logToFile = chk;
 
 		chk = new CCheckBoxView(vc, SRect(280,272,515,290));
-		chk->SetTitle("\pCreate old Hotline news groups");
+		chk->SetTitle("\x1e" "Create old Hotline news groups");
 		chk->SetAutoMark(true);
 	#if NEW_NEWS_FORMAT
 		chk->Show();
@@ -1297,7 +1297,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 		// make filter label
 		lbl = new CLabelView(vc, SRect(12,10,62,26));
 		lbl->SetFont(kDefaultFont, nil, 9);
-		lbl->SetText("\pSearch:");
+		lbl->SetText("\x07" "Search:");
 		lbl->Show();
 	
 		// make filter text box
@@ -1315,7 +1315,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make news server checkbox
 		chk = new CCheckBoxView(vc, SRect(305,0,515,18));
-		chk->SetTitle("\pFilter selected News Server");
+		chk->SetTitle("\x1b" "Filter selected News Server");
 		chk->SetAutoMark(true);
 		chk->SetID(8);
 		chk->Show();
@@ -1323,7 +1323,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make hotline server checkbox
 		chk = new CCheckBoxView(vc, SRect(305,18,515,36));
-		chk->SetTitle("\pFilter selected Hotline Server");
+		chk->SetTitle("\x1e" "Filter selected Hotline Server");
 		chk->SetAutoMark(true);
 		chk->SetID(9);
 		chk->Show();
@@ -1337,7 +1337,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make news server label
 		lbl = new CLabelView(vc, SRect(10,167,105,183));
-		lbl->SetText("\pNews Server:");
+		lbl->SetText("\x0c" "News Server:");
 		lbl->Show();
 
 		// make news server text
@@ -1347,7 +1347,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 		
 		// make news group label
 		lbl = new CLabelView(vc, SRect(10,197,105,213));
-		lbl->SetText("\pNews Group:");
+		lbl->SetText("\x0b" "News Group:");
 		lbl->Show();
 
 		// make news group text
@@ -1357,7 +1357,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 	
 		// make login label
 		lbl = new CLabelView(vc, SRect(369,167,417,183));
-		lbl->SetText("\pLog:");
+		lbl->SetText("\x04" "Log:");
 		lbl->Show();
 
 		// make login text
@@ -1367,7 +1367,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 		
 		// make password label
 		lbl = new CLabelView(vc, SRect(369,197,417,213));
-		lbl->SetText("\pPass:");
+		lbl->SetText("\x05" "Pass:");
 		lbl->Show();
 
 		// make password box
@@ -1379,7 +1379,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make hotline server label
 		lbl = new CLabelView(vc, SRect(10,227,105,243));
-		lbl->SetText("\pHotline Server:");
+		lbl->SetText("\x0f" "Hotline Server:");
 		lbl->Show();
 
 		// make hotline server text
@@ -1389,7 +1389,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 		
 		// make hotline bundle label
 		lbl = new CLabelView(vc, SRect(369,227,417,243));
-		lbl->SetText("\pBundle:");
+		lbl->SetText("\x07" "Bundle:");
 		lbl->Show();
 
 		// make hotline bundle text
@@ -1399,7 +1399,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make hotline group label
 		lbl = new CLabelView(vc, SRect(10,257,105,273));
-		lbl->SetText("\pHotline Group:");
+		lbl->SetText("\x0e" "Hotline Group:");
 		lbl->Show();
 
 		// make hotline group text
@@ -1409,11 +1409,11 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 		
 		// make synch hours labels
 		lbl = new CLabelView(vc, SRect(10,287,105,303));
-		lbl->SetText("\pSynch every:");
+		lbl->SetText("\x0c" "Synch every:");
 		lbl->Show();
 
 		lbl = new CLabelView(vc, SRect(157,287,199,303));
-		lbl->SetText("\phours");
+		lbl->SetText("\x05" "hours");
 		lbl->Show();
 
 		// make synch hours box
@@ -1425,11 +1425,11 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make purge days labels
 		lbl = new CLabelView(vc, SRect(10,317,105,333));
-		lbl->SetText("\pPurge after:");
+		lbl->SetText("\x0c" "Purge after:");
 		lbl->Show();
 
 		lbl = new CLabelView(vc, SRect(157,317,199,333));
-		lbl->SetText("\pdays");
+		lbl->SetText("\x04" "days");
 		lbl->Show();
 
 		// make purge days box
@@ -1441,7 +1441,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make max articles label
 		lbl = new CLabelView(vc, SRect(10,347,105,363));
-		lbl->SetText("\pMax articles:");
+		lbl->SetText("\x0d" "Max articles:");
 		lbl->Show();
 
 		// make max articles box
@@ -1458,7 +1458,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make last date
 		lbl = new CLabelView(vc, SRect(208,289,283,305));
-		lbl->SetText("\pLast Synch:");
+		lbl->SetText("\x0b" "Last Synch:");
 		lbl->Show();
 
 		mViews.lastSynchLbl = new CLabelView(vc, SRect(283,289,510,305));
@@ -1466,7 +1466,7 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make next date		
 		lbl = new CLabelView(vc, SRect(208,315,283,331));
-		lbl->SetText("\pNext Synch:");
+		lbl->SetText("\x0b" "Next Synch:");
 		lbl->Show();
 
 		mViews.nextSynchLbl = new CLabelView(vc, SRect(283,315,510,331));
@@ -1480,23 +1480,23 @@ CContainerView *CMyOptionsWin::MakeSynchTab()
 
 		// make buttons
 		btn = new CButtonView(vc, SRect(199,344,275,366));
-		btn->SetTitle("\pAdd");
-//		btn->SetTooltipMsg("\pAdd New Synch");
+		btn->SetTitle("\x03" "Add");
+//		btn->SetTooltipMsg("\x0d" "Add New Synch");
 		btn->SetID(3);
 		btn->Show();
 		btn = new CButtonView(vc, SRect(279,344,355,366));
-		btn->SetTitle("\pEdit");
-//		btn->SetTooltipMsg("\pEdit Selected Synch");
+		btn->SetTitle("\x04" "Edit");
+//		btn->SetTooltipMsg("\x13" "Edit Selected Synch");
 		btn->SetID(4);
 		btn->Show();
 		btn = new CButtonView(vc, SRect(359,344,435,366));
-		btn->SetTitle("\pDelete");
-//		btn->SetTooltipMsg("\pDelete Selected Synch");
+		btn->SetTitle("\x06" "Delete");
+//		btn->SetTooltipMsg("\x15" "Delete Selected Synch");
 		btn->SetID(5);
 		btn->Show();
 		btn = new CButtonView(vc, SRect(439,344,515,366));
-		btn->SetTitle("\pSynch");
-//		btn->SetTooltipMsg("\pMake Selected Synch");
+		btn->SetTitle("\x05" "Synch");
+//		btn->SetTooltipMsg("\x13" "Make Selected Synch");
 		btn->SetID(6);
 		btn->Show();			
 	}
@@ -1524,7 +1524,7 @@ CLabelView *CMyOptionsWin::MakeSynchCount(CContainerView *inContainerView, const
 	CLabelView *lbl = new CLabelView(inContainerView, SRect(inBounds.left + 4, inBounds.top + 4, inBounds.right - 4, inBounds.bottom - 4));
 	lbl->SetSizing(sizing_HorizSticky);
 	lbl->SetFont(pFontDesc);	// takes ownership of the pFontDesc
-	lbl->SetText("\p0/0");
+	lbl->SetText("\x03" "0/0");
 	lbl->Show();
 
 	return lbl;
@@ -2088,9 +2088,9 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 	
 	// setup window
 	if (inAddEditSynch)
-		SetTitle("\pAdd Synch");
+		SetTitle("\x09" "Add Synch");
 	else
-		SetTitle("\pEdit Synch");
+		SetTitle("\x0a" "Edit Synch");
 
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
@@ -2100,7 +2100,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 
 	// make news server label
 	lbl = new CLabelView(vc, SRect(10,11,105,27));
-	lbl->SetText("\pNews Server:");
+	lbl->SetText("\x0c" "News Server:");
 	lbl->Show();
 
 	// make news server text
@@ -2110,7 +2110,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 	
 	// make news group label
 	lbl = new CLabelView(vc, SRect(10,41,105,57));
-	lbl->SetText("\pNews Group:");
+	lbl->SetText("\x0b" "News Group:");
 	lbl->Show();
 
 	// make news group text
@@ -2119,7 +2119,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 	
 	// make log label
 	lbl = new CLabelView(vc, SRect(369,11,417,27));
-	lbl->SetText("\pLog:");
+	lbl->SetText("\x04" "Log:");
 	lbl->Show();
 
 	// make log text
@@ -2128,7 +2128,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 	
 	// make pass label
 	lbl = new CLabelView(vc, SRect(369,41,417,57));
-	lbl->SetText("\pPass:");
+	lbl->SetText("\x05" "Pass:");
 	lbl->Show();
 
 	// make pass text
@@ -2137,7 +2137,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 
 	// make hotline server label
 	lbl = new CLabelView(vc, SRect(10,71,105,87));
-	lbl->SetText("\pHotline Server:");
+	lbl->SetText("\x0f" "Hotline Server:");
 	lbl->Show();
 
 	// make hotline server text
@@ -2146,7 +2146,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 
 	// make hotline bundle label
 	lbl = new CLabelView(vc, SRect(369,71,417,87));
-	lbl->SetText("\pBundle:");
+	lbl->SetText("\x07" "Bundle:");
 	lbl->Show();
 
 	// make hotline bundle text
@@ -2156,7 +2156,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 	
 	// make hotline group label
 	lbl = new CLabelView(vc, SRect(10,101,105,117));
-	lbl->SetText("\pHotline Group:");
+	lbl->SetText("\x0e" "Hotline Group:");
 	lbl->Show();
 
 	// make hotline group text
@@ -2165,11 +2165,11 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 	
 	// make synch hours labels
 	lbl = new CLabelView(vc, SRect(10,131,105,147));
-	lbl->SetText("\pSynch every:");
+	lbl->SetText("\x0c" "Synch every:");
 	lbl->Show();
 
 	lbl = new CLabelView(vc, SRect(157,131,200,147));
-	lbl->SetText("\phours");
+	lbl->SetText("\x05" "hours");
 	lbl->Show();
 
 	// make synch hours text
@@ -2181,11 +2181,11 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 
 	// make purge days labels
 	lbl = new CLabelView(vc, SRect(10,161,105,177));
-	lbl->SetText("\pPurge after:");
+	lbl->SetText("\x0c" "Purge after:");
 	lbl->Show();
 
 	lbl = new CLabelView(vc, SRect(157,161,200,177));
-	lbl->SetText("\pdays");
+	lbl->SetText("\x04" "days");
 	lbl->Show();
 
 	// make purge days text
@@ -2197,7 +2197,7 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 
 	// make max articles labels
 	lbl = new CLabelView(vc, SRect(10,191,105,207));
-	lbl->SetText("\pMax articles:");
+	lbl->SetText("\x0d" "Max articles:");
 	lbl->Show();
 
 	// make max articles text
@@ -2209,19 +2209,19 @@ CMyAddEditSynchWin::CMyAddEditSynchWin(bool inAddEditSynch, Uint32 inPurgeDays, 
 
 	// make select buttons
 	btn = new CButtonView(vc, SRect(297,128,395,150));
-	btn->SetTitle("\pSelect Bundle");
-	btn->SetTooltipMsg("\pSelect Hotline Bundle");
+	btn->SetTitle("\x0d" "Select Bundle");
+	btn->SetTooltipMsg("\x15" "Select Hotline Bundle");
 	btn->SetID(3);
 	btn->Show();
 
 	btn = new CButtonView(vc, SRect(417,128,515,150));
-	btn->SetTitle("\pSelect Group");
-	btn->SetTooltipMsg("\pSelect Hotline Group");
+	btn->SetTitle("\x0c" "Select Group");
+	btn->SetTooltipMsg("\x14" "Select Hotline Group");
 	btn->SetID(4);
 	btn->Show();
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSave", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Save", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(317,186,497,212), btns);
 
 	mBundleRef = nil;
@@ -2449,7 +2449,7 @@ CMySelectServerWin1::CMySelectServerWin1()
 	CScrollerView *scr;
 	
 	// setup window
-	SetTitle("\pSelect News Server");
+	SetTitle("\x12" "Select News Server");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -2471,7 +2471,7 @@ CMySelectServerWin1::CMySelectServerWin1()
 	// make label
 	CLabelView *lbl = new CLabelView(vc, SRect(12,6,268,22));
 	lbl->SetFont(pFontDesc);	// takes ownership of the pFontDesc
-	lbl->SetText("\pNews Servers");
+	lbl->SetText("\x0c" "News Servers");
 	lbl->Show();
 
 	// make list scroller view
@@ -2486,7 +2486,7 @@ CMySelectServerWin1::CMySelectServerWin1()
 	mViews.serverList->Show();
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSelect", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x06" "Select", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(90,206,270,232), btns);
 }
 
@@ -2501,7 +2501,7 @@ CMySelectServerWin2::CMySelectServerWin2()
 	CScrollerView *scr;
 	
 	// setup window
-	SetTitle("\pSelect Hotline Server");
+	SetTitle("\x15" "Select Hotline Server");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -2523,7 +2523,7 @@ CMySelectServerWin2::CMySelectServerWin2()
 	// make label
 	CLabelView *lbl = new CLabelView(vc, SRect(12,6,178,22));
 	lbl->SetFont(pFontDesc);	// takes ownership of the pFontDesc
-	lbl->SetText("\pHotline Servers");
+	lbl->SetText("\x0f" "Hotline Servers");
 	lbl->Show();
 
 	// make list scroller view
@@ -2552,7 +2552,7 @@ CMySelectServerWin2::CMySelectServerWin2()
 	// make label
 	lbl = new CLabelView(vc, SRect(192,6,348,22));
 	lbl->SetFont(pFontDesc);	// takes ownership of the pFontDesc
-	lbl->SetText("\pHotline Bundles");
+	lbl->SetText("\x0f" "Hotline Bundles");
 	lbl->Show();
 
 	// make list scroller view
@@ -2567,7 +2567,7 @@ CMySelectServerWin2::CMySelectServerWin2()
 	mViews.bundleList->Show();
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSelect", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x06" "Select", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(170,206,350,232), btns);
 }
 

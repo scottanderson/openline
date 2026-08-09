@@ -67,7 +67,7 @@ void SendNoError(TTransactSession inTsn)
 
 
 //#if NEW_NEWS
-//const Uint8 *kNeedNewClient = "\pThis is a Hotline 1.9 Server that implements a multi-category, multi-threaded news system.\rUsing this news system requires Hotline Client 1.5 or newer.\r\rSee http://www.BigRedH.com for more information.";
+//const Uint8 *kNeedNewClient = "\xc9" "This is a Hotline 1.9 Server that implements a multi-category, multi-threaded news system.\rUsing this news system requires Hotline Client 1.5 or newer.\r\rSee http://www.BigRedH.com for more information.";
 //#endif
 
 void CMyApplication::ProcessTran_GetMsgs(SMyClient *inClient, TTransactSession inTsn, TFieldData /* inData */)
@@ -83,7 +83,7 @@ void CMyApplication::ProcessTran_GetMsgs(SMyClient *inClient, TTransactSession i
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_NewsReadArt))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to read news from the message board.");
+		SendErrorMsg(inTsn, "\x38" "You are not allowed to read news from the message board.");
 		return;
 	}
 
@@ -111,7 +111,7 @@ void CMyApplication::ProcessTran_PostMsg(SMyClient *inClient, TTransactSession i
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_NewsPostArt))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to post news to the message board.");
+		SendErrorMsg(inTsn, "\x36" "You are not allowed to post news to the message board.");
 		return;
 	}
 
@@ -119,7 +119,7 @@ void CMyApplication::ProcessTran_PostMsg(SMyClient *inClient, TTransactSession i
 	Uint32 s = inData->GetFieldSize(myField_Data);
 	if (s > 8192)
 	{
-		SendErrorMsg(inTsn, "\pYour news post was not accepted because it was too big.");
+		SendErrorMsg(inTsn, "\x37" "Your news post was not accepted because it was too big.");
 		return;
 	}
 
@@ -248,7 +248,7 @@ void CMyApplication::ProcessTran_SendInstantMsg(SMyClient *inClient, TTransactSe
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_SendMessage))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to send private messages.");
+		SendErrorMsg(inTsn, "\x2d" "You are not allowed to send private messages.");
 		return;
 	}
 
@@ -257,7 +257,7 @@ void CMyApplication::ProcessTran_SendInstantMsg(SMyClient *inClient, TTransactSe
 	// check for sending message to client that doesn't exist
 	if (client == nil || !client->tpt->IsEstablished())
 	{
-		SendErrorMsg(inTsn, "\pCouldn't send your message because the client is not connected to this server.");
+		SendErrorMsg(inTsn, "\x4e" "Couldn't send your message because the client is not connected to this server.");
 		return;
 	}
 
@@ -322,7 +322,7 @@ void CMyApplication::ProcessTran_UserBroadcast(SMyClient *inClient, TTransactSes
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_Broadcast))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to broadcast.");
+		SendErrorMsg(inTsn, "\x21" "You are not allowed to broadcast.");
 		return;
 	}
 
@@ -431,7 +431,7 @@ void CMyApplication::ProcessTran_ChatSend(SMyClient *inClient, TTransactSession 
 	if (!HasGeneralPriv(inClient, myAcc_SendChat))
 	{
 		data->AddInteger(myField_ChatOptions, 1);
-		data->AddPString(myField_Data, "\pYou are not allowed to participate in chat.");
+		data->AddPString(myField_Data, "\x2b" "You are not allowed to participate in chat.");
 		inClient->tpt->SendTransaction(myTran_ServerMsg, data);
 		return;
 	}
@@ -569,7 +569,7 @@ void CMyApplication::ProcessTran_GetFileNameList(SMyClient *inClient, TTransactS
 		if (folder.IsInvalid())
 		{
 			// doesn't exist, send error reply
-			SendErrorMsg(inTsn, "\pCannot get file list because the specified folder could not be found.");
+			SendErrorMsg(inTsn, "\x45" "Cannot get file list because the specified folder could not be found.");
 			return;
 		}
 		
@@ -610,7 +610,7 @@ void CMyApplication::ProcessTran_GetNewsCatNameList(SMyClient *inClient, TTransa
 		if (folder.IsInvalid())
 		{
 			// doesn't exist, send error reply
-			SendErrorMsg(inTsn, "\pCannot get news list because the specified folder could not be found.");
+			SendErrorMsg(inTsn, "\x45" "Cannot get news list because the specified folder could not be found.");
 			return;
 		}
 		
@@ -638,7 +638,7 @@ void CMyApplication::ProcessTran_PostNewsArt(SMyClient *inClient, TTransactSessi
 	// check access
 	if (!HasBundlePriv(inClient, myAcc_NewsPostArt))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to post articles.");
+		SendErrorMsg(inTsn, "\x25" "You are not allowed to post articles.");
 		return;
 	}
 	
@@ -649,7 +649,7 @@ void CMyApplication::ProcessTran_PostNewsArt(SMyClient *inClient, TTransactSessi
 	if (file.IsInvalid())
 	{
 		// doesn't exist, send error reply
-		SendErrorMsg(inTsn, "\pCannot post article because the specified category could not be found.");
+		SendErrorMsg(inTsn, "\x46" "Cannot post article because the specified category could not be found.");
 		return;
 	}
 	
@@ -661,7 +661,7 @@ void CMyApplication::ProcessTran_PostNewsArt(SMyClient *inClient, TTransactSessi
 	
 	if (!id)
 	{
-		SendErrorMsg(inTsn, "\pCannot post article because invalid data was specified.");
+		SendErrorMsg(inTsn, "\x37" "Cannot post article because invalid data was specified.");
 		return;
 	}
 	
@@ -670,7 +670,7 @@ void CMyApplication::ProcessTran_PostNewsArt(SMyClient *inClient, TTransactSessi
 	Uint32 s = inData->GetFieldSize(myField_NewsArtData);
 	if (!s)
 	{
-		SendErrorMsg(inTsn, "\pCannot post article because invalid data was specified.");
+		SendErrorMsg(inTsn, "\x37" "Cannot post article because invalid data was specified.");
 		return;
 	}
 	
@@ -679,7 +679,7 @@ void CMyApplication::ProcessTran_PostNewsArt(SMyClient *inClient, TTransactSessi
 	
 	if (!UMyNewsDatabase::AddData(file, id, flav, BPTR(artDat), s))
 	{
-		SendErrorMsg(inTsn, "\pCannot post article because the specified category was corrupt.");
+		SendErrorMsg(inTsn, "\x3f" "Cannot post article because the specified category was corrupt.");
 		return;
 	}
 		
@@ -697,7 +697,7 @@ void CMyApplication::ProcessTran_DelNewsArt(SMyClient *inClient, TTransactSessio
 	// check access
 	if (!HasBundlePriv(inClient, myAcc_NewsDeleteArt))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to delete articles.");
+		SendErrorMsg(inTsn, "\x27" "You are not allowed to delete articles.");
 		return;
 	}
 	
@@ -708,7 +708,7 @@ void CMyApplication::ProcessTran_DelNewsArt(SMyClient *inClient, TTransactSessio
 	if (file.IsInvalid())
 	{
 		// doesn't exist, send error reply
-		SendErrorMsg(inTsn, "\pCannot delete article because the specified category could not be found.");
+		SendErrorMsg(inTsn, "\x48" "Cannot delete article because the specified category could not be found.");
 		return;
 	}
 	
@@ -722,7 +722,7 @@ void CMyApplication::ProcessTran_DelNewsArt(SMyClient *inClient, TTransactSessio
 	}
 	catch(...)
 	{
-		SendErrorMsg(inTsn, "\pCannot delete article because an invalid category or item was specified.");
+		SendErrorMsg(inTsn, "\x48" "Cannot delete article because an invalid category or item was specified.");
 		return;
 	}
 	
@@ -746,21 +746,21 @@ void CMyApplication::ProcessTran_DelNewsFldrItem(SMyClient *inClient, TTransactS
 	if (file.IsInvalid() || file->Equals(root))
 	{
 		// doesn't exist, send error reply
-		SendErrorMsg(inTsn, "\pCannot delete news item because it could not be found.");
+		SendErrorMsg(inTsn, "\x36" "Cannot delete news item because it could not be found.");
 		return;
 	}
 	
 	// check access
 	if (type == fsItemType_Folder && !HasBundlePriv(inClient, myAcc_NewsDeleteFldr))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to delete news bundles.");
+		SendErrorMsg(inTsn, "\x2b" "You are not allowed to delete news bundles.");
 		return;
 	}
 
 	// check access
 	if (type == fsItemType_File && (!pathSize || !HasBundlePriv(inClient, myAcc_NewsDeleteCat)))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to delete news categories.");
+		SendErrorMsg(inTsn, "\x2e" "You are not allowed to delete news categories.");
 		return;
 	}
 		
@@ -770,7 +770,7 @@ void CMyApplication::ProcessTran_DelNewsFldrItem(SMyClient *inClient, TTransactS
 	}
 	catch(...)
 	{
-		SendErrorMsg(inTsn, "\pNews item could not be deleted.");
+		SendErrorMsg(inTsn, "\x1f" "News item could not be deleted.");
 		return;
 	}
 	
@@ -791,7 +791,7 @@ void CMyApplication::ProcessTran_NewNewsFldr(SMyClient *inClient, TTransactSessi
 	// check access
 	if (!HasBundlePriv(inClient, myAcc_NewsCreateFldr))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to create news bundles.");
+		SendErrorMsg(inTsn, "\x2b" "You are not allowed to create news bundles.");
 		return;
 	}
 	
@@ -805,9 +805,9 @@ void CMyApplication::ProcessTran_NewNewsFldr(SMyClient *inClient, TTransactSessi
 		if (newFolder.IsInvalid())
 		{
 			if (type == fsItemType_NonExistantParent)
-				SendErrorMsg(inTsn, "Cannot create news bundle “%#s” because the enclosing bundle could not be found.", fileName);
+				SendErrorMsg(inTsn, "Cannot create news bundle \xd2%#s\xd3 because the enclosing bundle could not be found.", fileName);
 			else
-				SendErrorMsg(inTsn, "Cannot create news bundle “%#s” because there is already an item or bundle with that name.", fileName);
+				SendErrorMsg(inTsn, "Cannot create news bundle \xd2%#s\xd3 because there is already an item or bundle with that name.", fileName);
 		
 			return;
 		}
@@ -817,7 +817,7 @@ void CMyApplication::ProcessTran_NewNewsFldr(SMyClient *inClient, TTransactSessi
 	}
 	catch (SError& err)
 	{
-		SendErrorMsg(inTsn, err, "Cannot create bundle “%#s”:", fileName);
+		SendErrorMsg(inTsn, err, "Cannot create bundle \xd2%#s\xd3:", fileName);
 		return;
 	}
 	
@@ -826,7 +826,7 @@ void CMyApplication::ProcessTran_NewNewsFldr(SMyClient *inClient, TTransactSessi
 
 #if !FACELESS
 	// display in log
-	Log(inClient, "Create news folder “%#s”", fileName);
+	Log(inClient, "Create news folder \xd2%#s\xd3", fileName);
 #endif
 }
 
@@ -848,7 +848,7 @@ void CMyApplication::ProcessTran_NewNewsCat(SMyClient *inClient, TTransactSessio
 	// check access
 	if (!HasBundlePriv(inClient, myAcc_NewsCreateCat))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to create news categories.");
+		SendErrorMsg(inTsn, "\x2e" "You are not allowed to create news categories.");
 		return;
 	}
 	
@@ -872,20 +872,20 @@ void CMyApplication::ProcessTran_NewNewsCat(SMyClient *inClient, TTransactSessio
 	if (file.IsInvalid())
 	{
 		if (type == fsItemType_NonExistantParent)
-			SendErrorMsg(inTsn, "Cannot create news category “%#s” because the enclosing bundle could not be found.", fileName);
+			SendErrorMsg(inTsn, "Cannot create news category \xd2%#s\xd3 because the enclosing bundle could not be found.", fileName);
 		else
-			SendErrorMsg(inTsn, "Cannot create news category “%#s” because there is already an item or bundle with that name.", fileName);
+			SendErrorMsg(inTsn, "Cannot create news category \xd2%#s\xd3 because there is already an item or bundle with that name.", fileName);
 		return;
 	}
 	
 	// create the folder
 	try
 	{
-		UMyNewsDatabase::CreateNewGroup(file, '3113', fileName, "\p");	// no desc for now!
+		UMyNewsDatabase::CreateNewGroup(file, '3113', fileName, "\x00" "");	// no desc for now!
 	}
 	catch(SError& err)
 	{
-		SendErrorMsg(inTsn, err, "Cannot create news category “%#s”:", fileName);
+		SendErrorMsg(inTsn, err, "Cannot create news category \xd2%#s\xd3:", fileName);
 		return;
 	}
 	
@@ -894,7 +894,7 @@ void CMyApplication::ProcessTran_NewNewsCat(SMyClient *inClient, TTransactSessio
 
 #if !FACELESS
 	// display in log
-	Log(inClient, "Create news category “%#s”", fileName);
+	Log(inClient, "Create news category \xd2%#s\xd3", fileName);
 #endif
 }
 
@@ -914,14 +914,14 @@ void CMyApplication::ProcessTran_GetNewsArtNameList(SMyClient *inClient, TTransa
 	if (file.IsInvalid())
 	{
 		// doesn't exist, send error reply
-		SendErrorMsg(inTsn, "\pCannot get article list because the specified category could not be found.");
+		SendErrorMsg(inTsn, "\x4a" "Cannot get article list because the specified category could not be found.");
 		return;
 	}
 
 	// build file list
 	if (!BuildNewsArtList(file, data))
 	{
-		SendErrorMsg(inTsn, "\pCannot get news list because an invalid category was specified.");
+		SendErrorMsg(inTsn, "\x3f" "Cannot get news list because an invalid category was specified.");
 		return;
 	}
 	
@@ -944,7 +944,7 @@ void CMyApplication::ProcessTran_GetNewsArtData(SMyClient *inClient, TTransactSe
 	// check access
 	if (!HasBundlePriv(inClient, myAcc_NewsReadArt))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to read articles.");
+		SendErrorMsg(inTsn, "\x25" "You are not allowed to read articles.");
 		return;
 	}
 
@@ -955,7 +955,7 @@ void CMyApplication::ProcessTran_GetNewsArtData(SMyClient *inClient, TTransactSe
 	if (file.IsInvalid())
 	{
 		// doesn't exist, send error reply
-		SendErrorMsg(inTsn, "\pCannot get article data because the specified category could not be found.");
+		SendErrorMsg(inTsn, "\x4a" "Cannot get article data because the specified category could not be found.");
 		return;
 	}
 	
@@ -970,7 +970,7 @@ void CMyApplication::ProcessTran_GetNewsArtData(SMyClient *inClient, TTransactSe
 	}
 	catch(...)
 	{
-		SendErrorMsg(inTsn, "\pCannot get article data because an invalid category was specified.");
+		SendErrorMsg(inTsn, "\x42" "Cannot get article data because an invalid category was specified.");
 		return;
 	}
 	
@@ -1109,7 +1109,7 @@ void CMyApplication::ProcessTran_Login(SMyClient *inClient, TTransactSession inT
 			Uint8 str[256];
 			errorMsgText[0] = UError::GetMessage(err, errorMsgText+1, sizeof(errorMsgText)-1);
 			errorIDText[0] = UError::GetDetailMessage(err, errorIDText+1, sizeof(errorIDText)-1);
-			str[0] = UText::Format(str+1, 255, "Cannot read account “%#s”:\r%#s\r%#s", psUserLogin, errorMsgText, errorIDText);
+			str[0] = UText::Format(str+1, 255, "Cannot read account \xd2%#s\xd3:\r%#s\r%#s", psUserLogin, errorMsgText, errorIDText);
 			
 			failedLoginMsg = str;
 			goto loginFailed;
@@ -1189,13 +1189,13 @@ void CMyApplication::ProcessTran_Login(SMyClient *inClient, TTransactSession inT
 	
 	// error exits
 permBanned:				// permanently banned
-	failedLoginMsg = "\pYou are permanently banned on this server.";
+	failedLoginMsg = "\x2a" "You are permanently banned on this server.";
 	goto loginFailed;
 tempBanned:				// temporarily banner
-	failedLoginMsg = "\pYou are temporarily banned on this server.";
+	failedLoginMsg = "\x2a" "You are temporarily banned on this server.";
 	goto loginFailed;
 loginIncorrect:			// incorrect login
-	failedLoginMsg = "\pIncorrect login.";
+	failedLoginMsg = "\x10" "Incorrect login.";
 loginFailed:
 	// send message and store the time
 	SendErrorMsg(inTsn, failedLoginMsg);
@@ -1213,7 +1213,7 @@ loginFailed:
 #if NETWORK_SERVER
 exceedSimConnetions:	// max simultaneous connections
 	// send message and store the time
-	SendErrorMsg(inTsn, "\pThis server is licensed to handle a limited number of simultaneous connections. Please try later!");
+	SendErrorMsg(inTsn, "\x61" "This server is licensed to handle a limited number of simultaneous connections. Please try later!");
 	inClient->loginFailedSecs = UDateTime::GetSeconds();
 
 #if !FACELESS
@@ -1240,7 +1240,7 @@ void CMyApplication::ProcessTran_Agreed(SMyClient *inClient, TTransactSession in
 	catch(...)
 	{
 		// send message and store the time
-		SendErrorMsg(inTsn, "Cannot read account “%#s”.", inClient->accountLogin);
+		SendErrorMsg(inTsn, "Cannot read account \xd2%#s\xd3.", inClient->accountLogin);
 		inClient->loginFailedSecs = UDateTime::GetSeconds();
 		
 		return;	
@@ -1315,7 +1315,7 @@ void CMyApplication::ProcessTran_DownloadFile(SMyClient *inClient, TTransactSess
 	// check access
 	if (!HasFolderPriv(inClient, myAcc_DownloadFile))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to download files.");
+		SendErrorMsg(inTsn, "\x26" "You are not allowed to download files.");
 		return;
 	}
 
@@ -1349,7 +1349,7 @@ void CMyApplication::ProcessTran_DownloadFile(SMyClient *inClient, TTransactSess
 		file = UFS::New(root, path, pathSize, fileName, fsOption_PreferExistingFile);
 		if (file == nil)
 		{
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download because there is no file named “%#s”.", fileName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download because there is no file named \xd2%#s\xd3.", fileName);
 			SendErrorMsg(inTsn, str);
 			return;
 		}
@@ -1362,7 +1362,7 @@ void CMyApplication::ProcessTran_DownloadFile(SMyClient *inClient, TTransactSess
 			UText::MakeLowercase(path, pathSize);
 			if (UMemory::Search("drop box", 8, str+1, str[0]) || UMemory::Search("drop box", 8, path, pathSize))
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download “%#s” because it is in a drop box.", fileName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download \xd2%#s\xd3 because it is in a drop box.", fileName);
 				SendErrorMsg(inTsn, str);
 				
 				delete file;
@@ -1441,7 +1441,7 @@ void CMyApplication::ProcessTran_DownloadFile(SMyClient *inClient, TTransactSess
 	mStats.dlCounter++;
 	
 #if !FACELESS
-	Log(inClient, dt->isRaw ? "View “%#s”" : "Download “%#s”", fileName);
+	Log(inClient, dt->isRaw ? "View \xd2%#s\xd3" : "Download \xd2%#s\xd3", fileName);
 	UpdateDisplay();
 #endif
 	
@@ -1463,7 +1463,7 @@ void CMyApplication::ProcessTran_DownloadFldr(SMyClient *inClient, TTransactSess
 	// check access
 	if (!HasFolderPriv(inClient, myAcc_DownloadFolder))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to download folders.");
+		SendErrorMsg(inTsn, "\x28" "You are not allowed to download folders.");
 		return;
 	}
 
@@ -1498,7 +1498,7 @@ void CMyApplication::ProcessTran_DownloadFldr(SMyClient *inClient, TTransactSess
 		file = UFS::New(root, path, pathSize, fldrName, fsOption_PreferExistingFolder);
 		if (file == nil)
 		{
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download because there is no folder named “%#s”.", fldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download because there is no folder named \xd2%#s\xd3.", fldrName);
 			SendErrorMsg(inTsn, str);
 			return;
 		}
@@ -1511,7 +1511,7 @@ void CMyApplication::ProcessTran_DownloadFldr(SMyClient *inClient, TTransactSess
 			UText::MakeLowercase(path, pathSize);
 			if (UMemory::Search("drop box", 8, fldrName+1, fldrName[0]) || UMemory::Search("drop box", 8, path, pathSize))
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download “%#s” because you are not permitted to access drop boxes.", fldrName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Cannot download \xd2%#s\xd3 because you are not permitted to access drop boxes.", fldrName);
 				SendErrorMsg(inTsn, str);
 				
 				delete file;
@@ -1604,7 +1604,7 @@ void CMyApplication::ProcessTran_DownloadFldr(SMyClient *inClient, TTransactSess
 		mStats.dlCounter++;
 	
 	#if !FACELESS
-		Log(inClient, "Download “%#s”", fldrName);
+		Log(inClient, "Download \xd2%#s\xd3", fldrName);
 		UpdateDisplay();
 	#endif
 			
@@ -1665,7 +1665,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 	// check access
 	if (!HasFolderPriv(inClient, myAcc_UploadFile))	
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to upload files.");
+		SendErrorMsg(inTsn, "\x24" "You are not allowed to upload files.");
 		return;
 	}
 
@@ -1685,7 +1685,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 		
 	if (ts > 3 && UText::toupper(fileName[ts-2]) == 'L' && UText::toupper(fileName[ts-1]) == 'N' && UText::toupper(fileName[ts]) == 'K' && fileName[ts-3] == '.')
 	{
-		SendErrorMsg(inTsn, "\pCannot upload shortcuts.");
+		SendErrorMsg(inTsn, "\x18" "Cannot upload shortcuts.");
 		return;
 	}
 #endif
@@ -1697,7 +1697,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 	if (folder == nil)
 	{
 		// folder not found, send error
-		SendErrorMsg(inTsn, "Cannot accept upload of the file “%#s” because the specified folder could not be found.", fileName);
+		SendErrorMsg(inTsn, "Cannot accept upload of the file \xd2%#s\xd3 because the specified folder could not be found.", fileName);
 		return;
 	}
 	scopekill(TFSRefObj, folder);
@@ -1710,7 +1710,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 		
 		if (!UText::SearchInsensitive("upload", 6, folderName + 1, folderName[0]) && !UText::SearchInsensitive("drop box", 8, folderName + 1, folderName[0]))
 		{
-			SendErrorMsg(inTsn, "Cannot accept upload of the file “%#s” because you are only allowed to upload to the “Uploads” folder.", fileName);
+			SendErrorMsg(inTsn, "Cannot accept upload of the file \xd2%#s\xd3 because you are only allowed to upload to the \xd2Uploads\xd3 folder.", fileName);
 			return;
 		}
 	}
@@ -1719,7 +1719,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 	if (folder->IsDiskLocked())
 	{
 		// volume is locked, send error
-		SendErrorMsg(inTsn, "Cannot accept upload of the file “%#s” because the destination volume is read-only or locked.", fileName);
+		SendErrorMsg(inTsn, "Cannot accept upload of the file \xd2%#s\xd3 because the destination volume is read-only or locked.", fileName);
 		return;
 	}
 	
@@ -1728,7 +1728,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 
 #if WIN32
 	if (validatedName[0] <= 4 || UMemory::Compare(validatedName + validatedName[0] - 3, ".hpf", 4))
-		pstrcat(validatedName, "\p.hpf");	// add ".hpf" to validatedName
+		pstrcat(validatedName, "\x04" ".hpf");	// add ".hpf" to validatedName
 	else if (fileName[0] > 4)
 		fileName[0] -= 4;					// delete ".hpf" from fileName
 #endif
@@ -1743,7 +1743,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 			if (file == nil)
 			{
 				// file does not exist, send error
-				errorMsg = "Cannot resume upload of the file “%#s” because it does not exist.";
+				errorMsg = "Cannot resume upload of the file \xd2%#s\xd3 because it does not exist.";
 				goto sendError;
 			}
 			
@@ -1751,7 +1751,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 			file->GetTypeAndCreatorCode(typeCode, creatorCode);
 			if (typeCode != TB((Uint32)'HTft') || creatorCode != TB((Uint32)'HTLC'))
 			{
-				errorMsg = "Cannot resume upload of the file “%#s” because it is already fully transfered.";
+				errorMsg = "Cannot resume upload of the file \xd2%#s\xd3 because it is already fully transfered.";
 				goto sendError;
 			}
 		}
@@ -1761,7 +1761,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 			file = UFS::New(folder, nil, fileName, fsOption_NilIfExists);
 			if (file == nil)
 			{
-				errorMsg = "Cannot accept upload because there is already a file named “%#s”. Try choosing a different name.";
+				errorMsg = "Cannot accept upload because there is already a file named \xd2%#s\xd3. Try choosing a different name.";
 				goto sendError;
 			}
 			
@@ -1774,7 +1774,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 					Log(inClient, "Not enough free disk space for upload");
 				#endif	
 					
-					errorMsg = "Cannot accept upload of the file “%#s” because there is not enough free disk space.";
+					errorMsg = "Cannot accept upload of the file \xd2%#s\xd3 because there is not enough free disk space.";
 					goto sendError;
 				}
 			}
@@ -1789,7 +1789,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 			
 			if (file->Exists())
 			{
-				errorMsg = "Cannot accept upload because there is already a file named “%#s”. Try choosing a different name.";
+				errorMsg = "Cannot accept upload because there is already a file named \xd2%#s\xd3. Try choosing a different name.";
 				goto sendError;
 			}
 		#endif
@@ -1841,14 +1841,14 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 
 		// make error message for client
 		if (opts == 1 && err.type == errorType_FileSys && err.id == fsError_FileInUse)
-			path[0] = UText::Format(path+1, 255, "Cannot resume upload of the file “%#s” because it is already in use.", fileName);
+			path[0] = UText::Format(path+1, 255, "Cannot resume upload of the file \xd2%#s\xd3 because it is already in use.", fileName);
 		else
 		{
 			Uint8 errorMsgText[256];
 			Uint8 errorIDText[32];
 			errorMsgText[0] = UError::GetMessage(err, errorMsgText+1, sizeof(errorMsgText)-1);
 			errorIDText[0] = UError::GetDetailMessage(err, errorIDText+1, sizeof(errorIDText)-1);
-			path[0] = UText::Format(path+1, 255, "Cannot accept upload of “%#s”:\r%#s\r%#s", fileName, errorMsgText, errorIDText);
+			path[0] = UText::Format(path+1, 255, "Cannot accept upload of \xd2%#s\xd3:\r%#s\r%#s", fileName, errorMsgText, errorIDText);
 		}
 		
 		// send the error message to the client and get outta here 
@@ -1863,7 +1863,7 @@ void CMyApplication::ProcessTran_UploadFile(SMyClient *inClient, TTransactSessio
 	mStats.ulCounter++;	
 	
 #if !FACELESS
-	Log(inClient, "Upload “%#s”", fileName);
+	Log(inClient, "Upload \xd2%#s\xd3", fileName);
 	UpdateDisplay();
 #endif
 
@@ -1889,7 +1889,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 	// check access
 	if (!HasFolderPriv(inClient, myAcc_UploadFolder))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to upload folders.");
+		SendErrorMsg(inTsn, "\x26" "You are not allowed to upload folders.");
 		return;
 	}
 
@@ -1909,7 +1909,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 	if (folder == nil)
 	{
 		// folder not found, send error
-		SendErrorMsg(inTsn, "Cannot accept upload of the folder “%#s” because the specified folder could not be found.", fldrName);
+		SendErrorMsg(inTsn, "Cannot accept upload of the folder \xd2%#s\xd3 because the specified folder could not be found.", fldrName);
 		return;
 	}
 	scopekill(TFSRefObj, folder);
@@ -1922,7 +1922,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 		UText::MakeLowercase(tempstr+1, tempstr[0]);
 		if (!UMemory::Search("upload", 6, tempstr+1, tempstr[0]) && !UMemory::Search("drop box", 8, tempstr+1, tempstr[0]))
 		{
-			SendErrorMsg(inTsn, "Cannot accept upload of the folder “%#s” because you are only allowed to upload to the “Uploads” folder.", fldrName);
+			SendErrorMsg(inTsn, "Cannot accept upload of the folder \xd2%#s\xd3 because you are only allowed to upload to the \xd2Uploads\xd3 folder.", fldrName);
 			return;
 		}
 	}
@@ -1931,7 +1931,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 	if (folder->IsDiskLocked())
 	{
 		// volume is locked, send error
-		SendErrorMsg(inTsn, "Cannot accept upload of the folder “%#s” because the destination volume is read-only or locked.", fldrName);
+		SendErrorMsg(inTsn, "Cannot accept upload of the folder \xd2%#s\xd3 because the destination volume is read-only or locked.", fldrName);
 		return;
 	}
 	
@@ -1944,7 +1944,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 			if (fldr == nil)
 			{
 				// folder does not exist, send error
-				errorMsg = "Cannot resume upload of the folder “%#s” because it does not exist.";
+				errorMsg = "Cannot resume upload of the folder \xd2%#s\xd3 because it does not exist.";
 				goto sendError;
 			}
 			
@@ -1952,7 +1952,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 			if (!fldr->Exists(&bIsFolder) || !bIsFolder)
 			{
 				// our folder is a file, send error
-				errorMsg = "Cannot resume upload because “%#s” is a file.";
+				errorMsg = "Cannot resume upload because \xd2%#s\xd3 is a file.";
 				goto sendError;
 			}
 		}
@@ -1962,7 +1962,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 			fldr = UFS::New(folder, nil, fldrName, fsOption_NilIfExists);
 			if (fldr == nil)
 			{
-				errorMsg = "Cannot accept upload because there is already a folder named “%#s”. Try choosing a different name.";
+				errorMsg = "Cannot accept upload because there is already a folder named \xd2%#s\xd3. Try choosing a different name.";
 				goto sendError;
 			}
 		}
@@ -1976,7 +1976,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 				Log(inClient, "Not enough free disk space for folder upload");
 			#endif
 		
-				errorMsg = "Cannot accept upload of the folder “%#s” because there is not enough free disk space.";
+				errorMsg = "Cannot accept upload of the folder \xd2%#s\xd3 because there is not enough free disk space.";
 				goto sendError;
 			}
 		}
@@ -2024,7 +2024,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 		Uint8 errorIDText[32];
 		errorMsgText[0] = UError::GetMessage(err, errorMsgText+1, sizeof(errorMsgText)-1);
 		errorIDText[0] = UError::GetDetailMessage(err, errorIDText+1, sizeof(errorIDText)-1);
-		path[0] = UText::Format(path+1, 255, "Cannot accept upload of “%#s”:\r%#s\r%#s", fldrName, errorMsgText, errorIDText);
+		path[0] = UText::Format(path+1, 255, "Cannot accept upload of \xd2%#s\xd3:\r%#s\r%#s", fldrName, errorMsgText, errorIDText);
 		
 		// send the error message to the client and get outta here 
 		SendErrorMsg(inTsn, path);
@@ -2047,7 +2047,7 @@ void CMyApplication::ProcessTran_UploadFldr(SMyClient *inClient, TTransactSessio
 	mStats.ulCounter++;
 	
 #if !FACELESS
-	Log(inClient, "Upload folder “%#s”", fldrName);
+	Log(inClient, "Upload folder \xd2%#s\xd3", fldrName);
 	UpdateDisplay();
 #endif
 
@@ -2077,7 +2077,7 @@ void CMyApplication::ProcessTran_DeleteFile(SMyClient *inClient, TTransactSessio
 	StFileSysRef fsItem(root, path, pathSize, fileName, fsOption_NilIfNonExistant);
 	if (fsItem.IsInvalid())
 	{
-		SendErrorMsg(inTsn, "Cannot delete “%#s” because it does not exist or cannot be found.", fileName);
+		SendErrorMsg(inTsn, "Cannot delete \xd2%#s\xd3 because it does not exist or cannot be found.", fileName);
 		return;
 	}
 		
@@ -2087,7 +2087,7 @@ void CMyApplication::ProcessTran_DeleteFile(SMyClient *inClient, TTransactSessio
 	{
 		if (!HasFolderPriv(inClient, myAcc_DeleteFolder))
 		{
-			SendErrorMsg(inTsn, "\pYou are not allowed to delete folders.");
+			SendErrorMsg(inTsn, "\x26" "You are not allowed to delete folders.");
 			return;
 		}
 	}
@@ -2095,7 +2095,7 @@ void CMyApplication::ProcessTran_DeleteFile(SMyClient *inClient, TTransactSessio
 	{
 		if (!HasFolderPriv(inClient, myAcc_DeleteFile))
 		{
-			SendErrorMsg(inTsn, "\pYou are not allowed to delete files.");
+			SendErrorMsg(inTsn, "\x24" "You are not allowed to delete files.");
 			return;
 		}
 	}
@@ -2107,7 +2107,7 @@ void CMyApplication::ProcessTran_DeleteFile(SMyClient *inClient, TTransactSessio
 	}
 	catch(SError& err)
 	{
-		SendErrorMsg(inTsn, err, "Cannot delete “%#s”:", fileName);
+		SendErrorMsg(inTsn, err, "Cannot delete \xd2%#s\xd3:", fileName);
 		return;
 	}
 	
@@ -2116,7 +2116,7 @@ void CMyApplication::ProcessTran_DeleteFile(SMyClient *inClient, TTransactSessio
 
 #if !FACELESS
 	// display in log
-	Log(inClient, "Delete “%#s”", fileName);
+	Log(inClient, "Delete \xd2%#s\xd3", fileName);
 #endif
 }
 
@@ -2134,7 +2134,7 @@ void CMyApplication::ProcessTran_NewFolder(SMyClient *inClient, TTransactSession
 	// check access
 	if (!HasFolderPriv(inClient, myAcc_CreateFolder))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to create folders.");
+		SendErrorMsg(inTsn, "\x26" "You are not allowed to create folders.");
 		return;
 	}
 	
@@ -2149,9 +2149,9 @@ void CMyApplication::ProcessTran_NewFolder(SMyClient *inClient, TTransactSession
 		if (newFolder.IsInvalid())
 		{
 			if (type == fsItemType_NonExistantParent)
-				SendErrorMsg(inTsn, "Cannot create folder “%#s” because the enclosing folder could not be found.", fileName);
+				SendErrorMsg(inTsn, "Cannot create folder \xd2%#s\xd3 because the enclosing folder could not be found.", fileName);
 			else
-				SendErrorMsg(inTsn, "Cannot create folder “%#s” because there is already a file or folder with that name.", fileName);
+				SendErrorMsg(inTsn, "Cannot create folder \xd2%#s\xd3 because there is already a file or folder with that name.", fileName);
 		
 			return;
 		}
@@ -2161,7 +2161,7 @@ void CMyApplication::ProcessTran_NewFolder(SMyClient *inClient, TTransactSession
 	}
 	catch (SError& err)
 	{
-		SendErrorMsg(inTsn, err, "Cannot create folder “%#s”:", fileName);
+		SendErrorMsg(inTsn, err, "Cannot create folder \xd2%#s\xd3:", fileName);
 		return;
 	}
 	
@@ -2170,13 +2170,13 @@ void CMyApplication::ProcessTran_NewFolder(SMyClient *inClient, TTransactSession
 
 #if !FACELESS
 	// display in log
-	Log(inClient, "Create folder “%#s”", fileName);
+	Log(inClient, "Create folder \xd2%#s\xd3", fileName);
 #endif
 }
 
 void CMyApplication::ProcessTran_Unknown(SMyClient *inClient, TTransactSession inTsn, TFieldData /* inData */)
 {
-	SendErrorMsg(inTsn, "\pUnknown transaction type!");
+	SendErrorMsg(inTsn, "\x19" "Unknown transaction type!");
 
 #if !FACELESS
 	Log(inClient, "Received unknown transaction type!");
@@ -2195,7 +2195,7 @@ void CMyApplication::ProcessTran_NewUser(SMyClient *inClient, TTransactSession i
 	// check access
 	if (!inClient->HasAccess(myAcc_CreateUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to create new accounts.");
+		SendErrorMsg(inTsn, "\x2b" "You are not allowed to create new accounts.");
 		return;
 	}
 
@@ -2216,7 +2216,7 @@ void CMyApplication::ProcessTran_NewUser(SMyClient *inClient, TTransactSession i
 	ClearBit(&modAcc0, myAcc_NoAgreement);	// don't care if someone turns on noAgreement but they don't have it on for themselves
 	if ( (modAcc0 & ~(inClient->access.data[0])) || (modAcc1 & ~(inClient->access.data[1])) )
 	{
-		SendErrorMsg(inTsn, "\pCannot create account with more access than yourself.");
+		SendErrorMsg(inTsn, "\x35" "Cannot create account with more access than yourself.");
 		return;
 	}
 
@@ -2237,9 +2237,9 @@ void CMyApplication::ProcessTran_NewUser(SMyClient *inClient, TTransactSession i
 	catch(SError& err)
 	{
 		if (err.type == errorType_FileSys && err.id == fsError_ItemAlreadyExists)
-			SendErrorMsg(inTsn, "Cannot create account “%#s” because there is already an account with that login.", loginName);
+			SendErrorMsg(inTsn, "Cannot create account \xd2%#s\xd3 because there is already an account with that login.", loginName);
 		else
-			SendErrorMsg(inTsn, err, "Cannot create account “%#s”:", loginName);
+			SendErrorMsg(inTsn, err, "Cannot create account \xd2%#s\xd3:", loginName);
 		return;
 	}
 	
@@ -2247,10 +2247,10 @@ void CMyApplication::ProcessTran_NewUser(SMyClient *inClient, TTransactSession i
 	SendNoError(inTsn);
 	
 	// display in log
-	LogAccountChange(inClient, "\pCreate", loginName);
+	LogAccountChange(inClient, "\x06" "Create", loginName);
 
 #if !FACELESS
-	Log(inClient, "Create account “%#s”", loginName);
+	Log(inClient, "Create account \xd2%#s\xd3", loginName);
 #endif
 }
 
@@ -2263,7 +2263,7 @@ void CMyApplication::ProcessTran_DeleteUser(SMyClient *inClient, TTransactSessio
 	// check access
 	if (!inClient->HasAccess(myAcc_DeleteUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to delete accounts.");
+		SendErrorMsg(inTsn, "\x27" "You are not allowed to delete accounts.");
 		return;
 	}
 
@@ -2282,9 +2282,9 @@ void CMyApplication::ProcessTran_DeleteUser(SMyClient *inClient, TTransactSessio
 	catch(SError& err)
 	{
 		if (err.type == errorType_FileSys && (err.id == fsError_NoSuchItem || err.id == fsError_NoSuchFolder))
-			SendErrorMsg(inTsn, "No account with login “%#s”.", loginName);
+			SendErrorMsg(inTsn, "No account with login \xd2%#s\xd3.", loginName);
 		else
-			SendErrorMsg(inTsn, err, "Cannot delete account “%#s”:", loginName);
+			SendErrorMsg(inTsn, err, "Cannot delete account \xd2%#s\xd3:", loginName);
 		return;
 	}
 
@@ -2295,10 +2295,10 @@ void CMyApplication::ProcessTran_DeleteUser(SMyClient *inClient, TTransactSessio
 	DeleteOnlineAccount(loginName, inClient);
 
 	// display in log
-	LogAccountChange(inClient, "\pDelete", loginName);
+	LogAccountChange(inClient, "\x06" "Delete", loginName);
 
 #if !FACELESS
-	Log(inClient, "Delete account “%#s”", loginName);
+	Log(inClient, "Delete account \xd2%#s\xd3", loginName);
 #endif
 }
 
@@ -2313,7 +2313,7 @@ void CMyApplication::ProcessTran_GetUser(SMyClient *inClient, TTransactSession i
 	// check access
 	if (!inClient->HasAccess(myAcc_OpenUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to get account information.");
+		SendErrorMsg(inTsn, "\x2f" "You are not allowed to get account information.");
 		return;
 	}
 	
@@ -2326,9 +2326,9 @@ void CMyApplication::ProcessTran_GetUser(SMyClient *inClient, TTransactSession i
 	catch(SError& err)
 	{
 		if (err.type == errorType_FileSys && (err.id == fsError_NoSuchItem || err.id == fsError_NoSuchFolder))
-			SendErrorMsg(inTsn, "No account with login “%#s”.", loginName);
+			SendErrorMsg(inTsn, "No account with login \xd2%#s\xd3.", loginName);
 		else
-			SendErrorMsg(inTsn, err, "Cannot read account “%#s”:", loginName);
+			SendErrorMsg(inTsn, err, "Cannot read account \xd2%#s\xd3:", loginName);
 		return;
 	}
 	
@@ -2362,7 +2362,7 @@ void CMyApplication::ProcessTran_SetUser(SMyClient *inClient, TTransactSession i
 	// check access
 	if (!inClient->HasAccess(myAcc_ModifyUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to modify account information.");
+		SendErrorMsg(inTsn, "\x32" "You are not allowed to modify account information.");
 		return;
 	}
 
@@ -2398,9 +2398,9 @@ void CMyApplication::ProcessTran_SetUser(SMyClient *inClient, TTransactSession i
 		catch(SError& err)
 		{
 			if (err.type == errorType_FileSys && (err.id == fsError_NoSuchItem || err.id == fsError_NoSuchFolder))
-				SendErrorMsg(inTsn, "No account with login “%#s”.", loginName);
+				SendErrorMsg(inTsn, "No account with login \xd2%#s\xd3.", loginName);
 			else
-				SendErrorMsg(inTsn, err, "Cannot read account “%#s”:", loginName);
+				SendErrorMsg(inTsn, err, "Cannot read account \xd2%#s\xd3:", loginName);
 			return;
 		}
 		
@@ -2416,9 +2416,9 @@ void CMyApplication::ProcessTran_SetUser(SMyClient *inClient, TTransactSession i
 	catch(SError& err)
 	{
 		if (err.type == errorType_FileSys && (err.id == fsError_NoSuchItem || err.id == fsError_NoSuchFolder))
-			SendErrorMsg(inTsn, "No account with login “%#s”.", loginName);
+			SendErrorMsg(inTsn, "No account with login \xd2%#s\xd3.", loginName);
 		else
-			SendErrorMsg(inTsn, err, "Cannot modify account “%#s”:", loginName);
+			SendErrorMsg(inTsn, err, "Cannot modify account \xd2%#s\xd3:", loginName);
 		return;
 	}
 	
@@ -2429,10 +2429,10 @@ void CMyApplication::ProcessTran_SetUser(SMyClient *inClient, TTransactSession i
 	SetOnlineAccount(loginName, info);
 	
 	// display in log
-	LogAccountChange(inClient, "\pModify", loginName);
+	LogAccountChange(inClient, "\x06" "Modify", loginName);
 
 #if !FACELESS
-	Log(inClient, "Modify account “%#s”", loginName);
+	Log(inClient, "Modify account \xd2%#s\xd3", loginName);
 #endif
 }
 
@@ -2447,14 +2447,14 @@ void CMyApplication::ProcessTran_GetUserList(SMyClient *inClient, TTransactSessi
 	// check access
 	if (!inClient->HasAccess(myAcc_OpenUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to administer accounts.");
+		SendErrorMsg(inTsn, "\x2b" "You are not allowed to administer accounts.");
 		return;
 	}
 	
 	THdl hList = GetUserFolderList();
 	if (!hList)
 	{
-		SendErrorMsg(inTsn, "\pCannot read account list.");
+		SendErrorMsg(inTsn, "\x19" "Cannot read account list.");
 		return;
 	}
 	
@@ -2509,7 +2509,7 @@ void CMyApplication::ProcessTran_GetUserList(SMyClient *inClient, TTransactSessi
 	{
 		// don't throw
 		UMemory::Dispose(hList);	
-		SendErrorMsg(inTsn, "\pCannot read account list.");
+		SendErrorMsg(inTsn, "\x19" "Cannot read account list.");
 		return;
 	}
 
@@ -2530,14 +2530,14 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 	// check access
 	if (!inClient->HasAccess(myAcc_CreateUser) && !inClient->HasAccess(myAcc_ModifyUser) && !inClient->HasAccess(myAcc_DeleteUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to modify account information.");
+		SendErrorMsg(inTsn, "\x32" "You are not allowed to modify account information.");
 		return;
 	}
 	
 	Uint16 nFieldCount = inData->GetFieldCount();
 	if (!nFieldCount)
 	{
-		SendErrorMsg(inTsn, "\pError saving list of accounts.");
+		SendErrorMsg(inTsn, "\x1e" "Error saving list of accounts.");
 		return;
 	}
 
@@ -2597,7 +2597,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 				// check access
 				if (!inClient->HasAccess(myAcc_DeleteUser))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed to delete accounts.");
+					SendErrorMsg(inTsn, "\x27" "You are not allowed to delete accounts.");
 					return;
 				}
 
@@ -2610,10 +2610,10 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 					DeleteOnlineAccount(psSavedLogin, inClient);
 
 					// display in log
-					LogAccountChange(inClient, "\pDelete", psSavedLogin);
+					LogAccountChange(inClient, "\x06" "Delete", psSavedLogin);
 				
 				#if !FACELESS
-					Log(inClient, "Delete account “%#s”", psSavedLogin);
+					Log(inClient, "Delete account \xd2%#s\xd3", psSavedLogin);
 				#endif
 				}
 				catch(...)
@@ -2661,7 +2661,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 				// check access
 				if (!inClient->HasAccess(myAcc_ModifyUser))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed to modify account information.");
+					SendErrorMsg(inTsn, "\x32" "You are not allowed to modify account information.");
 					return;
 				}
 
@@ -2672,8 +2672,8 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 					
 					// display in log
 					Uint8 psModifiedLogin[256];
-					psModifiedLogin[0] = UText::Format(psModifiedLogin + 1, sizeof(psModifiedLogin) - 1, "“%#s” “%#s”", psSavedLogin, loginName);
-					LogAccountChange(inClient, "\pRename", psModifiedLogin);
+					psModifiedLogin[0] = UText::Format(psModifiedLogin + 1, sizeof(psModifiedLogin) - 1, "\xd2%#s\xd3 \xd2%#s\xd3", psSavedLogin, loginName);
+					LogAccountChange(inClient, "\x06" "Rename", psModifiedLogin);
 				
 				#if !FACELESS
 					Log(inClient, "Rename account %#s", psModifiedLogin);
@@ -2693,7 +2693,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 					// check access
 					if (!inClient->HasAccess(myAcc_ModifyUser))
 					{
-						SendErrorMsg(inTsn, "\pYou are not allowed to modify account information.");
+						SendErrorMsg(inTsn, "\x32" "You are not allowed to modify account information.");
 						return;
 					}
 
@@ -2706,10 +2706,10 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 						SetOnlineAccount(psSavedLogin, info);
 	
 						// display in log
-						LogAccountChange(inClient, "\pModify", loginName);
+						LogAccountChange(inClient, "\x06" "Modify", loginName);
 					
 					#if !FACELESS
-						Log(inClient, "Modify account “%#s”", loginName);
+						Log(inClient, "Modify account \xd2%#s\xd3", loginName);
 					#endif
 					}
 					catch(...)
@@ -2722,7 +2722,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 				{		
 					// send error message
 					Uint8 psMsg[256];
-					psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Cannot create account “%#s” because there is already an account with that login.", loginName);
+					psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Cannot create account \xd2%#s\xd3 because there is already an account with that login.", loginName);
 					
 					StFieldData data;
 					data->AddPString(myField_Data, psMsg);
@@ -2735,7 +2735,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 				// check access
 				if (!inClient->HasAccess(myAcc_CreateUser))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed to create new accounts.");
+					SendErrorMsg(inTsn, "\x2b" "You are not allowed to create new accounts.");
 					return;
 				}
 
@@ -2745,7 +2745,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 				ClearBit(&modAcc0, myAcc_NoAgreement);	// don't care if someone turns on noAgreement but they don't have it on for themselves
 				if ((modAcc0 & ~(inClient->access.data[0])) || (modAcc1 & ~(inClient->access.data[1])))
 				{
-					SendErrorMsg(inTsn, "\pCannot create account with more access than yourself.");
+					SendErrorMsg(inTsn, "\x35" "Cannot create account with more access than yourself.");
 					return;
 				}
 
@@ -2755,10 +2755,10 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 					NewUser(info);
 					
 					// display in log
-					LogAccountChange(inClient, "\pCreate", loginName);
+					LogAccountChange(inClient, "\x06" "Create", loginName);
 				
 				#if !FACELESS
-					Log(inClient, "Create account “%#s”", loginName);
+					Log(inClient, "Create account \xd2%#s\xd3", loginName);
 				#endif
 				}
 				catch(...)
@@ -2772,7 +2772,7 @@ void CMyApplication::ProcessTran_SetUserList(SMyClient *inClient, TTransactSessi
 		
 	if (bSaveError)
 	{
-		SendErrorMsg(inTsn, "\pError saving list of accounts.");
+		SendErrorMsg(inTsn, "\x1e" "Error saving list of accounts.");
 		return;
 	}
 	
@@ -2788,7 +2788,7 @@ void CMyApplication::ProcessTran_DisconnectUser(SMyClient *inClient, TTransactSe
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_DisconUser))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to disconnect users.");
+		SendErrorMsg(inTsn, "\x28" "You are not allowed to disconnect users.");
 		return;
 	}
 	
@@ -2800,7 +2800,7 @@ void CMyApplication::ProcessTran_DisconnectUser(SMyClient *inClient, TTransactSe
 		// check access
 		if (HasGeneralPriv(client, myAcc_CannotBeDiscon))
 		{
-			SendErrorMsg(inTsn, "You are not allowed to disconnect user “%#s” (user is protected).", client->userName);
+			SendErrorMsg(inTsn, "You are not allowed to disconnect user \xd2%#s\xd3 (user is protected).", client->userName);
 			return;
 		}
 		
@@ -2811,7 +2811,7 @@ void CMyApplication::ProcessTran_DisconnectUser(SMyClient *inClient, TTransactSe
 		if (nPermTempBan == 1)
 		{
 			// send message
-			data->AddPString(myField_Data, "\pYou are temporarily banned on this server.");
+			data->AddPString(myField_Data, "\x2a" "You are temporarily banned on this server.");
 			client->tpt->SendTransaction(myTran_ServerMsg, data);
 
 			AddTempBan(client->ipAddress);
@@ -2819,7 +2819,7 @@ void CMyApplication::ProcessTran_DisconnectUser(SMyClient *inClient, TTransactSe
 		else if (nPermTempBan == 2)
 		{
 			// send message
-			data->AddPString(myField_Data, "\pYou are permanently banned on this server.");
+			data->AddPString(myField_Data, "\x2a" "You are permanently banned on this server.");
 			client->tpt->SendTransaction(myTran_ServerMsg, data);
 
 			Uint8 bufDescr[64]; 
@@ -2846,11 +2846,11 @@ void CMyApplication::ProcessTran_DisconnectUser(SMyClient *inClient, TTransactSe
 
 	#if !FACELESS
 		if (nPermTempBan == 2)
-			Log(inClient, "Disconnect & permanent ban “%#s”", p);
+			Log(inClient, "Disconnect & permanent ban \xd2%#s\xd3", p);
 		else if (nPermTempBan == 1)
-			Log(inClient, "Disconnect & temporary ban “%#s”", p);
+			Log(inClient, "Disconnect & temporary ban \xd2%#s\xd3", p);
 		else
-			Log(inClient, "Disconnect “%#s”", p);
+			Log(inClient, "Disconnect \xd2%#s\xd3", p);
 	#endif
 	}
 	
@@ -2883,7 +2883,7 @@ void CMyApplication::ProcessTran_GetClientInfoText(SMyClient *inClient, TTransac
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_GetClientInfo))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to get client information.");
+		SendErrorMsg(inTsn, "\x2e" "You are not allowed to get client information.");
 		return;
 	}
 
@@ -2892,7 +2892,7 @@ void CMyApplication::ProcessTran_GetClientInfoText(SMyClient *inClient, TTransac
 	
 	if (client == nil)
 	{
-		SendErrorMsg(inTsn, "\pCannot get info for the specified client because it does not exist.");
+		SendErrorMsg(inTsn, "\x43" "Cannot get info for the specified client because it does not exist.");
 		return;
 	}
 	
@@ -3172,7 +3172,7 @@ void CMyApplication::ProcessTran_GetFileInfo(SMyClient *inClient, TTransactSessi
 	{
 		// send error reply
 noSuchFile:
-		SendErrorMsg(inTsn, "Cannot get info because there is no file/folder named “%#s”.", fileName);
+		SendErrorMsg(inTsn, "Cannot get info because there is no file/folder named \xd2%#s\xd3.", fileName);
 		return;
 	}
 	
@@ -3196,18 +3196,18 @@ noSuchFile:
 		case fsItemType_Folder:
 		case fsItemType_FolderAlias:
 		{
-			data->AddPString(myField_FileTypeString, fsType == fsItemType_Folder ? "\pFolder" : "\pFolder Alias");
-			data->AddPString(myField_FileCreatorString, "\pn/a");
-			data->AddPString(myField_FileType, "\pfldr");
+			data->AddPString(myField_FileTypeString, fsType == fsItemType_Folder ? "\x06" "Folder" : "\x0c" "Folder Alias");
+			data->AddPString(myField_FileCreatorString, "\x03" "n/a");
+			data->AddPString(myField_FileType, "\x04" "fldr");
 		}
 		break;
 
 		// unattached alias
 		case fsItemType_UnattachedAlias:
 		{
-			data->AddPString(myField_FileTypeString, "\pUnattached Alias");
-			data->AddPString(myField_FileCreatorString, "\pn/a");
-			data->AddPString(myField_FileType, "\palis");
+			data->AddPString(myField_FileTypeString, "\x10" "Unattached Alias");
+			data->AddPString(myField_FileCreatorString, "\x03" "n/a");
+			data->AddPString(myField_FileType, "\x04" "alis");
 		}
 		break;
 
@@ -3231,19 +3231,19 @@ noSuchFile:
 				switch (typeID)
 				{
 					case 'APPL':
-						p = "\pApplication Program";
+						p = "\x13" "Application Program";
 						break;
 					case 'SITD':
-						p = "\pStuffIt Archive";
+						p = "\x0f" "StuffIt Archive";
 						break;
 					case 'TEXT':
-						p = "\pText File";
+						p = "\x09" "Text File";
 						break;
 					case 'HTft':
-						p = "\pIncomplete File";
+						p = "\x0f" "Incomplete File";
 						break;
 					case 'HTbm':
-						p = "\pHotline Bookmark";
+						p = "\x10" "Hotline Bookmark";
 						break;
 					default:
 						p = nil;
@@ -3260,13 +3260,13 @@ noSuchFile:
 			{
 				case 'HTLC':
 				case 'HTLS':
-					p = "\pHotline";
+					p = "\x07" "Hotline";
 					break;
 				case 'SIT!':
-					p = "\pStuffIt";
+					p = "\x07" "StuffIt";
 					break;
 				case 'ttxt':
-					p = "\pSimpleText";
+					p = "\x0a" "SimpleText";
 					break;
 				default:
 					p = nil;
@@ -3339,7 +3339,7 @@ void CMyApplication::ProcessTran_SetFileInfo(SMyClient *inClient, TTransactSessi
 	{
 		// send error reply
 noSuchFile:
-		SendErrorMsg(inTsn, "Cannot set info because there is no file/folder named “%#s”.", fileName);
+		SendErrorMsg(inTsn, "Cannot set info because there is no file/folder named \xd2%#s\xd3.", fileName);
 		return;
 	}
 	
@@ -3375,7 +3375,7 @@ noSuchFile:
 			{
 				if (!HasFolderPriv(inClient, myAcc_SetFolderComment))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed set comments for folders.");
+					SendErrorMsg(inTsn, "\x2d" "You are not allowed set comments for folders.");
 					return;
 				}
 			}
@@ -3383,7 +3383,7 @@ noSuchFile:
 			{
 				if (!HasFolderPriv(inClient, myAcc_SetFileComment))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed set comments for files.");
+					SendErrorMsg(inTsn, "\x2b" "You are not allowed set comments for files.");
 					return;
 				}
 			}
@@ -3410,7 +3410,7 @@ noSuchFile:
 			{
 				if (!HasFolderPriv(inClient, myAcc_RenameFolder))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed to rename folders.");
+					SendErrorMsg(inTsn, "\x26" "You are not allowed to rename folders.");
 					return;
 				}
 			}
@@ -3418,7 +3418,7 @@ noSuchFile:
 			{
 				if (!HasFolderPriv(inClient, myAcc_RenameFile))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed to rename files.");
+					SendErrorMsg(inTsn, "\x24" "You are not allowed to rename files.");
 					return;
 				}
 			}
@@ -3430,7 +3430,7 @@ noSuchFile:
 				UText::MakeLowercase(path+1, path[0]);
 				if (UMemory::Search("drop box", 8, path+1, path[0]))
 				{
-					SendErrorMsg(inTsn, "\pYou are not allowed to rename drop boxes.");
+					SendErrorMsg(inTsn, "\x29" "You are not allowed to rename drop boxes.");
 					return;
 				}
 			}
@@ -3443,7 +3443,7 @@ noSuchFile:
 			ts = str[0];
 			if (!isLinkFile && ts > 3 && UText::toupper(str[ts-2]) == 'L' && UText::toupper(str[ts-1]) == 'N' && UText::toupper(str[ts]) == 'K' && str[ts-3] == '.')
 			{
-				SendErrorMsg(inTsn, "\pYou are not allowed to hack servers.");
+				SendErrorMsg(inTsn, "\x24" "You are not allowed to hack servers.");
 				return;
 			}
 		#endif
@@ -3454,7 +3454,7 @@ noSuchFile:
 	}
 	catch(SError& err)
 	{
-		SendErrorMsg(inTsn, err, "Cannot set info for “%#s”:", fileName);
+		SendErrorMsg(inTsn, err, "Cannot set info for \xd2%#s\xd3:", fileName);
 		return;
 	}
 
@@ -3479,7 +3479,7 @@ void CMyApplication::ProcessTran_MoveFile(SMyClient *inClient, TTransactSession 
 	StFileSysRef fsItem(root, path, pathSize, fileName, fsOption_NilIfNonExistant);	// don't resolve aliases here
 	if (fsItem.IsInvalid())
 	{
-		SendErrorMsg(inTsn, "Cannot move because there is no file/folder named “%#s”.", fileName);
+		SendErrorMsg(inTsn, "Cannot move because there is no file/folder named \xd2%#s\xd3.", fileName);
 		return;
 	}
 
@@ -3489,7 +3489,7 @@ void CMyApplication::ProcessTran_MoveFile(SMyClient *inClient, TTransactSession 
 	{
 		if (!HasFolderPriv(inClient, myAcc_MoveFolder))
 		{
-			SendErrorMsg(inTsn, "\pYou are not allowed to move folders.");
+			SendErrorMsg(inTsn, "\x24" "You are not allowed to move folders.");
 			return;
 		}
 	}
@@ -3497,7 +3497,7 @@ void CMyApplication::ProcessTran_MoveFile(SMyClient *inClient, TTransactSession 
 	{
 		if (!HasFolderPriv(inClient, myAcc_MoveFile))
 		{
-			SendErrorMsg(inTsn, "\pYou are not allowed to move files.");
+			SendErrorMsg(inTsn, "\x22" "You are not allowed to move files.");
 			return;
 		}
 	}
@@ -3507,7 +3507,7 @@ void CMyApplication::ProcessTran_MoveFile(SMyClient *inClient, TTransactSession 
 	StFileSysRef destFolder(root, path, pathSize, nil, fsOption_PreferExistingFolder);
 	if (destFolder.IsInvalid())
 	{
-		SendErrorMsg(inTsn, "Cannot move “%#s” because the destination folder could not be found.", fileName);
+		SendErrorMsg(inTsn, "Cannot move \xd2%#s\xd3 because the destination folder could not be found.", fileName);
 		return;
 	}
 
@@ -3523,21 +3523,21 @@ void CMyApplication::ProcessTran_MoveFile(SMyClient *inClient, TTransactSession 
 			switch (err.id)
 			{
 				case fsError_ItemAlreadyExists:
-					SendErrorMsg(inTsn, "Cannot move “%#s” because there is already a file/folder in the destination folder with the same name.", fileName);
+					SendErrorMsg(inTsn, "Cannot move \xd2%#s\xd3 because there is already a file/folder in the destination folder with the same name.", fileName);
 					break;
 				case fsError_DifferentDisks:
-					SendErrorMsg(inTsn, "Cannot move “%#s” between different disks.", fileName);
+					SendErrorMsg(inTsn, "Cannot move \xd2%#s\xd3 between different disks.", fileName);
 					break;
 				case fsError_BadMove:
-					SendErrorMsg(inTsn, "Cannot move “%#s” into itself or into a subfolder of itself.", fileName);
+					SendErrorMsg(inTsn, "Cannot move \xd2%#s\xd3 into itself or into a subfolder of itself.", fileName);
 					break;
 				default:
-					SendErrorMsg(inTsn, err, "Cannot move “%#s”:", fileName);
+					SendErrorMsg(inTsn, err, "Cannot move \xd2%#s\xd3:", fileName);
 					break;
 			}
 		}
 		else
-			SendErrorMsg(inTsn, err, "Cannot move “%#s”:", fileName);
+			SendErrorMsg(inTsn, err, "Cannot move \xd2%#s\xd3:", fileName);
 		return;
 	}
 
@@ -3546,7 +3546,7 @@ void CMyApplication::ProcessTran_MoveFile(SMyClient *inClient, TTransactSession 
 	
 #if !FACELESS
 	// display in log
-	Log(inClient, "Move “%#s”", fileName);
+	Log(inClient, "Move \xd2%#s\xd3", fileName);
 #endif
 }
 
@@ -3563,7 +3563,7 @@ void CMyApplication::ProcessTran_MakeFileAlias(SMyClient *inClient, TTransactSes
 	// check access
 	if (!HasFolderPriv(inClient, myAcc_MakeAlias))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to make aliases.");
+		SendErrorMsg(inTsn, "\x24" "You are not allowed to make aliases.");
 		return;
 	}
 
@@ -3574,7 +3574,7 @@ void CMyApplication::ProcessTran_MakeFileAlias(SMyClient *inClient, TTransactSes
 	StFileSysRef originalFile(root, path, pathSize, fileName, fsOption_NilIfNonExistant);
 	if (originalFile.IsInvalid())
 	{
-		SendErrorMsg(inTsn, "Cannot make alias because there is no file/folder named “%#s”.", fileName);
+		SendErrorMsg(inTsn, "Cannot make alias because there is no file/folder named \xd2%#s\xd3.", fileName);
 		return;
 	}
 
@@ -3583,7 +3583,7 @@ void CMyApplication::ProcessTran_MakeFileAlias(SMyClient *inClient, TTransactSes
 	StFileSysRef newAlias(root, path, pathSize, fileName, fsOption_NilIfNonExistantParent);
 	if (newAlias.IsInvalid())
 	{
-		SendErrorMsg(inTsn, "Cannot make alias of “%#s” because the destination folder could not be found.", fileName);
+		SendErrorMsg(inTsn, "Cannot make alias of \xd2%#s\xd3 because the destination folder could not be found.", fileName);
 		return;
 	}
 
@@ -3599,15 +3599,15 @@ void CMyApplication::ProcessTran_MakeFileAlias(SMyClient *inClient, TTransactSes
 			switch (err.id)
 			{
 				case fsError_ItemAlreadyExists:
-					SendErrorMsg(inTsn, "Cannot make alias of “%#s” because there is already a file/folder in the destination folder with the same name.", fileName);
+					SendErrorMsg(inTsn, "Cannot make alias of \xd2%#s\xd3 because there is already a file/folder in the destination folder with the same name.", fileName);
 					break;
 				default:
-					SendErrorMsg(inTsn, err, "Cannot make alias of “%#s”:", fileName);
+					SendErrorMsg(inTsn, err, "Cannot make alias of \xd2%#s\xd3:", fileName);
 					break;
 			}
 		}
 		else
-			SendErrorMsg(inTsn, err, "Cannot make alias of “%#s”:", fileName);
+			SendErrorMsg(inTsn, err, "Cannot make alias of \xd2%#s\xd3:", fileName);
 		return;
 	}
 
@@ -3616,7 +3616,7 @@ void CMyApplication::ProcessTran_MakeFileAlias(SMyClient *inClient, TTransactSes
 	
 #if !FACELESS
 	// display in log
-	Log(inClient, "Alias “%#s”", fileName);
+	Log(inClient, "Alias \xd2%#s\xd3", fileName);
 #endif
 }
 
@@ -3652,7 +3652,7 @@ void CMyApplication::ProcessTran_InviteNewChat(SMyClient *inClient, TTransactSes
 	// check access
 	if (!HasGeneralPriv(inClient, myAcc_CreateChat))
 	{
-		SendErrorMsg(inTsn, "\pYou are not allowed to create a new chat.");
+		SendErrorMsg(inTsn, "\x29" "You are not allowed to create a new chat.");
 		return;
 	}
 	
@@ -3796,7 +3796,7 @@ void CMyApplication::ProcessTran_JoinChat(SMyClient *inClient, TTransactSession 
 		inTsn->SendData(data);
 	}
 	else
-		SendErrorMsg(inTsn, "\pCannot join private chat because it has been closed already.");
+		SendErrorMsg(inTsn, "\x3c" "Cannot join private chat because it has been closed already.");
 }
 
 void CMyApplication::ProcessTran_LeaveChat(SMyClient *inClient, TTransactSession /* inTsn */, TFieldData inData)

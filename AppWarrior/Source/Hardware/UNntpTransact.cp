@@ -1360,7 +1360,7 @@ static bool _ConvertArticleDate(const Uint8 *inDate, SCalendarDate& outDate)
 	const Uint8 *pWeekDayEnd = UMemory::Search(", ", 2, pWeekDayBegin, pDateEnd - pWeekDayBegin);
 	if (pWeekDayEnd)
 	{
-		Uint8 *pWeekDayList1[7] = {"\pMonday", "\pTuesday", "\pWednesday", "\pThursday", "\pFriday", "\pSaturday", "\pSunday"};
+		Uint8 *pWeekDayList1[7] = {"\x06" "Monday", "\x07" "Tuesday", "\x09" "Wednesday", "\x08" "Thursday", "\x06" "Friday", "\x08" "Saturday", "\x06" "Sunday"};
 		Int8 *pWeekDayList2[7] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
 		while (nWeekDay < 7)
@@ -1518,8 +1518,8 @@ static Uint32 _ConvertPostDate(SCalendarDate& inPostDate, Uint8 *outDate, Uint32
 	if (!inPostDate.IsValid())
 		UDateTime::GetCalendarDate(calendar_Gregorian, inPostDate);
 		
-	Uint8 *pWeekDayList[7] = {"\pMon", "\pTue", "\pWed", "\pThu", "\pFri", "\pSat", "\pSun"};
-	Uint8 *pMonthList[12] = {"\pJan", "\pFeb", "\pMar", "\pApr", "\pMay", "\pJun", "\pJul", "\pAug", "\pSep", "\pOct", "\pNov", "\pDec"};
+	Uint8 *pWeekDayList[7] = {"\x03" "Mon", "\x03" "Tue", "\x03" "Wed", "\x03" "Thu", "\x03" "Fri", "\x03" "Sat", "\x03" "Sun"};
+	Uint8 *pMonthList[12] = {"\x03" "Jan", "\x03" "Feb", "\x03" "Mar", "\x03" "Apr", "\x03" "May", "\x03" "Jun", "\x03" "Jul", "\x03" "Aug", "\x03" "Sep", "\x03" "Oct", "\x03" "Nov", "\x03" "Dec"};
 	
 	return UText::Format(outDate, inMaxSize, "%#s, %li %#s %li %2.2li:%2.2li:%2.2li %#s", pWeekDayList[inPostDate.weekDay - 1], inPostDate.day, pMonthList[inPostDate.month - 1], inPostDate.year, inPostDate.hour, inPostDate.minute, inPostDate.second, psTimeDepl);
 }

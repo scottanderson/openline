@@ -101,7 +101,7 @@ void CMyDummyTask::FinishDummyTask()
 #pragma mark -
 
 CMyConnectTask::CMyConnectTask()
-	: CMyTask("\pConnecting to Server...")
+	: CMyTask("\x17" "Connecting to Server...")
 {
 	gApp->MakeTransactor();
 	gApp->ScheduleTaskProcess();
@@ -177,7 +177,7 @@ void CMyConnectTask::Process()
 #pragma mark -
 
 CMyGetOldNewsTask::CMyGetOldNewsTask()
-	: CMyTransactTask("\pTransferring messages...")
+	: CMyTransactTask("\x18" "Transferring messages...")
 {
 	// CMyTransactTask will dispose mTranSession if we fail
 	mTranSession = NewSendSession(myTran_GetMsgs);
@@ -187,7 +187,7 @@ CMyGetOldNewsTask::CMyGetOldNewsTask()
 
 Uint32 CMyGetOldNewsTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pGetting Messages...";
+	const Uint8 desc[] = "\x13" "Getting Messages...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -258,7 +258,7 @@ void CMyGetOldNewsTask::Process()
 #pragma mark -
 
 CMyGetFileListTask::CMyGetFileListTask(const void *inPathData, Uint32 inPathSize, bool inListParent)
-	: CMyTransactTask("\p"), mPathData(nil), mPathSize(0)
+	: CMyTransactTask("\x00" ""), mPathData(nil), mPathSize(0)
 {
 	mName[0] = 0;
 	mListParent = inListParent;
@@ -279,12 +279,12 @@ CMyGetFileListTask::CMyGetFileListTask(const void *inPathData, Uint32 inPathSize
 
 		// set name in tasks window
 		if (!inPathData)
-			ShowProgress(0, 1, "\pListing root folder...");
+			ShowProgress(0, 1, "\x16" "Listing root folder...");
 		else
 		{
 			Uint8 str[256];
 			mName[0] = UFS::GetPathTargetName(inPathData, inPathSize, mName+1, sizeof(mName)-1);
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Listing folder “%#s”", mName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Listing folder \xd2%#s\xd3", mName);
 			ShowProgress(0, 1, str);
 		}
 	}
@@ -389,7 +389,7 @@ void CMyStartupGetFileListTask::Process()
 			
 			if (!mPathData || !mPathSize || mFileName[0])
 			{
-				gApp->DisplayStandardMessage("\pServer Message", "\pThe specified folder could not be found.", icon_Caution, 1);
+				gApp->DisplayStandardMessage("\x0e" "Server Message", "\x28" "The specified folder could not be found.", icon_Caution, 1);
 				return;
 			}
 						
@@ -498,7 +498,7 @@ void CMyStartupGetFileListTask::Process()
 			if (bFound)
 				(dynamic_cast<CMyFileWin *>(pFileWin))->DoDownload(0);
 			else
-				gApp->DisplayStandardMessage("\pServer Message", "\pThe specified file could not be found.", icon_Caution, 1);
+				gApp->DisplayStandardMessage("\x0e" "Server Message", "\x26" "The specified file could not be found.", icon_Caution, 1);
 		}
 	}
 }
@@ -507,7 +507,7 @@ void CMyStartupGetFileListTask::Process()
 #pragma mark -
 
 CMyGetNewsCatListTask::CMyGetNewsCatListTask(const void *inPathData, Uint32 inPathSize, bool inListParent)
-	: CMyTransactTask("\p"), mPathData(nil), mPathSize(0)
+	: CMyTransactTask("\x00" ""), mPathData(nil), mPathSize(0)
 {
 	mName[0] = 0;
 	mListParent = inListParent;
@@ -528,13 +528,13 @@ CMyGetNewsCatListTask::CMyGetNewsCatListTask(const void *inPathData, Uint32 inPa
 
 		// set name in tasks window
 		if (!inPathData)
-			ShowProgress(0, 1, "\pListing root news bundle...");
+			ShowProgress(0, 1, "\x1b" "Listing root news bundle...");
 		else
 		{
 			Uint8 str[256];
 			Uint8 name[256];
 			name[0] = UFS::GetPathTargetName(inPathData, inPathSize, name+1, sizeof(name)-1);
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Listing news bundle “%#s”", name);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Listing news bundle \xd2%#s\xd3", name);
 			ShowProgress(0, 1, str);
 		}
 	}
@@ -631,7 +631,7 @@ void CMyStartupGetNewsCatListTask::Process()
 			
 			if (!mPathData || !mPathSize || mCategoryName[0])
 			{
-				gApp->DisplayStandardMessage("\pServer Message", "\pThe specified bundle could not be found.", icon_Caution, 1);
+				gApp->DisplayStandardMessage("\x0e" "Server Message", "\x28" "The specified bundle could not be found.", icon_Caution, 1);
 				return;
 			}
 						
@@ -736,7 +736,7 @@ void CMyStartupGetNewsCatListTask::Process()
 			if (bFound)
 				(dynamic_cast<CMyNewsCategoryWin *>(pBundleWin))->DoDoubleClick(0);
 			else
-				gApp->DisplayStandardMessage("\pServer Message", "\pThe specified category could not be found.", icon_Caution, 1);
+				gApp->DisplayStandardMessage("\x0e" "Server Message", "\x2a" "The specified category could not be found.", icon_Caution, 1);
 		}
 	}
 }
@@ -744,14 +744,14 @@ void CMyStartupGetNewsCatListTask::Process()
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
 CMyNewNewsFldrTask::CMyNewNewsFldrTask(const void *inPathData, Uint32 inPathSize, const Uint8 inName[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Create news bundle “%#s”", inName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Create news bundle \xd2%#s\xd3", inName);
 	ShowProgress(1, 2, str);
 
 	// setup field data
@@ -796,14 +796,14 @@ void CMyNewNewsFldrTask::Process()
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
 CMyNewNewsCatTask::CMyNewNewsCatTask(const void *inPathData, Uint32 inPathSize, const Uint8 inName[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inName);
 
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Create news category “%#s”", inName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Create news category \xd2%#s\xd3", inName);
 	ShowProgress(1, 2, str);
 
 	// setup field data
@@ -850,7 +850,7 @@ void CMyNewNewsCatTask::Process()
 #pragma mark -
 
 CMyDeleteNewsFldrItemTask::CMyDeleteNewsFldrItemTask(const Uint8 *inItemName, Uint16 inType, const void *inPathData, Uint32 inPathSize)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	pstrcpy(mName, inItemName);
 	
@@ -859,7 +859,7 @@ CMyDeleteNewsFldrItemTask::CMyDeleteNewsFldrItemTask(const Uint8 *inItemName, Ui
 	Uint32 nNewPathCS = UMemory::Checksum(pNewPath, nNewPathSize);
 
 	Uint8 str[256];
-	Uint8 *type = "\p";
+	Uint8 *type = "\x00" "";
 
 	if (inType == 1)		// folder
 	{
@@ -867,7 +867,7 @@ CMyDeleteNewsFldrItemTask::CMyDeleteNewsFldrItemTask(const Uint8 *inItemName, Ui
 		if (fWin)
 			delete fWin;
 			
-		type = "\p news bundle";
+		type = "\x0c" " news bundle";
 	}
 	else if (inType == 10)	// category
 	{
@@ -875,7 +875,7 @@ CMyDeleteNewsFldrItemTask::CMyDeleteNewsFldrItemTask(const Uint8 *inItemName, Ui
 		if (cWin)
 			delete cWin;
 			
-		type = "\p news category";
+		type = "\x0e" " news category";
 	}
 	
 	mFieldData->AddField(myField_NewsPath, pNewPath, nNewPathSize);
@@ -922,7 +922,7 @@ void CMyDeleteNewsFldrItemTask::Process()
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
 CMyGetNewsArtListTask::CMyGetNewsArtListTask(const void *inPathData, Uint32 inPathSize)
-	: CMyTransactTask("\p"), mPathData(nil), mPathSize(0)
+	: CMyTransactTask("\x00" ""), mPathData(nil), mPathSize(0)
 {
 	mName[0] = 0;
 
@@ -945,7 +945,7 @@ CMyGetNewsArtListTask::CMyGetNewsArtListTask(const void *inPathData, Uint32 inPa
 		// set name in tasks window
 		Uint8 str[256];
 		mName[0] = UFS::GetPathTargetName(inPathData, inPathSize, mName+1, sizeof(mName)-1);
-		str[0] = UText::Format(str+1, sizeof(str)-1, "Listing news category “%#s”", mName);
+		str[0] = UText::Format(str+1, sizeof(str)-1, "Listing news category \xd2%#s\xd3", mName);
 		ShowProgress(0, 1, str);
 	}
 	catch(...)
@@ -1001,7 +1001,7 @@ void CMyGetNewsArtListTask::Process()
 #pragma mark -
 
 CMyGetNewsArticleDataTask::CMyGetNewsArticleDataTask(const void *inPathData, Uint32 inPathSize, Uint32 inID, const Uint8 inArticTitle[], const Int8 inFlavor[], Uint32 inOptions)
-	: CMyTransactTask("\p"), mPathData(nil), mPathSize(0), mID(0)
+	: CMyTransactTask("\x00" ""), mPathData(nil), mPathSize(0), mID(0)
 {
 	mInfoAction = 0;
 	mPathData = nil;
@@ -1036,28 +1036,28 @@ CMyGetNewsArticleDataTask::CMyGetNewsArticleDataTask(const void *inPathData, Uin
 		switch (inOptions)
 		{
 			case viewID_NewsArticGoNext:
-				ShowProgress(0, 1, "\pGetting next article");
+				ShowProgress(0, 1, "\x14" "Getting next article");
 				mInfoAction = viewID_NewsArticGoNext;
 				break;
 				
 			case viewID_NewsArticGoPrev:
-				ShowProgress(0, 1, "\pGetting previous article");
+				ShowProgress(0, 1, "\x18" "Getting previous article");
 				mInfoAction = viewID_NewsArticGoPrev;
 				break;
 				
 			case viewID_NewsArticGoParent:
-				ShowProgress(0, 1, "\pGetting parent article");
+				ShowProgress(0, 1, "\x16" "Getting parent article");
 				mInfoAction = viewID_NewsArticGoParent;
 				break;
 				
 			case viewID_NewsArticGo1stChild:
-				ShowProgress(0, 1, "\pGetting first reply");
+				ShowProgress(0, 1, "\x13" "Getting first reply");
 				mInfoAction = viewID_NewsArticGo1stChild;
 				break;
 				
 			default:
 				Uint8 str[256];
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Getting news article “%#s”", inArticTitle);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Getting news article \xd2%#s\xd3", inArticTitle);
 				ShowProgress(0, 1, str);
 				mInfoAction = 0;
 				break;	
@@ -1079,11 +1079,11 @@ CMyGetNewsArticleDataTask::~CMyGetNewsArticleDataTask()
 
 Uint32 CMyGetNewsArticleDataTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 getPrevMsg[] = "\pGetting previous article...";
-	const Uint8 getNextMsg[] = "\pGetting next article...";
-	const Uint8 getParentMsg[] = "\pGetting parent article...";
-	const Uint8 get1stChildMsg[] = "\pGetting first reply...";
-	const Uint8 getMsg[] = "\pGetting news article...";
+	const Uint8 getPrevMsg[] = "\x1b" "Getting previous article...";
+	const Uint8 getNextMsg[] = "\x17" "Getting next article...";
+	const Uint8 getParentMsg[] = "\x19" "Getting parent article...";
+	const Uint8 get1stChildMsg[] = "\x16" "Getting first reply...";
+	const Uint8 getMsg[] = "\x17" "Getting news article...";
 
 	switch (mInfoAction)
 	{
@@ -1146,7 +1146,7 @@ void CMyGetNewsArticleDataTask::Process()
 #pragma mark -
 
 CMyOldPostNewsTask::CMyOldPostNewsTask(const void *inData, Uint32 inDataSize)
-	: CMyTransactTask("\pPosting message...")
+	: CMyTransactTask("\x12" "Posting message...")
 {
 	// CMyTransactTask will dispose mTranSession if we fail
 	mFieldData->AddField(myField_Data, inData, inDataSize);
@@ -1183,7 +1183,7 @@ void CMyOldPostNewsTask::Process()
 #pragma mark -
 
 CMyNewsDeleteArticTask::CMyNewsDeleteArticTask(const void *inPathData, Uint32 inPathSize, Uint32 inArticID, Uint8 inTitle[], bool inDeleteChildren)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	pstrcpy(mName, inTitle);
 	
@@ -1237,7 +1237,7 @@ void CMyNewsDeleteArticTask::Process()
 #pragma mark -
 
 CMyPostNewsTextArticle::CMyPostNewsTextArticle(const void *inPathData, Uint32 inPathSize, Uint32 inParentID, const Uint8 inTitle[], Uint32 inFlags, const Uint8 *inData, Uint32 inDataSize)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
@@ -1294,7 +1294,7 @@ CMySendPrivMsgTask::CMySendPrivMsgTask( Uint16 inYourID,
 										const void *inMyMsg, Uint32 inMyMsgSize, 
 										Uint16 inOptions, 
 										const void* inYourMsg, Uint32 inYourMsgSize)
-: CMyTransactTask("\pSending private message...")
+: CMyTransactTask("\x1a" "Sending private message...")
 {
 	mFieldData->AddInteger(myField_UserID, inYourID);
 	mFieldData->AddInteger(myField_Options, inOptions); // is an automatic response or user message
@@ -1314,7 +1314,7 @@ CMySendPrivMsgTask::CMySendPrivMsgTask( Uint16 inYourID,
 
 Uint32 CMySendPrivMsgTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pSending private message...";
+	const Uint8 desc[] = "\x1a" "Sending private message...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -1345,7 +1345,7 @@ void CMySendPrivMsgTask::Process()
 #pragma mark -
 
 CMyBroadcastTask::CMyBroadcastTask(const void *inData, Uint32 inDataSize)
-	: CMyTransactTask("\pBroadcasting...")
+	: CMyTransactTask("\x0f" "Broadcasting...")
 {
 	mFieldData->AddField(myField_Data, inData, inDataSize);
 
@@ -1358,7 +1358,7 @@ CMyBroadcastTask::CMyBroadcastTask(const void *inData, Uint32 inDataSize)
 
 Uint32 CMyBroadcastTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pSending broadcast...";
+	const Uint8 desc[] = "\x14" "Sending broadcast...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -1425,7 +1425,7 @@ CMyGetOnlineUsersTask::CMyGetOnlineUsersTask(Uint8 *inDesc)
 
 Uint32 CMyGetOnlineUsersTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pGetting list of online users...";
+	const Uint8 desc[] = "\x1f" "Getting list of online users...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -1456,7 +1456,7 @@ void CMyGetOnlineUsersTask::Process()
 #pragma mark -
 
 CMyLoginTask::CMyLoginTask(const Uint8 inLogin[], const Uint8 inPassword[])
-	: CMyTransactTask("\pLogging in...")
+	: CMyTransactTask("\x0d" "Logging in...")
 {
 	Uint8 str[256];
 	Uint8 *p;
@@ -1511,7 +1511,7 @@ void CMyLoginTask::Process()
 		gApp->mServerVers = mFieldData->GetInteger(myField_Vers);
 		if (gApp->mServerVers >= 150)
 		{
-			new CMyDummyTask("\pLoading Agreement...", true);
+			new CMyDummyTask("\x14" "Loading Agreement...", true);
 						
 			// get the server name
 			Uint32 nSize = mFieldData->ReadField(myField_ServerName, 0, gApp->mServerName + 1, sizeof(gApp->mServerName) - 1);
@@ -1530,7 +1530,7 @@ void CMyLoginTask::Process()
 			gApp->mIsAgreed = true;
 			gApp->ShowConnected(); 
 
-			new CMyGetOnlineUsersTask("\pTransferring list of online users..."); 
+			new CMyGetOnlineUsersTask("\x24" "Transferring list of online users..."); 
 			
 			gApp->ProcessStartupPath();
 				
@@ -1549,7 +1549,7 @@ void CMyLoginTask::Process()
 #pragma mark -
 
 CMyAgreedTask::CMyAgreedTask()
-	: CMyTransactTask("\pLogging in...")
+	: CMyTransactTask("\x0d" "Logging in...")
 {
 	if (gApp->mServerVers >= 150)
 	{
@@ -1573,7 +1573,7 @@ CMyAgreedTask::~CMyAgreedTask()
 
 Uint32 CMyAgreedTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pAgreeing...";
+	const Uint8 desc[] = "\x0b" "Agreeing...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -1601,7 +1601,7 @@ void CMyAgreedTask::Process()
 		ShowProgress(2, 2);
 		Finish();
 
-		new CMyGetOnlineUsersTask("\pTransferring list of online users...");
+		new CMyGetOnlineUsersTask("\x24" "Transferring list of online users...");
 		
 	#if !NEW_NEWS
 		new CMyGetNewsTask();
@@ -2009,7 +2009,7 @@ bool CMyGetBannerTask::CheckURL(Uint8 *ioUrl, bool inProtocolsAllowed)
 #pragma mark -
 
 CMyLaunchUrlTask::CMyLaunchUrlTask(THdl inAddress)
-	: CMyTask("\pLaunching browser...")
+	: CMyTask("\x14" "Launching browser...")
 {
 	mFinishTimer = nil;
 	
@@ -2118,7 +2118,7 @@ startagain:
 /* ————————————————————————————————————————————————————————————————————————— */
 #pragma mark -
 CMyDownloadTask::CMyDownloadTask(const void *inPathData, Uint32 inPathSize, const Uint8 *inFileFldrName, const Uint8 *inValidatedName, bool inQueued)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	mTpt = nil;
 	mWaitingTimer = nil;
@@ -2185,7 +2185,7 @@ bool CMyDownloadTask::ShowWaitingCount(Uint32 inRefNum, Uint32 inWaitingCount)
 		mMaxWaitingCount = mWaitingCount;
 		   
 	Uint8 psMsg[256];
-	psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "All downloads slots are full. “%#s” is number %lu in the server queue. Please wait...", mFileFldrName, mWaitingCount);
+	psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "All downloads slots are full. \xd2%#s\xd3 is number %lu in the server queue. Please wait...", mFileFldrName, mWaitingCount);
 	ShowProgress(mMaxWaitingCount - mWaitingCount, mMaxWaitingCount, psMsg);
 
 	if (!mWaitingCount)
@@ -2271,9 +2271,9 @@ CMyDownloadFileTask::CMyDownloadFileTask(
 	{
 		// set text description in task window
 		if (mWasQueued)
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading “%#s” (queued)", inFileName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading \xd2%#s\xd3 (queued)", inFileName);
 		else
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading “%#s”", inFileName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading \xd2%#s\xd3", inFileName);
 		
 		ShowProgress(0, 1, str);
 				
@@ -2289,7 +2289,7 @@ CMyDownloadFileTask::CMyDownloadFileTask(
 		{
 		#if WIN32
 			// put the .hpf extension
-			pstrcat(mValidatedName, "\p.hpf");
+			pstrcat(mValidatedName, "\x04" ".hpf");
 			
 			if (inCreateFile)
 				mFile->SetRefName(mValidatedName);
@@ -2415,7 +2415,7 @@ goFromStart:
 		{
 			if (mWasQueued)
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading “%#s”", mFileFldrName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading \xd2%#s\xd3", mFileFldrName);
 				ShowProgress(0, 10, str);
 			}
 			
@@ -2600,7 +2600,7 @@ goFromStart:
 					Uint8 stat[256];
 					gApp->GetTransferStatText(downloadedSize, totalSize, bps, etr, stat);
 					
-					str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading “%#s” (%#s)", mFileFldrName, stat);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading \xd2%#s\xd3 (%#s)", mFileFldrName, stat);
 					ShowProgress(downloadedSize, totalSize, str);
 
 					mDisplayedSize = downloadedSize;
@@ -2641,9 +2641,9 @@ CMyViewFileTask::CMyViewFileTask(const void *inPathData, Uint32 inPathSize,
 	{
 		// set text description in task window
 		if (inQueued)
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing “%#s” (queued)", inFileName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing \xd2%#s\xd3 (queued)", inFileName);
 		else
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing “%#s”", inFileName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing \xd2%#s\xd3", inFileName);
 
 		ShowProgress(0, 1, str);
 		
@@ -2808,7 +2808,7 @@ bool CMyViewFileTask::StartQuickTime()
 			Uint8 psMsg[256];
 			psMsg[0] = UText::Format(psMsg + 1, sizeof(psMsg) - 1, "Couldn't open %#s because it is not a file that QuickTime understands.", mFileFldrName);
 			
-			gApp->DisplayStandardMessage("\pView", psMsg, icon_Stop);
+			gApp->DisplayStandardMessage("\x04" "View", psMsg, icon_Stop);
 		}
 		
 		return false;
@@ -2852,7 +2852,7 @@ goFromStart:
 		{
 			if (mWasQueued)
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing “%#s”", mFileFldrName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing \xd2%#s\xd3", mFileFldrName);
 				ShowProgress(0, 10, str);
 			}
 			
@@ -2887,7 +2887,7 @@ goFromStart:
 					
 					// this message may be changed
 					str[0] = UText::Format(str + 1, sizeof(str) - 1, "%#s is empty.", mFileFldrName);
-					gApp->DisplayStandardMessage("\pView", str, icon_Stop);
+					gApp->DisplayStandardMessage("\x04" "View", str, icon_Stop);
 
 					return;
 				}
@@ -3087,7 +3087,7 @@ void CMyViewFileTask::ShowFileProgress()
 			gApp->GetTransferStatText(downloadedSize, totalSize, bps, etr, stat);
 					
 			Uint8 str[256];
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing “%#s” (%#s)", mFileFldrName, stat);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Viewing \xd2%#s\xd3 (%#s)", mFileFldrName, stat);
 			ShowProgress(downloadedSize, totalSize, str);
 
 			mDisplayedSize = downloadedSize;
@@ -3117,9 +3117,9 @@ CMyDownloadFldrTask::CMyDownloadFldrTask(const void *inPathData, Uint32 inPathSi
 	{
 		// set text description in task window
 		if (mWasQueued)
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading Folder “%#s” (queued)", inFldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading Folder \xd2%#s\xd3 (queued)", inFldrName);
 		else
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading Folder “%#s”", inFldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading Folder \xd2%#s\xd3", inFldrName);
 		
 		ShowProgress(0, 1, str);
 
@@ -3236,7 +3236,7 @@ goFromStart:
 		{
 			if (mWasQueued)
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading Folder “%#s”", mFileFldrName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading Folder \xd2%#s\xd3", mFileFldrName);
 				ShowProgress(0, 10, str);
 			}
 			
@@ -3473,7 +3473,7 @@ goFromStart:
 			#if WIN32
 				// put the .hpf extension
 				mFile->GetName(str);
-				pstrcat(str, "\p.hpf");
+				pstrcat(str, "\x04" ".hpf");
 				mFile->SetRefName(str);
 			#endif
 
@@ -3594,7 +3594,7 @@ goFromStart:
 					Uint8 stat[256];
 					gApp->GetTransferStatText(downloadedSize, totalSize, bps, etr, stat);
 					
-					str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading folder “%#s” (%#s) [%lu of %lu]", mFileFldrName, stat, mDownloadedItems + 1 > mTotalItems ? mTotalItems : mDownloadedItems + 1, mTotalItems);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "Downloading folder \xd2%#s\xd3 (%#s) [%lu of %lu]", mFileFldrName, stat, mDownloadedItems + 1 > mTotalItems ? mTotalItems : mDownloadedItems + 1, mTotalItems);
 					ShowProgress(downloadedSize, totalSize, str);
 
 					mDisplayedSize = downloadedSize;
@@ -3618,7 +3618,7 @@ goFromStart:
 #pragma mark -
 
 CMyDownloadBannerTask::CMyDownloadBannerTask(Uint32 inBannerType, Uint8 *inBannerURL)
-	: CMyTransactTask("\pLoading Server Banner...")
+	: CMyTransactTask("\x18" "Loading Server Banner...")
 {
 	mTpt = nil;
 	
@@ -3811,7 +3811,7 @@ void CMyKillDownloadTask::Process()
 #pragma mark -
 
 CMyUploadTask::CMyUploadTask(TFSRefObj* inSpec, bool inQueued)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {	
 	mTpt = nil;
 	
@@ -3870,9 +3870,9 @@ CMyUploadFileTask::CMyUploadFileTask(const void *inPathData, Uint32 inPathSize, 
 	{
 		// set text description in task window
 		if (mWasQueued)
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading “%#s” (queued)", mFileFldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading \xd2%#s\xd3 (queued)", mFileFldrName);
 		else
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading “%#s”", mFileFldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading \xd2%#s\xd3", mFileFldrName);
 	
 		ShowProgress(0, 1, str);
 		
@@ -3948,7 +3948,7 @@ goFromStart:
 		{
 			if (mWasQueued)
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading “%#s”", mFileFldrName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading \xd2%#s\xd3", mFileFldrName);
 				ShowProgress(0, 10, str);
 			}
 			
@@ -4126,7 +4126,7 @@ goFromStart:
 			{
 				if (!mDisplayedFinish)
 				{
-					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading “%#s” (finishing)", mFileFldrName);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading \xd2%#s\xd3 (finishing)", mFileFldrName);
 					ShowProgress(10, 10, str);
 					mDisplayedFinish = true;
 				}
@@ -4142,7 +4142,7 @@ goFromStart:
 					Uint8 stat[256];
 					gApp->GetTransferStatText(uploadedSize, totalSize, bps, etr, stat);
 					
-					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading “%#s” (%#s)", mFileFldrName, stat);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading \xd2%#s\xd3 (%#s)", mFileFldrName, stat);
 					
 					ShowProgress(uploadedSize, totalSize, str);
 
@@ -4172,9 +4172,9 @@ CMyUploadFldrTask::CMyUploadFldrTask(const void *inPathData, Uint32 inPathSize, 
 	{
 		// set text description in task window
 		if (mWasQueued)
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder “%#s” (queued)", mFileFldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder \xd2%#s\xd3 (queued)", mFileFldrName);
 		else
-			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder “%#s”", mFileFldrName);
+			str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder \xd2%#s\xd3", mFileFldrName);
 		
 		ShowProgress(0, 1, str);
 		
@@ -4262,7 +4262,7 @@ goFromStart:
 		{
 			if (mWasQueued)
 			{
-				str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder “%#s”", mFileFldrName);
+				str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder \xd2%#s\xd3", mFileFldrName);
 				ShowProgress(0, 10, str);
 			}
 			
@@ -4576,7 +4576,7 @@ sendFileInfo:
 					Uint8 stat[256];
 					gApp->GetTransferStatText(uploadedSize, totalSize, bps, etr, stat);
 					
-					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder “%#s” (%#s) [%lu of %lu]", mFileFldrName, stat, mUploadedItems, mTotalItems);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder \xd2%#s\xd3 (%#s) [%lu of %lu]", mFileFldrName, stat, mUploadedItems, mTotalItems);
 					ShowProgress(uploadedSize, totalSize, str);
 
 					mDisplayedSize = uploadedSize;
@@ -4596,7 +4596,7 @@ sendFileInfo:
 				if (mUploadedItems == mTotalItems)
 				{
 					// we're done!
-					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder “%#s” (finishing)", mFileFldrName);
+					str[0] = UText::Format(str+1, sizeof(str)-1, "Uploading folder \xd2%#s\xd3 (finishing)", mFileFldrName);
 					ShowProgress(10, 10, str);
 				}
 
@@ -4653,7 +4653,7 @@ sendFileInfo:
 #pragma mark -
 
 CMyOpenUserListTask::CMyOpenUserListTask()
-	: CMyTransactTask("\pTransferring list of accounts...")
+	: CMyTransactTask("\x20" "Transferring list of accounts...")
 {
 	// CMyTransactTask will dispose mTranSession if we fail
 	mTranSession = NewSendSession(myTran_GetUserList);
@@ -4662,7 +4662,7 @@ CMyOpenUserListTask::CMyOpenUserListTask()
 
 Uint32 CMyOpenUserListTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pGetting list of accounts...";
+	const Uint8 desc[] = "\x1b" "Getting list of accounts...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -4698,7 +4698,7 @@ void CMyOpenUserListTask::Process()
 
 // take ownership of inData
 CMySetUserListTask::CMySetUserListTask(TFieldData inData)
-	: CMyTransactTask("\pSaving list of accounts...")
+	: CMyTransactTask("\x1a" "Saving list of accounts...")
 {
 	mFieldData->SetDataHandle(inData->DetachDataHandle());
 	UFieldData::Dispose(inData);
@@ -4710,7 +4710,7 @@ CMySetUserListTask::CMySetUserListTask(TFieldData inData)
 
 Uint32 CMySetUserListTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pSaving list of accounts...";
+	const Uint8 desc[] = "\x1a" "Saving list of accounts...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -4741,7 +4741,7 @@ void CMySetUserListTask::Process()
 #pragma mark -
 
 CMyNewUserTask::CMyNewUserTask(const Uint8 inName[], const Uint8 inLogin[], const Uint8 inPass[], const SMyUserAccess& inAccess)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	Uint8 *p;
@@ -4750,7 +4750,7 @@ CMyNewUserTask::CMyNewUserTask(const Uint8 inName[], const Uint8 inLogin[], cons
 	pstrcpy(mName, inLogin);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Creating account “%#s”", inLogin);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Creating account \xd2%#s\xd3", inLogin);
 	ShowProgress(1, 2, str);
 
 	// scramble and store login
@@ -4811,7 +4811,7 @@ void CMyNewUserTask::Process()
 #pragma mark -
 
 CMyDeleteUserTask::CMyDeleteUserTask(const Uint8 inLogin[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	Uint8 *p;
@@ -4820,7 +4820,7 @@ CMyDeleteUserTask::CMyDeleteUserTask(const Uint8 inLogin[])
 	pstrcpy(mName, inLogin);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Deleting account “%#s”", inLogin);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Deleting account \xd2%#s\xd3", inLogin);
 	ShowProgress(1, 2, str);
 
 	// scramble and store login
@@ -4869,7 +4869,7 @@ void CMyDeleteUserTask::Process()
 #pragma mark -
 
 CMySetUserTask::CMySetUserTask(const Uint8 inName[], const Uint8 inLogin[], const Uint8 inPass[], const SMyUserAccess& inAccess)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	Uint8 *p;
@@ -4878,7 +4878,7 @@ CMySetUserTask::CMySetUserTask(const Uint8 inName[], const Uint8 inLogin[], cons
 	pstrcpy(mName, inLogin);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Modifying account “%#s”", inLogin);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Modifying account \xd2%#s\xd3", inLogin);
 	ShowProgress(1, 2, str);
 
 	// scramble and store login
@@ -4941,14 +4941,14 @@ void CMySetUserTask::Process()
 #pragma mark -
 
 CMyOpenUserTask::CMyOpenUserTask(const Uint8 inLogin[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inLogin);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Opening account “%#s”", inLogin);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Opening account \xd2%#s\xd3", inLogin);
 	ShowProgress(0, 10, str);
 
 	// setup field data
@@ -4997,14 +4997,14 @@ void CMyOpenUserTask::Process()
 #pragma mark -
 
 CMyDisconnectUserTask::CMyDisconnectUserTask(Uint16 inID, const Uint8 inName[], Uint8 inBanOptions)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Disconnect user “%#s”", inName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Disconnect user \xd2%#s\xd3", inName);
 	ShowProgress(1, 2, str);
 
 	// setup field data
@@ -5056,7 +5056,7 @@ void CMyDisconnectUserTask::Process()
 #pragma mark -
 
 CMyGetClientInfoTask::CMyGetClientInfoTask(Uint16 inUserID, const Uint8 *inUserName)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
@@ -5064,7 +5064,7 @@ CMyGetClientInfoTask::CMyGetClientInfoTask(Uint16 inUserID, const Uint8 *inUserN
 	UMemory::Copy(mUserName, inUserName, inUserName[0] + 1);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Get info for “%#s”", mUserName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Get info for \xd2%#s\xd3", mUserName);
 	ShowProgress(1, 2, str);
 
 	// setup field data
@@ -5112,14 +5112,14 @@ void CMyGetClientInfoTask::Process()
 #pragma mark -
 
 CMyDeleteFileTask::CMyDeleteFileTask(const void *inPathData, Uint32 inPathSize, const Uint8 inFileName[], bool inIsFolder)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inFileName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, inIsFolder ? "Delete folder “%#s”" : "Delete file “%#s”", inFileName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, inIsFolder ? "Delete folder \xd2%#s\xd3" : "Delete file \xd2%#s\xd3", inFileName);
 	ShowProgress(1, 2, str);
 
 	// setup field data
@@ -5167,14 +5167,14 @@ void CMyDeleteFileTask::Process()
 #pragma mark -
 
 CMyNewFolderTask::CMyNewFolderTask(const void *inPathData, Uint32 inPathSize, const Uint8 inName[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Create folder “%#s”", inName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Create folder \xd2%#s\xd3", inName);
 	ShowProgress(1, 2, str);
 
 	// setup field data
@@ -5222,7 +5222,7 @@ void CMyNewFolderTask::Process()
 #pragma mark -
 
 CMyGetTrackServListTask::CMyGetTrackServListTask(const Uint8 inAddr[], const Uint8 inName[], Uint16 inTrackerID, const Uint8 inLogin[], const Uint8 inPasswd[])
-	: CMyTransactTask("\p"), mTpt(0), mCount(0), mTotalCount(0),
+	: CMyTransactTask("\x00" ""), mTpt(0), mCount(0), mTotalCount(0),
 	  mMsgDataSize(0), mMsgType(0), mClearedList(0), mTrackerID(inTrackerID)
 {
 #if !NEW_TRACKSERV
@@ -5276,7 +5276,7 @@ CMyGetTrackServListTask::CMyGetTrackServListTask(const Uint8 inAddr[], const Uin
 CMyGetTrackServListTask::~CMyGetTrackServListTask()
 {
 	if (!mIsFinished)
-		gApp->mTracker->SetStatusMsg(mTrackerID, "\pClosed");
+		gApp->mTracker->SetStatusMsg(mTrackerID, "\x06" "Closed");
 	
 	UMemory::Dispose(mMsgData);
 	if (mTpt)
@@ -5343,7 +5343,7 @@ goFromStart:
 					str[0] = UText::Format(str + 1, sizeof(str) - 1, "Tracker %#s refused connection", mName);
 					Finish();
 					ShowProgress(0, 2, str);	// do this after Finish because Finish sets the progress bar to 100/100
-					gApp->mTracker->SetStatusMsg(mTrackerID, "\pRefused");
+					gApp->mTracker->SetStatusMsg(mTrackerID, "\x07" "Refused");
 				}
 				else
 					throw err;
@@ -5438,14 +5438,14 @@ goFromStart:
 #pragma mark -
 
 CMyGetFileInfoTask::CMyGetFileInfoTask(const void *inPathData, Uint32 inPathSize, const Uint8 inFileName[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inFileName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Get info for file/folder “%#s”", inFileName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Get info for file/folder \xd2%#s\xd3", inFileName);
 	ShowProgress(1, 2, str);
 
 	// setup field data to send
@@ -5598,13 +5598,13 @@ void CMyGetFileInfoTask::Process()
 }
 
 CMySetFileInfoTask::CMySetFileInfoTask(const void *inPathData, Uint32 inPathSize, const Uint8 inFileName[], const Uint8 inNewName[], const Uint8 inComment[])
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	pstrcpy(mName, inFileName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Set info for file/folder “%#s”", inFileName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Set info for file/folder \xd2%#s\xd3", inFileName);
 	ShowProgress(1, 2, str);
 
 	// setup field data to send
@@ -5655,14 +5655,14 @@ void CMySetFileInfoTask::Process()
 #pragma mark -
 
 CMyMoveFileTask::CMyMoveFileTask(const Uint8 *inFileName, const void *inPathData, Uint32 inPathSize, const void *inNewPath, Uint32 inNewPathSize)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inFileName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Move file/folder “%#s”", inFileName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Move file/folder \xd2%#s\xd3", inFileName);
 	ShowProgress(1, 2, str);
 
 	// setup field data to send
@@ -5712,14 +5712,14 @@ void CMyMoveFileTask::Process()
 #pragma mark -
 
 CMyMakeFileAliasTask::CMyMakeFileAliasTask(const Uint8 *inFileName, const void *inPathData, Uint32 inPathSize, const void *inDestPath, Uint32 inDestPathSize)
-	: CMyTransactTask("\p")
+	: CMyTransactTask("\x00" "")
 {
 	Uint8 str[256];
 	
 	pstrcpy(mName, inFileName);
 	
 	// set text description in task window
-	str[0] = UText::Format(str+1, sizeof(str)-1, "Make alias of “%#s”", inFileName);
+	str[0] = UText::Format(str+1, sizeof(str)-1, "Make alias of \xd2%#s\xd3", inFileName);
 	ShowProgress(1, 2, str);
 
 	// setup field data to send
@@ -5773,7 +5773,7 @@ void CMyMakeFileAliasTask::Process()
 #pragma mark -
 
 CMyInviteNewChatTask::CMyInviteNewChatTask(const Uint32 *inUserIDs, Uint32 inCount)
-	: CMyTransactTask("\pOpening private chat...")
+	: CMyTransactTask("\x17" "Opening private chat...")
 {
 	// add user IDs to invite
 	for (Uint32 i=0; i!=inCount; i++)
@@ -5786,7 +5786,7 @@ CMyInviteNewChatTask::CMyInviteNewChatTask(const Uint32 *inUserIDs, Uint32 inCou
 
 Uint32 CMyInviteNewChatTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pOpening private chat...";
+	const Uint8 desc[] = "\x17" "Opening private chat...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 
@@ -5851,7 +5851,7 @@ void CMyInviteNewChatTask::Process()
 #pragma mark -
 
 CMyJoinChatTask::CMyJoinChatTask(Uint32 inChatID)
-	: CMyTransactTask("\pJoining private chat..."), mChatID(inChatID)
+	: CMyTransactTask("\x17" "Joining private chat..."), mChatID(inChatID)
 {
 	mFieldData->AddInteger(myField_ChatID, inChatID);
 	
@@ -5862,7 +5862,7 @@ CMyJoinChatTask::CMyJoinChatTask(Uint32 inChatID)
 
 Uint32 CMyJoinChatTask::GetShortDesc(Uint8 *outText, Uint32 inMaxSize)
 {
-	const Uint8 desc[] = "\pJoining private chat...";
+	const Uint8 desc[] = "\x17" "Joining private chat...";
 	return UMemory::Copy(outText, desc + 1, min(inMaxSize, (Uint32)desc[0]));
 }
 

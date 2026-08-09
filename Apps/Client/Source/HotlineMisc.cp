@@ -689,7 +689,7 @@ void ReverseSubsTable(const Uint8 *inTab, Uint8 *outTab)
 
 void GenerateRandomPassword(void *outData, Uint32 inSize)
 {
-	const Uint8 chars[] = "\pabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	const Uint8 chars[] = "\x3e" "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	Uint8 *p, *ep;
 	
 	if (inSize)

@@ -12,7 +12,7 @@ CMyOptionsWin::CMyOptionsWin()
 	CTabbedView *tabs;
 	
 	// setup window
-	SetTitle("\pOptions");
+	SetTitle("\x07" "Options");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -24,9 +24,9 @@ CMyOptionsWin::CMyOptionsWin()
 	tabs->SetFont(UFontDesc::New(kDefaultFont, nil, 10));
 	
 	// add the tabs
-	tabs->AddTab("\pGeneral");
-	tabs->AddTab("\pPassword");
-	tabs->AddTab("\pBan");
+	tabs->AddTab("\x07" "General");
+	tabs->AddTab("\x08" "Password");
+	tabs->AddTab("\x03" "Ban");
 	
 	// attach views to tabs
 	tabs->SetTabView(1, MakeGeneralTab());
@@ -36,7 +36,7 @@ CMyOptionsWin::CMyOptionsWin()
 	tabs->Show();
 
 	// make buttons
-	SButtons btns[] = {{1, "\pSave", btnOpt_Default, nil}, {2, "\pCancel", btnOpt_Cancel, nil}};
+	SButtons btns[] = {{1, "\x04" "Save", btnOpt_Default, nil}, {2, "\x06" "Cancel", btnOpt_Cancel, nil}};
 	CButtonView::BuildButtons(vc, SRect(200,300,380,326), btns);
 }
 
@@ -58,35 +58,35 @@ CContainerView *CMyOptionsWin::MakeGeneralTab()
 
 		// make label view
 		lbl = new CLabelView(vc, SRect(20,21,160,37));
-		lbl->SetText("\pTracker IP:");
+		lbl->SetText("\x0b" "Tracker IP:");
 		lbl->Show();
 		
 		// make IP text views
 		scr = MakeTextBoxView(vc, SRect(162,16,202,42), scrollerOption_Border, &mViews.ip1Text);
 		scr->Show();
 		lbl = new CLabelView(vc, SRect(204,26,210,42));
-		lbl->SetText("\p.");
+		lbl->SetText("\x01" ".");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(212,16,252,42), scrollerOption_Border, &mViews.ip2Text);
 		scr->Show();
 		lbl = new CLabelView(vc, SRect(254,26,260,42));
-		lbl->SetText("\p.");
+		lbl->SetText("\x01" ".");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(262,16,302,42), scrollerOption_Border, &mViews.ip3Text);
 		scr->Show();
 		lbl = new CLabelView(vc, SRect(304,26,310,42));
-		lbl->SetText("\p.");
+		lbl->SetText("\x01" ".");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(312,16,352,42), scrollerOption_Border, &mViews.ip4Text);
 		scr->Show();
 				
 		lbl = new CLabelView(vc, SRect(20,46,352,164));
-		lbl->SetText("\pIf you have multihoming/IP-aliasing configured on your computer, you can specify which address to bind to here.\r\rIf you have only set up a single IP address, or if you wish to use your default address, leave the IP set to 0.0.0.0.");
+		lbl->SetText("\xe6" "If you have multihoming/IP-aliasing configured on your computer, you can specify which address to bind to here.\r\rIf you have only set up a single IP address, or if you wish to use your default address, leave the IP set to 0.0.0.0.");
 		lbl->Show();
 		
 		// make max servers per IP
 		lbl = new CLabelView(vc, SRect(10,185,328,201));
-		lbl->SetText("\pMax simultaneous servers listed per IP address:");
+		lbl->SetText("\x2f" "Max simultaneous servers listed per IP address:");
 		lbl->Show();
 		scr = MakeTextBoxView(vc, SRect(330,180,370,206), scrollerOption_Border, &mViews.maxServersPerIP);
 		scr->Show();
@@ -115,7 +115,7 @@ CContainerView *CMyOptionsWin::MakePasswordTab()
 	{	
 		// make label view
 		lbl = new CLabelView(vc, SRect(10,193,85,209));
-		lbl->SetText("\pPassword:");
+		lbl->SetText("\x09" "Password:");
 		lbl->Show();
 	
 		// make list scroller view
@@ -137,11 +137,11 @@ CContainerView *CMyOptionsWin::MakePasswordTab()
 		// make buttons
 		// make buttons
 		btn = new CButtonView(vc, SRect(32,222,108,244));
-		btn->SetTitle("\pAdd");
+		btn->SetTitle("\x03" "Add");
 		btn->SetID(3);
 		btn->Show();
 		btn = new CButtonView(vc, SRect(122,222,198,244));
-		btn->SetTitle("\pDelete");
+		btn->SetTitle("\x06" "Delete");
 		btn->SetID(4);
 		btn->Show();
 	}
@@ -169,7 +169,7 @@ CContainerView *CMyOptionsWin::MakeBanTab()
 	{	
 		// make label view
 		lbl = new CLabelView(vc, SRect(10,193,32,209));
-		lbl->SetText("\pIP:");
+		lbl->SetText("\x03" "IP:");
 		lbl->Show();
 
 		// make list scroller view
@@ -190,11 +190,11 @@ CContainerView *CMyOptionsWin::MakeBanTab()
 
 		// make buttons
 		btn = new CButtonView(vc, SRect(32,222,108,244));
-		btn->SetTitle("\pAdd");
+		btn->SetTitle("\x03" "Add");
 		btn->SetID(5);
 		btn->Show();
 		btn = new CButtonView(vc, SRect(122,222,198,244));
-		btn->SetTitle("\pDelete");
+		btn->SetTitle("\x06" "Delete");
 		btn->SetID(6);
 		btn->Show();
 	}
@@ -322,7 +322,7 @@ CMyStatsWin::CMyStatsWin()
 	CButtonView *btn;
 
 	// setup window
-	SetTitle("\pHotline Tracker");
+	SetTitle("\x0f" "Hotline Tracker");
 	SetAutoBounds(windowPos_TopRight, windowPosOn_WinScreen);
 	mServerCount = mUserCount = mListingCounter = 0;
 
@@ -332,30 +332,30 @@ CMyStatsWin::CMyStatsWin()
 
 	// make labels
 	lbl = new CLabelView(vc, SRect(10,10,130,26));
-	lbl->SetText("\pServer Count:");
+	lbl->SetText("\x0d" "Server Count:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(160,10,200,26));
-	lbl->SetText("\p0");
+	lbl->SetText("\x01" "0");
 	lbl->Show();
 	mViews.servCountText = lbl;
 	lbl = new CLabelView(vc, SRect(10,30,130,46));
-	lbl->SetText("\pUser Count:");
+	lbl->SetText("\x0b" "User Count:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(160,30,200,46));
-	lbl->SetText("\p0");
+	lbl->SetText("\x01" "0");
 	lbl->Show();
 	mViews.userCountText = lbl;
 	lbl = new CLabelView(vc, SRect(10,50,130,66));
-	lbl->SetText("\pListing Counter:");
+	lbl->SetText("\x10" "Listing Counter:");
 	lbl->Show();
 	lbl = new CLabelView(vc, SRect(160,50,220,66));
-	lbl->SetText("\p0");
+	lbl->SetText("\x01" "0");
 	lbl->Show();
 	mViews.listCountText = lbl;
 	
 	// make button
 	btn = new CButtonView(vc, SRect(10,72,100,96));
-	btn->SetTitle("\pOptions");
+	btn->SetTitle("\x07" "Options");
 	btn->SetID(viewID_Options);
 	btn->Show();
 }

@@ -14,11 +14,11 @@ Uint32 _LookUpNewsMimeFlav(const Uint8 inFlav[])
 	if (!inFlav)
 		return 0;
 		
-	if (!pstrcmp(inFlav, "\ptext/plain"))
+	if (!pstrcmp(inFlav, "\x0a" "text/plain"))
 		return hlNewsFlav_plain_text;
-	else if (!pstrcmp(inFlav, "\pimage/jpeg"))
+	else if (!pstrcmp(inFlav, "\x0a" "image/jpeg"))
 		return hlNewsFlav_image_jpeg;
-	else if (!pstrcmp(inFlav, "\pimage/gif"))
+	else if (!pstrcmp(inFlav, "\x09" "image/gif"))
 		return hlNewsFlav_image_gif;
 	else
 		return 0;
@@ -36,11 +36,11 @@ CMyNewsArticleTreeView::CMyNewsArticleTreeView(CViewHandler *inHandler, const SR
 	mKeyDownTime = 0;
 
 	// set headers
-	AddTab("\pTitle", 80, 80);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
-	AddTab("\pPoster");
-	AddTab("\pDate", 1, 1, align_CenterHoriz);
-	AddTab("\pTime", 1, 1, align_CenterHoriz);
+	AddTab("\x05" "Title", 80, 80);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
+	AddTab("\x06" "Poster");
+	AddTab("\x04" "Date", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Time", 1, 1, align_CenterHoriz);
 	SetTabs(40,5,25,15,15);
 }
 
@@ -543,7 +543,7 @@ CMyNewsArticleTreeWin::CMyNewsArticleTreeWin(CWindow *inParent, CNZReadList *inR
 	CIconButtonView *icb;
 	
 	// Std stuff
-	SetTitle("\pArticles");
+	SetTitle("\x08" "Articles");
 	SetLimits(420,150);
 	
 	SRect r = cBounds;
@@ -557,7 +557,7 @@ CMyNewsArticleTreeWin::CMyNewsArticleTreeWin(CWindow *inParent, CNZReadList *inR
 	icb = new CIconButtonView(mVC, r);
 	icb->SetIconID(223);
 	icb->SetID(viewID_NewArticle);
-	icb->SetTooltipMsg("\pNew Article");
+	icb->SetTooltipMsg("\x0b" "New Article");
 	icb->Show();
 	mViews.newArt = icb;
 		
@@ -568,7 +568,7 @@ CMyNewsArticleTreeWin::CMyNewsArticleTreeWin(CWindow *inParent, CNZReadList *inR
 	icb = new CIconButtonView(mVC, r);
 	icb->SetIconID(205);
 	icb->SetID(viewID_Refresh);
-	icb->SetTooltipMsg("\pRefresh");
+	icb->SetTooltipMsg("\x07" "Refresh");
 	icb->Show();
 	mViews.refresh = icb;
 		
@@ -580,7 +580,7 @@ CMyNewsArticleTreeWin::CMyNewsArticleTreeWin(CWindow *inParent, CNZReadList *inR
 	icb->SetIconID(212);
 	icb->SetSizing(sizing_HorizSticky);
 	icb->SetID(viewID_Delete);
-	icb->SetTooltipMsg("\pDelete");
+	icb->SetTooltipMsg("\x06" "Delete");
 	icb->Show();
 	mViews.trash = icb;
 
@@ -590,7 +590,7 @@ CMyNewsArticleTreeWin::CMyNewsArticleTreeWin(CWindow *inParent, CNZReadList *inR
 	icb = new CIconButtonView(mVC, r);
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpNews);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 	
@@ -774,8 +774,8 @@ CMyNewsCategoryListView::CMyNewsCategoryListView(CViewHandler *inHandler, const 
 	: CMyListStatusView(inHandler, inBounds)
 {
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 60);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 60);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
 }
 
 CMyNewsCategoryListView::~CMyNewsCategoryListView()
@@ -1156,8 +1156,8 @@ CMyNewsCategoryTreeView::CMyNewsCategoryTreeView(CViewHandler *inHandler, const 
 	mRefreshBundleIndex = 0;
 	
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 80);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 80);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
 }
 
 CMyNewsCategoryTreeView::~CMyNewsCategoryTreeView()
@@ -1846,7 +1846,7 @@ void CMyNewsCategoryWin::BuildButtons(const SRect& inBounds, CContainerView *inC
 	CIconButtonView *icb = new CIconButtonView(inContainerView, r);
 	icb->SetIconID(221);
 	icb->SetID(viewID_OpenParent);
-	icb->SetTooltipMsg("\pOpen Parent");
+	icb->SetTooltipMsg("\x0b" "Open Parent");
 	icb->Show();
 	mViews.parentFolder = icb;
 
@@ -1857,7 +1857,7 @@ void CMyNewsCategoryWin::BuildButtons(const SRect& inBounds, CContainerView *inC
 	icb = new CIconButtonView(inContainerView, r);
 	icb->SetIconID(413);
 	icb->SetID(viewID_NewsFldrNewCat);
-	icb->SetTooltipMsg("\pCreate New Category");
+	icb->SetTooltipMsg("\x13" "Create New Category");
 	icb->Show();
 	mViews.newCategory = icb;
 		
@@ -1868,7 +1868,7 @@ void CMyNewsCategoryWin::BuildButtons(const SRect& inBounds, CContainerView *inC
 	icb = new CIconButtonView(inContainerView, r);
 	icb->SetIconID(231);
 	icb->SetID(viewID_New);
-	icb->SetTooltipMsg("\pCreate New Bundle");
+	icb->SetTooltipMsg("\x11" "Create New Bundle");
 	icb->Show();
 	mViews.newFolder = icb;
 
@@ -1879,7 +1879,7 @@ void CMyNewsCategoryWin::BuildButtons(const SRect& inBounds, CContainerView *inC
 	icb = new CIconButtonView(inContainerView, r);
 	icb->SetIconID(205);
 	icb->SetID(viewID_Refresh);
-	icb->SetTooltipMsg("\pRefresh");
+	icb->SetTooltipMsg("\x07" "Refresh");
 	icb->Show();
 	mViews.refresh = icb;
 		
@@ -1891,7 +1891,7 @@ void CMyNewsCategoryWin::BuildButtons(const SRect& inBounds, CContainerView *inC
 	icb->SetIconID(212);
 	icb->SetSizing(sizing_HorizSticky);
 	icb->SetID(viewID_Delete);
-	icb->SetTooltipMsg("\pDelete");
+	icb->SetTooltipMsg("\x06" "Delete");
 	icb->Show();
 	mViews.trash = icb;
 
@@ -1901,7 +1901,7 @@ void CMyNewsCategoryWin::BuildButtons(const SRect& inBounds, CContainerView *inC
 	icb = new CIconButtonView(inContainerView, r);
 	icb->SetIconID(iconID_HelpToolbar);
 	icb->SetID(viewID_HelpNews);
-	icb->SetTooltipMsg("\pHelp");
+	icb->SetTooltipMsg("\x04" "Help");
 	icb->SetSizing(sizing_HorizSticky);
 	icb->Show();
 	
@@ -1998,7 +1998,7 @@ CMyNewsCategoryListWin::CMyNewsCategoryListWin(CWindow *inParent, TPtr inPathDat
 	gApp->GetNewsBoundsInfo();
 	gApp->mCategoryWinList.AddItem(this);
 		
-	SetTitle("\pNews");
+	SetTitle("\x04" "News");
 	SetLimits(230,150);
 	
 	BuildButtons(SRect(0, 0, 300, 300), mVC);
@@ -2175,7 +2175,7 @@ CMyNewsCategoryTreeWin::CMyNewsCategoryTreeWin(CWindow *inParent, TPtr inPathDat
 	gApp->GetNewsBoundsInfo();
 	gApp->mCategoryWinList.AddItem(this);
 	
-	SetTitle("\pNews");
+	SetTitle("\x04" "News");
 	SetLimits(230,150);
 
 	BuildButtons(SRect(0, 0, 300, 300), mVC);
@@ -2369,7 +2369,7 @@ CMyNewsCategoryExplWin::CMyNewsCategoryExplWin(CWindow *inParent, TPtr inPathDat
 	gApp->GetNewsBoundsInfo();
 	gApp->mCategoryWinList.AddItem(this);
 	
-	SetTitle("\pNews");
+	SetTitle("\x04" "News");
 	SetLimits(500,200);
 		
 	SRect r;
@@ -2420,7 +2420,7 @@ CMyNewsCategoryExplWin::CMyNewsCategoryExplWin(CWindow *inParent, TPtr inPathDat
 	CIconButtonView *icb = new CIconButtonView(rCont, r);
 	icb->SetIconID(223);
 	icb->SetID(viewID_NewArticle);
-	icb->SetTooltipMsg("\pNew Article");
+	icb->SetTooltipMsg("\x0b" "New Article");
 	icb->Show();
 	mNewViews.newArt = icb;
 
@@ -2430,7 +2430,7 @@ CMyNewsCategoryExplWin::CMyNewsCategoryExplWin(CWindow *inParent, TPtr inPathDat
 	icb = new CIconButtonView(rCont, r);
 	icb->SetIconID(220);
 	icb->SetID(viewID_NewsArticReply);
-	icb->SetTooltipMsg("\pReply");
+	icb->SetTooltipMsg("\x05" "Reply");
 	icb->Show();
 	mNewViews.replArt = icb;
 	
@@ -3083,7 +3083,7 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 		vc->SetDefaultView(icb);
 		mViews.send = icb;
 		mViews.repl = nil;
-		icb->SetTooltipMsg("\pSend");
+		icb->SetTooltipMsg("\x04" "Send");
 		icb->Show();
 	}
 	else
@@ -3095,7 +3095,7 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 		sicb->SetIconID(218);
 		sicb->SetID(viewID_NewsArticGoParent);
 		sicb->SetEnable(false);
-		sicb->SetTooltipMsg("\pOpen Parent");
+		sicb->SetTooltipMsg("\x0b" "Open Parent");
 		sicb->Show();
 		mViews.goParent = sicb;
 		
@@ -3108,7 +3108,7 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 		sicb->SetIconID(224);
 		sicb->SetID(viewID_NewsArticGoPrev);
 		sicb->SetEnable(true);
-		sicb->SetTooltipMsg("\pOpen Previous in Level");
+		sicb->SetTooltipMsg("\x16" "Open Previous in Level");
 		sicb->Show();
 		mViews.goPrev = sicb;
 				
@@ -3119,7 +3119,7 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 		sicb->SetIconID(225);
 		sicb->SetID(viewID_NewsArticGoNext);
 		sicb->SetEnable(true);
-		sicb->SetTooltipMsg("\pOpen Next in Level");
+		sicb->SetTooltipMsg("\x12" "Open Next in Level");
 		sicb->Show();
 		mViews.goNext = sicb;
 
@@ -3132,7 +3132,7 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 		sicb->SetIconID(219);
 		sicb->SetID(viewID_NewsArticGo1stChild);
 		sicb->SetEnable(false);
-		sicb->SetTooltipMsg("\pOpen First Reply");
+		sicb->SetTooltipMsg("\x10" "Open First Reply");
 		sicb->Show();
 		mViews.goChild = sicb;
 
@@ -3144,7 +3144,7 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 		icb->SetID(viewID_NewsArticReply);
 		mViews.repl = icb;
 		mViews.send = nil;
-		icb->SetTooltipMsg("\pReply");
+		icb->SetTooltipMsg("\x05" "Reply");
 		icb->Show();
 	}
 
@@ -3177,22 +3177,22 @@ CMyNewsArticTextWin::CMyNewsArticTextWin(CWindow *inParent, CNZReadList *inReadL
 	r.bottom = r.top + 16;
 	Int16 lblTop = r.top;
 	
-	(new CLabelView(vc, r, "\pTitle:"))->Show();
+	(new CLabelView(vc, r, "\x06" "Title:"))->Show();
 
 	r.top = r.bottom + 5;
 	r.bottom = r.top + 16;
 	
-	(new CLabelView(vc, r, "\pPoster:"))->Show();
+	(new CLabelView(vc, r, "\x07" "Poster:"))->Show();
 
 	r.top = r.bottom + 5;
 	r.bottom = r.top + 16;
 	
-	(new CLabelView(vc, r, "\pDate:"))->Show();
+	(new CLabelView(vc, r, "\x05" "Date:"))->Show();
 
 	r.top = r.bottom + 5;
 	r.bottom = r.top + 16;
 	
-	(new CLabelView(vc, r, "\pCategory:"))->Show();
+	(new CLabelView(vc, r, "\x09" "Category:"))->Show();
 	
 	// label values
 	r.left = r.right + 10;
@@ -3585,7 +3585,7 @@ CMyNewNewsCatWin::CMyNewNewsCatWin()
 	CBoxView *box;
 
 	// setup window
-	SetTitle("\pCreate News Category");
+	SetTitle("\x14" "Create News Category");
 	SetAutoBounds(windowPos_Center, windowPosOn_WinScreen);
 
 	// make container view for content
@@ -3599,7 +3599,7 @@ CMyNewNewsCatWin::CMyNewNewsCatWin()
 	
 	// make label
 	lbl = new CLabelView(vc, SRect(50,17,290,33));
-	lbl->SetText("\pEnter a name for the new category:");
+	lbl->SetText("\x22" "Enter a name for the new category:");
 	lbl->Show();
 
 	// make box
@@ -3615,7 +3615,7 @@ CMyNewNewsCatWin::CMyNewNewsCatWin()
 	
 	// make buttons
 	btn = new CButtonView(vc, SRect(214,110,290,136));
-	btn->SetTitle("\pCreate");
+	btn->SetTitle("\x06" "Create");
 	btn->SetDefault(true);
 	btn->SetID(1);
 	btn->Disable();
@@ -3623,7 +3623,7 @@ CMyNewNewsCatWin::CMyNewNewsCatWin()
 	vc->SetDefaultView(btn);
 	mViews.createBtn = btn;
 	btn = new CButtonView(vc, SRect(124,113,194,133));
-	btn->SetTitle("\pCancel");
+	btn->SetTitle("\x06" "Cancel");
 	btn->SetID(2);
 	btn->Show();
 	vc->SetCancelView(btn);

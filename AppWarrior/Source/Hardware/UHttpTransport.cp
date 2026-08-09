@@ -1562,9 +1562,9 @@ static bool _SendHttpPostHeader(THttpTransport inTpt)
 	void *pBuffer = nil;
 	Uint32 nBufferSize = 0;
 
-	if (!_AddField_General(&pBuffer, nBufferSize, "\pPOST ", psAddress, "\p HTTP/1.0") || !_AddField_General(&pBuffer, nBufferSize, "\pProxy-Connection: ", "\pKeep-Alive") ||
-	    !_AddField_General(&pBuffer, nBufferSize, "\pPragma: ", "\pno-cache") || !_AddField_General(&pBuffer, nBufferSize, "\pHost: ", psHost) ||
-		!_AddField_General(&pBuffer, nBufferSize, "\pContent-Length: ", "\p999999999") || !_AddField_General(&pBuffer, nBufferSize, "\pContent-Type: ", "\photline/protocol") ||
+	if (!_AddField_General(&pBuffer, nBufferSize, "\x05" "POST ", psAddress, "\x09" " HTTP/1.0") || !_AddField_General(&pBuffer, nBufferSize, "\x12" "Proxy-Connection: ", "\x0a" "Keep-Alive") ||
+	    !_AddField_General(&pBuffer, nBufferSize, "\x08" "Pragma: ", "\x08" "no-cache") || !_AddField_General(&pBuffer, nBufferSize, "\x06" "Host: ", psHost) ||
+		!_AddField_General(&pBuffer, nBufferSize, "\x10" "Content-Length: ", "\x09" "999999999") || !_AddField_General(&pBuffer, nBufferSize, "\x0e" "Content-Type: ", "\x10" "hotline/protocol") ||
 	    !_AddField_End(&pBuffer, nBufferSize))
 	{
 		UMemory::Dispose((TPtr)pBuffer);
@@ -1587,8 +1587,8 @@ static bool _SendHttpResponsePostHeader(TRegularTransport inTpt)
 	void *pBuffer = nil;
 	Uint32 nBufferSize = 0;
 		
-	if (!_AddField_General(&pBuffer, nBufferSize, "\pHTTP/1.0 ", "\p302 Found") || !_AddField_General(&pBuffer, nBufferSize, "\pConnection: ", "\pclose") ||
-	    !_AddField_General(&pBuffer, nBufferSize, "\pContent-Length: ", "\p8") || !_AddField_General(&pBuffer, nBufferSize, "\pContent-Type: ", "\photline/protocol") ||
+	if (!_AddField_General(&pBuffer, nBufferSize, "\x09" "HTTP/1.0 ", "\x09" "302 Found") || !_AddField_General(&pBuffer, nBufferSize, "\x0c" "Connection: ", "\x05" "close") ||
+	    !_AddField_General(&pBuffer, nBufferSize, "\x10" "Content-Length: ", "\x01" "8") || !_AddField_General(&pBuffer, nBufferSize, "\x0e" "Content-Type: ", "\x10" "hotline/protocol") ||
 	    !_AddField_End(&pBuffer, nBufferSize))
 	{
 		UMemory::Dispose((TPtr)pBuffer);
@@ -1621,9 +1621,9 @@ static bool _SendHttpGetHeader(THttpTransport inTpt)
 	void *pBuffer = nil;
 	Uint32 nBufferSize = 0;
 	
-	if (!_AddField_General(&pBuffer, nBufferSize, "\pGET ", psAddress, "\p HTTP/1.0") || !_AddField_General(&pBuffer, nBufferSize, "\pProxy-Connection: ", "\pKeep-Alive") ||
-		!_AddField_General(&pBuffer, nBufferSize, "\pPragma: ", "\pno-cache") || !_AddField_General(&pBuffer, nBufferSize, "\pHost: ", psHost) ||
-		!_AddField_General(&pBuffer, nBufferSize, "\pAccept: ", "\photline/protocol") || !_AddField_End(&pBuffer, nBufferSize))
+	if (!_AddField_General(&pBuffer, nBufferSize, "\x04" "GET ", psAddress, "\x09" " HTTP/1.0") || !_AddField_General(&pBuffer, nBufferSize, "\x12" "Proxy-Connection: ", "\x0a" "Keep-Alive") ||
+		!_AddField_General(&pBuffer, nBufferSize, "\x08" "Pragma: ", "\x08" "no-cache") || !_AddField_General(&pBuffer, nBufferSize, "\x06" "Host: ", psHost) ||
+		!_AddField_General(&pBuffer, nBufferSize, "\x08" "Accept: ", "\x10" "hotline/protocol") || !_AddField_End(&pBuffer, nBufferSize))
 	{
 		UMemory::Dispose((TPtr)pBuffer);
 		return false;
@@ -1640,8 +1640,8 @@ static bool _SendHttpResponseGetHeader(TRegularTransport inTpt)
 	void *pBuffer = nil;
 	Uint32 nBufferSize = 0;
 	
-	if (!_AddField_General(&pBuffer, nBufferSize, "\pHTTP/1.0 ", "\p200 OK") || !_AddField_General(&pBuffer, nBufferSize, "\pProxy-Connection: ", "\pKeep-Alive") ||
-	    !_AddField_General(&pBuffer, nBufferSize, "\pContent-Length: ", "\p999999999") || !_AddField_General(&pBuffer, nBufferSize, "\pContent-Type: ", "\photline/protocol") ||
+	if (!_AddField_General(&pBuffer, nBufferSize, "\x09" "HTTP/1.0 ", "\x06" "200 OK") || !_AddField_General(&pBuffer, nBufferSize, "\x12" "Proxy-Connection: ", "\x0a" "Keep-Alive") ||
+	    !_AddField_General(&pBuffer, nBufferSize, "\x10" "Content-Length: ", "\x09" "999999999") || !_AddField_General(&pBuffer, nBufferSize, "\x0e" "Content-Type: ", "\x10" "hotline/protocol") ||
 	    !_AddField_End(&pBuffer, nBufferSize))
 	{
 		UMemory::Dispose((TPtr)pBuffer);

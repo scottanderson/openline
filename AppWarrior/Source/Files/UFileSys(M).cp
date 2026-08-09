@@ -512,7 +512,7 @@ void UFileSys::MoveToTrash(TFSRefObj* inRef)
 			{
 				foundDirID = _FSGetDirID(spec->vRefNum, spec->parID, spec->name, nil);
 				CheckMacError(::FSpRename(spec, str));
-				CheckMacError(::CatMove(spec->vRefNum, foundDirID, "\p", dstSpec.parID, dstSpec.name));
+				CheckMacError(::CatMove(spec->vRefNum, foundDirID, "\x00" "", dstSpec.parID, dstSpec.name));
 			}
 			else
 				CheckMacError(err);
@@ -1450,7 +1450,7 @@ TFSRefObj* UFileSys::UserSelectFolder(TFSRefObj* inInitianFolder, Uint32 /* inOp
 
 #else
 
-	Str255 pDefaultName = "\pΩ≈˜åß˙∂˙∑∑´¨¥†";	// we don't want a file with this name to exist
+	Str255 pDefaultName = "\x0e" "\xbd\xc5\xf7\x8c\xa7\xfa\xb6\xfa\xb7\xb7\xab\xac\xb4\xa0";	// we don't want a file with this name to exist
 	StandardFileReply stFileReply;
 	Point stWhere = {-1, -1};					// center
 	Int16 bufActiveList[2] = {1, 7};			// only accept keydowns on file list
@@ -1490,7 +1490,7 @@ TFSRefObj* UFileSys::UserSaveFile(TFSRefObj* inInitianFolder, const Uint8 *inDef
 {
 	// set the default name
 	if (inDefaultName == nil)
-		inDefaultName = "\pUntitled";
+		inDefaultName = "\x08" "Untitled";
 	
 #if TARGET_API_MAC_CARBON
 
@@ -1547,7 +1547,7 @@ TFSRefObj* UFileSys::UserSaveFile(TFSRefObj* inInitianFolder, const Uint8 *inDef
 #else
 
 	if (inPrompt == nil)
-		inPrompt = "\pSave As:";
+		inPrompt = "\x08" "Save As:";
 
 	StandardFileReply stFileReply;
 	Point stWhere = {-1, -1};					// center
@@ -1795,7 +1795,7 @@ Uint32 UFileSys::GetApplicationURL(UInt8 *url, Uint32 urlZ)
 	
 	short z = 0;
 	Handle handle = 0;
-	err = ::GetFullPath(spec.vRefNum, spec.parID, "\p", &z, &handle);
+	err = ::GetFullPath(spec.vRefNum, spec.parID, "\x00" "", &z, &handle);
 	if (err != 0)
 		return 0;
 	if (size+z > urlZ)
@@ -2846,7 +2846,7 @@ static bool _FSPathDataToFolder(const FSSpec& inRoot, const void *inPath, Uint32
 	}
 	
 	// output target directory
-	if (::FSMakeFSSpec(pb.hFileInfo.ioVRefNum, pb.hFileInfo.ioDirID, "\p", &outFolder) != noErr)
+	if (::FSMakeFSSpec(pb.hFileInfo.ioVRefNum, pb.hFileInfo.ioDirID, "\x00" "", &outFolder) != noErr)
 		return false;
 	
 	// successfully located target directory
@@ -2927,7 +2927,7 @@ static bool _FSPathStringToFolder(const FSSpec& inRoot, const Uint8 *inPath, FSS
 	}
 	
 	// output target directory
-	if (::FSMakeFSSpec(pb.hFileInfo.ioVRefNum, pb.hFileInfo.ioDirID, "\p", &outFolder) != noErr)
+	if (::FSMakeFSSpec(pb.hFileInfo.ioVRefNum, pb.hFileInfo.ioDirID, "\x00" "", &outFolder) != noErr)
 		return false;
 	
 	// successfully located target directory
@@ -3517,7 +3517,7 @@ static void _FSCreateAliasFile(const FSSpec *inFile, const FSSpec *inOriginal)
 	UseResFile(refNum);
 	
 	// add alias resource to resource file
-	AddResource((Handle)halias, 'alis', 0, "\p");
+	AddResource((Handle)halias, 'alis', 0, "\x00" "");
 	err = ResError();
 	if (err) goto bail;
 	halias = nil;			// belongs to resource manager now

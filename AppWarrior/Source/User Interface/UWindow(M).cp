@@ -231,7 +231,7 @@ TWindow UWindow::New(const SRect& inBounds, Uint16 inLayer, Uint16 inFlags, Uint
 		win->state = windowState_Hidden;
 		
 		// create the window.  IMPORTANT: title must not be nil, use empty pstring
-		macWin = ::NewCWindow(nil, &r, "\p", false, _WNStyleToProcNum(inLayer, inFlags, inStyle), _WNFindPlaneForNewWindow(inLayer), inFlags & windowOption_CloseBox, (Int32)win);
+		macWin = ::NewCWindow(nil, &r, "\x00" "", false, _WNStyleToProcNum(inLayer, inFlags, inStyle), _WNFindPlaneForNewWindow(inLayer), inFlags & windowOption_CloseBox, (Int32)win);
 		if (macWin == nil) 
 			Fail(errorType_Memory, memError_NotEnough);
 	
@@ -343,13 +343,13 @@ void UWindow::SetTitle(TWindow inWin, const Uint8 *inTitle)
 		if (inTitle)
 			::SetWTitle(WIN->macWin, inTitle);
 		else
-			::SetWTitle(WIN->macWin, "\p");
+			::SetWTitle(WIN->macWin, "\x00" "");
 	}
 }
 
 void UWindow::SetNoTitle(TWindow inWin)
 {
-	if (inWin) ::SetWTitle(WIN->macWin, "\p");		// do NOT use nil for the title
+	if (inWin) ::SetWTitle(WIN->macWin, "\x00" "");		// do NOT use nil for the title
 }
 
 Uint32 UWindow::GetTitle(TWindow inWin, void *outText, Uint32 inMaxSize)
@@ -4188,8 +4188,8 @@ static void _SetupMacMenuBar()
 		if (nVersion < 0x0A00)
 		{
 			// set apple menu
-			MenuHandle appleMenu = ::NewMenu(128, "\p\024");
-			::AppendMenu(appleMenu, "\pAbout This Computer...");
+			MenuHandle appleMenu = ::NewMenu(128, "\x01" "\024");
+			::AppendMenu(appleMenu, "\x16" "About This Computer...");
 		#if !TARGET_API_MAC_CARBON	
 			// this is done automatically for us in Carbon
 			::AppendResMenu(appleMenu, 'DRVR');
@@ -4197,14 +4197,14 @@ static void _SetupMacMenuBar()
 			::InsertMenu(appleMenu, 0);
 		
 			// add "File" menu
-			MenuHandle fileMenu = ::NewMenu(129, "\pFile");
-			::AppendMenu(fileMenu, "\pQuit/Q");
+			MenuHandle fileMenu = ::NewMenu(129, "\x04" "File");
+			::AppendMenu(fileMenu, "\x06" "Quit/Q");
 			::InsertMenu(fileMenu, 0);
 		}
 		
 		// add "Edit" menu
-		MenuHandle editMenu = ::NewMenu(130, "\pEdit");
-		::AppendMenu(editMenu, "\pUndo/Z;-;Cut/X;Copy/C;Paste/V;Clear;-;Select All/A");
+		MenuHandle editMenu = ::NewMenu(130, "\x04" "Edit");
+		::AppendMenu(editMenu, "\x32" "Undo/Z;-;Cut/X;Copy/C;Paste/V;Clear;-;Select All/A");
 		::InsertMenu(editMenu, 0);
 	}
 	else

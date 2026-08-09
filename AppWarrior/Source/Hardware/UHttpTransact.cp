@@ -1412,11 +1412,11 @@ static bool _AddResponseField_Http(THttpTransact inTrn)
 {
 	Uint8 *pProtocol;
 	if (TRN->nProtocol == protocol_HTTP_1_1)
-		pProtocol = "\pHTTP/1.1 ";
+		pProtocol = "\x09" "HTTP/1.1 ";
 	else
-		pProtocol = "\pHTTP/1.0 ";
+		pProtocol = "\x09" "HTTP/1.0 ";
 	
-	return _AddField_General(inTrn, pProtocol, "\p200 OK");
+	return _AddField_General(inTrn, pProtocol, "\x06" "200 OK");
 }
 
 static bool _AddResponseField_Server(THttpTransact inTrn, const Uint8 *inServer)
@@ -1424,7 +1424,7 @@ static bool _AddResponseField_Server(THttpTransact inTrn, const Uint8 *inServer)
 	if (!inServer && !inServer[0])
 		return true;
 
-	return _AddField_General(inTrn, "\pServer: ", inServer);
+	return _AddField_General(inTrn, "\x08" "Server: ", inServer);
 }
 
 static bool _AddResponseField_ContentLength(THttpTransact inTrn, Uint32 inContentLength)
@@ -1432,17 +1432,17 @@ static bool _AddResponseField_ContentLength(THttpTransact inTrn, Uint32 inConten
 	Uint8 psContentLength[32];
 	psContentLength[0] = UText::IntegerToText(psContentLength + 1, sizeof(psContentLength) - 1, inContentLength);
 	
-	return _AddField_General(inTrn, "\pContent-Length: ", psContentLength);
+	return _AddField_General(inTrn, "\x10" "Content-Length: ", psContentLength);
 }
 
 static bool _AddResponseField_Connection(THttpTransact inTrn)
 {
-	return _AddField_General(inTrn, "\pConnection: ", "\pKeep-Alive");
+	return _AddField_General(inTrn, "\x0c" "Connection: ", "\x0a" "Keep-Alive");
 }
 
 static bool _AddResponseField_TransferEncoding(THttpTransact inTrn)
 {
-	return _AddField_General(inTrn, "\pTransfer-Encoding: ", "\pchunked");
+	return _AddField_General(inTrn, "\x13" "Transfer-Encoding: ", "\x07" "chunked");
 }
 
 static bool _AddResponseField_ContentType(THttpTransact inTrn)
@@ -1450,7 +1450,7 @@ static bool _AddResponseField_ContentType(THttpTransact inTrn)
 	Uint8 psType[32];
 	psType[0] = UMemory::Copy(psType + 1, TRN->csType, strlen(TRN->csType));
 		
-	return _AddField_General(inTrn, "\pContent-Type: ", psType);
+	return _AddField_General(inTrn, "\x0e" "Content-Type: ", psType);
 }
 
 
@@ -1464,19 +1464,19 @@ static bool _AddRequestField_Get(THttpTransact inTrn, const Uint8 *inDomain, boo
 		
 	const Uint8 *psProtocol;
 	if (TRN->nProtocol == protocol_HTTP_1_1)
-		psProtocol = "\p HTTP/1.1";
+		psProtocol = "\x09" " HTTP/1.1";
 	else
-		psProtocol = "\p HTTP/1.0";
+		psProtocol = "\x09" " HTTP/1.0";
 	
 	const Uint8 *psCommand;
 	if (inGetHeader)
-		psCommand = "\pHEAD ";
+		psCommand = "\x05" "HEAD ";
 	else
-		psCommand = "\pGET ";
+		psCommand = "\x04" "GET ";
 
 	const Uint8 *psDomain;
 	if (!inDomain[0])
-		psDomain = "\p/";
+		psDomain = "\x01" "/";
 	else
 		psDomain = inDomain;
 	
@@ -1491,7 +1491,7 @@ static bool _AddRequestField_IfModifiedSince(THttpTransact inTrn, const Uint8 *i
 	Uint8 psLength[32];
 	psLength[0] = UText::Format(psLength + 1, sizeof(psLength) - 1, "; length=%hu", inLength);
 	
-	return _AddField_General(inTrn, "\pIf-Modified-Since: ", inLastModified, psLength);
+	return _AddField_General(inTrn, "\x13" "If-Modified-Since: ", inLastModified, psLength);
 }
 
 static bool _AddRequestField_Referer(THttpTransact inTrn, const Uint8 *inReferer)
@@ -1499,15 +1499,15 @@ static bool _AddRequestField_Referer(THttpTransact inTrn, const Uint8 *inReferer
 	if (!inReferer || !inReferer[0])
 		return true;
 		
-	return _AddField_General(inTrn, "\pReferer: ", inReferer);
+	return _AddField_General(inTrn, "\x09" "Referer: ", inReferer);
 }
 
 static bool _AddRequestField_Connection(THttpTransact inTrn, bool inProxyConnection)
 {
 	if (inProxyConnection)
-		return _AddField_General(inTrn, "\pProxy-Connection: ", "\pKeep-Alive");
+		return _AddField_General(inTrn, "\x12" "Proxy-Connection: ", "\x0a" "Keep-Alive");
 
-	return _AddField_General(inTrn, "\pConnection: ", "\pKeep-Alive");
+	return _AddField_General(inTrn, "\x0c" "Connection: ", "\x0a" "Keep-Alive");
 }
 
 static bool _AddRequestField_UserAgent(THttpTransact inTrn, const Uint8 *inUserAgent)
@@ -1515,15 +1515,15 @@ static bool _AddRequestField_UserAgent(THttpTransact inTrn, const Uint8 *inUserA
 	if (!inUserAgent && !inUserAgent[0])
 		return true;
 		
-	return _AddField_General(inTrn, "\pUser-Agent: ", inUserAgent);
+	return _AddField_General(inTrn, "\x0c" "User-Agent: ", inUserAgent);
 }
 
 static bool _AddRequestField_Pragma(THttpTransact inTrn, const Uint8 *inPragma)
 {
 	if (inPragma)
-		return _AddField_General(inTrn, "\pPragma: ", inPragma);
+		return _AddField_General(inTrn, "\x08" "Pragma: ", inPragma);
 	else
-		return _AddField_General(inTrn, "\pPragma: ", "\pno-cache");
+		return _AddField_General(inTrn, "\x08" "Pragma: ", "\x08" "no-cache");
 }
 
 static bool _AddRequestField_Host(THttpTransact inTrn, const Uint8 *inHost)
@@ -1531,31 +1531,31 @@ static bool _AddRequestField_Host(THttpTransact inTrn, const Uint8 *inHost)
 	if (!inHost)
 		return false;
 		
-	return _AddField_General(inTrn, "\pHost: ", inHost);
+	return _AddField_General(inTrn, "\x06" "Host: ", inHost);
 }
 
 static bool _AddRequestField_Accept(THttpTransact inTrn, const Uint8 *inAccept)
 {
 	if (inAccept)
-		return _AddField_General(inTrn, "\pAccept: ", inAccept);
+		return _AddField_General(inTrn, "\x08" "Accept: ", inAccept);
 	else
-		return _AddField_General(inTrn, "\pAccept: ", "\ptext/*, image/*, */*");
+		return _AddField_General(inTrn, "\x08" "Accept: ", "\x14" "text/*, image/*, */*");
 }
 
 static bool _AddRequestField_AcceptLanguage(THttpTransact inTrn, const Uint8 *inAcceptLanguage)
 {
 	if (inAcceptLanguage)
-		return _AddField_General(inTrn, "\pAccept-Language: ", inAcceptLanguage);
+		return _AddField_General(inTrn, "\x11" "Accept-Language: ", inAcceptLanguage);
 	else
-		return _AddField_General(inTrn, "\pAccept-Language: ", "\pen");
+		return _AddField_General(inTrn, "\x11" "Accept-Language: ", "\x02" "en");
 }
 
 static bool _AddRequestField_AcceptCharset(THttpTransact inTrn, const Uint8 *inAcceptCharset)
 {
 	if (inAcceptCharset)
-		return _AddField_General(inTrn, "\pAccept-Charset: ", inAcceptCharset);
+		return _AddField_General(inTrn, "\x10" "Accept-Charset: ", inAcceptCharset);
 	else
-		return _AddField_General(inTrn, "\pAccept-Charset: ", "\piso-8859-1,*,utf-8");
+		return _AddField_General(inTrn, "\x10" "Accept-Charset: ", "\x12" "iso-8859-1,*,utf-8");
 }
 
 static bool _AddRequestField_HttpCookie(THttpTransact inTrn)
@@ -1687,7 +1687,7 @@ static bool _AddRequestField_CustomField(THttpTransact inTrn, const Uint8 *inCus
 	if (!inCustomField && !inCustomField[0])
 		return true;
 		
-	return _AddField_General(inTrn, "\p", inCustomField);
+	return _AddField_General(inTrn, "\x00" "", inCustomField);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2039,7 +2039,7 @@ bool CCookieList::ConvertExpiredDate(const Uint8 *inDate, SCalendarDate& outDate
 	if (!pWeekDayEnd)
 		return false;
 
-	const Uint8 *pWeekDayList1[7] = {"\pMonday", "\pTuesday", "\pWednesday", "\pThursday", "\pFriday", "\pSaturday", "\pSunday"};
+	const Uint8 *pWeekDayList1[7] = {"\x06" "Monday", "\x07" "Tuesday", "\x09" "Wednesday", "\x08" "Thursday", "\x06" "Friday", "\x08" "Saturday", "\x06" "Sunday"};
 	const Int8 *pWeekDayList2[7] = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
 
 	Uint8 nWeekDay = 0;

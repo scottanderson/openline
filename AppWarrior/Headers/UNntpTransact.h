@@ -76,7 +76,7 @@ struct SNewsArticleInfo {
 
 struct SArticleData {
 	Int8 csFlavor[32];		// "text/plain"	for article text
-	Uint8 psName[64];		// "\p.body" for article text
+	Uint8 psName[64];		// "\x05" ".body" for article text
 	Uint32 nDataSize;
 	void *pData;
 };

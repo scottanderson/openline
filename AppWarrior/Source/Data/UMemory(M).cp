@@ -753,7 +753,7 @@ Uint32 UMemory::Remove(THdl inHdl, Uint32 inOffset, Uint32 inSize)
 
 	if (inSize)
 	{
-		inOffset = ::Munger((Handle)inHdl, inOffset, nil, inSize, "\p", 0);
+		inOffset = ::Munger((Handle)inHdl, inOffset, nil, inSize, "\x00" "", 0);
 		CheckMemError();
 	}
 	

@@ -74,7 +74,7 @@ bool UOperatingSystem::InitQuickTime()
 	if (nCount > 0)
 	{
 		// version is 4.1 or better
-		::pstrcpy(mQuickTimeVersion, "\p4.1");
+		::pstrcpy(mQuickTimeVersion, "\x03" "4.1");
 		mCanHandleFlash = true;
 	}
 

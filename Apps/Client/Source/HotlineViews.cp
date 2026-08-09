@@ -370,19 +370,19 @@ void CMyListStatusView::Draw(TImage inImage, const SRect& inUpdateRect, Uint32 i
 		switch (mStatus)
 		{
 			case listStat_Loading:
-				statTxt = "\pLoading...";
+				statTxt = "\x0a" "Loading...";
 				break;
 			
 			case listStat_0Items:
-				statTxt = "\p0 items in list";
+				statTxt = "\x0f" "0 items in list";
 				break;
 			
 			case listStat_Custom:
-				statTxt = mCustStatMsg ? BPTR(mCustStatMsg) : "\p";
+				statTxt = mCustStatMsg ? BPTR(mCustStatMsg) : "\x00" "";
 				break;
 			
 			default:	// listStat_Hide
-				statTxt = "\p";
+				statTxt = "\x00" "";
 				break;
 		}
 		
@@ -413,8 +413,8 @@ CMyFileListView::CMyFileListView(CViewHandler *inHandler, const SRect& inBounds,
 	mListExpl = inListExpl;
 	
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 60);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 60);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
 }
 
 CMyFileListView::~CMyFileListView()
@@ -911,8 +911,8 @@ CMyFileTreeView::CMyFileTreeView(CViewHandler *inHandler, const SRect& inBounds,
 	mSavedFolderIndex = 0;	
 	
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 80);
-	AddTab("\pSize", 1, 1, align_CenterHoriz);
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 80);
+	AddTab("\x04" "Size", 1, 1, align_CenterHoriz);
 }
 
 CMyFileTreeView::~CMyFileTreeView()
@@ -2175,10 +2175,10 @@ CMyUserListView::CMyUserListView(CViewHandler *inHandler, const SRect& inBounds)
 	mRegularPrivIcon = UIcon::Load(193);
 		
 	// set headers
-	AddTab("\pName", inBounds.GetWidth() - 40, 60);
-	AddTab("\pStatus");
+	AddTab("\x04" "Name", inBounds.GetWidth() - 40, 60);
+	AddTab("\x06" "Status");
 #else
-	AddTab("\pName");
+	AddTab("\x04" "Name");
 #endif
 
 	SetStatus(statTxt_UserlistNotOnline);
