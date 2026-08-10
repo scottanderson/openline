@@ -11,7 +11,6 @@
 #define USE_LARGE_FONT			0
 #define DRAW_USERLIST_ICONS		1
 #define DISABLE_TABS			0
-#define EXTRA_BANNER_BUTTONS	1
 
 #define BANNER_AUTO_REFRESH_MS  0
 
@@ -100,15 +99,6 @@ enum {
 	viewID_ToolbarStatus		= 1060,
 	iconID_ShowMsgBoard			= 429,
 	viewID_ShowMsgBoard			= 1061,
-	
-	iconID_UnusedAD				= 2002,
-	viewID_UnusedAD				= 1062,
-	iconID_ISP					= 433,
-	viewID_ISP					= 1063,
-	iconID_Securiphone			= 432,
-	viewID_Securiphone			= 1064,
-	iconID_Xsprings				= 434,
-	viewID_Xsprings				= 1065,
 	
 	viewID_OpenUserList			= 1070,
 	
@@ -2494,18 +2484,12 @@ class CMyBannerToolbarWin : public CMyToolbar, public CMyBannerWin
 			eButtonHeight	= 24,
 			eButtonWidth 	= 24,
 			eButtonSpace 	= 3,
-			eButtonDepl 	= 5,
-			
-			eAdButtonHeight = 21,
-			eAdButtonWidth	= 21
+			eButtonDepl 	= 5
 		};
-				
-		struct 
+
+		struct
 		{
 			CIconButtonView * aboutBtn;
-			#if EXTRA_BANNER_BUTTONS
-				CIconButtonView* adBtns[3];
-			#endif
 		} mViews;
 			
 		void CalculateNewBounds(const SRect *inScrollerBounds = nil);
@@ -4252,9 +4236,7 @@ protected:
 		void ProcessTran_UserBroadcast(TFieldData inData);
 		void ProcessTran_UserAccess(TFieldData inData);
 		void ProcessTran_DownloadInfo(TFieldData inData);
-		
-		void DoLaunchSecuriphone();
-	
+
 };
 
 inline void CMyApplication::StartTransferConnect(TTransport inTpt, const void *inAddr, Uint32 inAddrSize)

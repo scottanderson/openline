@@ -1062,19 +1062,6 @@ void CMyApplication::WindowHit(CWindow *inWindow, const SHitMsgData& inInfo)
 		case viewID_OpenDloadFolder:
 			DoOpenDloadFolder();
 			break;
-		case viewID_ISP:
-//			UTransport::LaunchURL("\x19" "http://www.hotlineisp.com");
-//			UTransport::LaunchURL("\x46" "http://join.hotlineisp.com/preregisterhlisp.asp?ID=139&refID=&u1=&u2=/");
-			UTransport::LaunchURL("\x1a" "http://join.hotlineisp.com");
-			break;
-		case viewID_Securiphone:
-			DoLaunchSecuriphone();
-			break;
-		case viewID_Xsprings:
-			UTransport::LaunchURL("\x1a" "http://www.crossprings.com");
-			break;
-
-
 		case viewID_ChatUserList:
 			if (inInfo.type == hitType_Drop)
 			{
@@ -8959,38 +8946,5 @@ void CMyApplication::DoViewDloadFile(Uint8* fName)
 //		UDebug::LogToDebugFile("Open Download URL: %s\n", name);
 		UTransport::LaunchURL(name, z);
 	}
-}
-
-void CMyApplication::DoLaunchSecuriphone()
-{
-#if WIN32
-	// on windows we try to launch the app itself, if we can find it
-	char sphone[256];
-	Uint32 z = sizeof(sphone)-1;
-	sphone[z] = 0;
-	if (!UExternalApp::ReadSystemRegistry("HKCU\\Software\\EarthSpeak International\\SecuriPhone\\CurrentVersion"
-		, "path", sphone, z)) 
-		z=0;
-	sphone[z] = 0;
-	if ((sphone[0] != 0) && (z >= 2) && (sphone[1] == ':'))
-	{
-		sphone[1] = '|';
-		for (int k=0; k<z; ++k)
-			if (sphone[k] == '\\')
-				sphone[k] = '/';
-		if (sphone[z-1] == '/')
-			sphone[--z] = 0;
-			
-		Uint8 request[512];
-		request[0] = UText::Format( request+1, sizeof(request)-1
-								  , "file:///%s/Sphone.exe"
-								  , sphone );
-		UTransport::LaunchURL(request);
-		return;
-	}
-#endif
-    
-    // go to securiphone site
-	UTransport::LaunchURL("\x31" "http://www.securiphone.info/english/download.html");
 }
 

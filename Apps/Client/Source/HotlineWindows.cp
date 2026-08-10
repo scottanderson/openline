@@ -5294,41 +5294,6 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 	btn->SetID(viewID_Disconnect);
 	mToolbarViews.disconnectBtn = btn;
 
-#if EXTRA_BANNER_BUTTONS
-	btnRect.right = rToolbarWinBounds.GetWidth() - 1; //eButtonDepl +1;
-	btnRect.left = btnRect.right - eAdButtonWidth;
-
-	{ // bottom
-		btnRect.bottom = btnRect.top;// - eButtonSpace;
-		btnRect.top = btnRect.bottom - eAdButtonHeight;
-		mViews.adBtns[0] = btn = new CIconButtonView(mContainerView, btnRect);
-		btn->SetIconID(iconID_Securiphone);
-		btn->SetTooltipMsg("\x0b" "Securiphone");
-		btn->SetID(viewID_Securiphone);
-		btn->Show();
-	}
-	{  // middle
-		btnRect.bottom = btnRect.top;// - eButtonSpace;
-		btnRect.top = btnRect.bottom - eAdButtonHeight;
-		mViews.adBtns[1] = btn = new CIconButtonView(mContainerView, btnRect);
-		btn->SetIconID(iconID_ISP);
-		btn->SetTooltipMsg("\x03" "ISP");
-		btn->SetID(viewID_ISP);
-		btn->Show();
-	}
-	{  // top
-		btnRect.bottom = btnRect.top;// - eButtonSpace;
-		btnRect.top = btnRect.bottom - eAdButtonHeight;
-		mViews.adBtns[2] = btn = new CIconButtonView(mContainerView, btnRect);
-		btn->SetIconID(iconID_Xsprings);    //iconID_UnusedAD
-		btn->SetTooltipMsg("\x08" "xSprings");
-		btn->SetID(viewID_Xsprings);
-		btn->Show();
-		//btn->Disable();
-	}
-#endif
-
-
 	// make info view
 	mToolbarViews.connectInfo = new CMyConnectedInfoView(mContainerView, SRect(0,31,eMinHorizBannerWin,46), "\x0d" "Not Connected", fd_Default9);
 	mToolbarViews.connectInfo->SetID(viewID_ToolbarStatus);
@@ -5440,18 +5405,6 @@ void CMyBannerToolbarWin::SetViewsPosition()
 	stNewButtonsBounds.right = stNewButtonsBounds.left - eButtonSpace;
 	stNewButtonsBounds.left = stNewButtonsBounds.right - eButtonWidth;
 	mToolbarViews.disconnectBtn->SetBounds(stNewButtonsBounds);
-
-#if EXTRA_BANNER_BUTTONS
-	stNewButtonsBounds.right = stWinBounds.GetWidth()-1; // - eButtonDepl;
-	stNewButtonsBounds.left = stNewButtonsBounds.right - eAdButtonWidth;
-	stNewButtonsBounds.top  = stNewBounds.bottom-2;
-	for(int k = 0; k<3; ++k)
-	{
-		stNewButtonsBounds.bottom = stNewButtonsBounds.top;
-		stNewButtonsBounds.top = stNewButtonsBounds.bottom - eAdButtonHeight+1;
-		mViews.adBtns[k]->SetBounds(stNewButtonsBounds);
-	}
-#endif
 
 	// info view
 	Uint32 nHeight = stWinBounds.GetHeight();
@@ -5587,9 +5540,6 @@ void CMyBannerToolbarWin::CalculateNewBounds(const SRect *inScrollerBounds)
 	stNewBounds.right = stNewBounds.left + stScrollerBounds.GetWidth() - nExtraSpace;
 	if (stNewBounds.GetWidth() < eMinHorizBannerWin)
 		stNewBounds.right = stNewBounds.left + eMinHorizBannerWin;
-#if EXTRA_BANNER_BUTTONS
-	stNewBounds.right += /*eButtonSpace+*/eAdButtonWidth+3; //eButtonDepl;
-#endif	
 	if (stNewBounds != stBounds)
 		SetBounds(stNewBounds);
 	
