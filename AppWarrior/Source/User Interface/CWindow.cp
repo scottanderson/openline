@@ -1420,8 +1420,29 @@ bool CSnapWindows::RectSnapScreen(SRect& ioWindowBounds, bool inMoveSize)
 
 bool CSnapWindows::RectKeepOnScreen(SRect& ioWindowBounds)
 {
+#if WIN32
+	// Like RectSnapScreen() (see the #if WIN32 block there for the full
+	// explanation), this clamps ioWindowBounds against _GetScreenBounds(),
+	// which on Windows is the MDI client's rect, not the physical monitor.
+	// It runs unconditionally (not even gated behind the "Magnetic Windows"
+	// preference -- see WinKeepOnScreen()) for every WM_WINDOWPOSCHANGING
+	// on any window registered via MakeKeepOnScreenWin() (in this app, just
+	// the banner/toolbar window, CMyBannerToolbarWin -- see
+	// Apps/Client/Source/Hotline.cp's CreateBannerToolbar()). Native Windows
+	// Snap positions/sizes windows against the real monitor, which can be
+	// larger than, or offset from, the MDI client rect (eg if the main
+	// frame isn't maximized, or the MDI client is narrower due to
+	// toolbars/panes) -- so immediately after Windows places the window via
+	// a native Snap, this clamp would silently pull it back to fit inside
+	// the (wrong) MDI-client-sized "screen", fighting the OS snap and
+	// producing an inconsistent final position that depends on how much the
+	// MDI client's current rect differs from the monitor's. Leave on-screen
+	// keeping to Windows entirely, same as RectSnapScreen.
+	(void)ioWindowBounds;
+	return false;
+#else
 	bool bChanged = false;
-	
+
 	SRect rScreenBounds;
 	_GetScreenBounds(rScreenBounds);
 
@@ -1430,19 +1451,19 @@ bool CSnapWindows::RectKeepOnScreen(SRect& ioWindowBounds)
 		bChanged = true;
 		ioWindowBounds.Move(rScreenBounds.left - ioWindowBounds.left, 0);
 	}
-	
+
 	if (ioWindowBounds.right > rScreenBounds.right)
 	{
 		bChanged = true;
 		ioWindowBounds.MoveBack(ioWindowBounds.right - rScreenBounds.right, 0);
 	}
-	
+
 	if (rScreenBounds.top > ioWindowBounds.top)
 	{
 		bChanged = true;
 		ioWindowBounds.Move(0, rScreenBounds.top - ioWindowBounds.top);
 	}
-	
+
 	if (ioWindowBounds.bottom > rScreenBounds.bottom)
 	{
 		bChanged = true;
@@ -1450,6 +1471,7 @@ bool CSnapWindows::RectKeepOnScreen(SRect& ioWindowBounds)
 	}
 
 	return bChanged;
+#endif
 }
 
 void CSnapWindows::ComposeSnapWinList(CWindow *inWindow, SRect inWindowBounds)
