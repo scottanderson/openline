@@ -37,7 +37,7 @@ typedef unsigned long size_t;
  * Structures and Types
  */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SSendBuf {
 	SSendBuf *next;
 	Handle h;
@@ -45,7 +45,7 @@ struct SSendBuf {
 	Uint32 dataSize;
 	Uint8 data[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 struct SFirewallInfo {
 	TBind ret;

@@ -7,7 +7,7 @@ enum {
 	kOutTask = 1, kOutReplyTask, kInTask, kInReplyTask
 };
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct STranHdr {
 	Uint8 flag;							// reserved, should be 0
 	Uint8 isReply;						// is this transaction a reply?
@@ -22,7 +22,7 @@ struct STranHdr {
 	// GCC (unlike Metrowerks) rejects a flexible array member in a struct that's
 	// embedded as a non-final member of another struct (STransact::rcvHeader).
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 struct STranTask {
 	STranTask *next;
@@ -220,12 +220,12 @@ Uint16 UTransact::GetConnectStatus(TTransact inTrn)
 	
 	if (TRN->waitEstabReply)
 	{
-#pragma options align=packed
+#pragma pack(push, 1)
 		struct {
 			Uint32 protocol;
 			Uint32 result;
 		} rcvData;
-#pragma options align=reset
+#pragma pack(pop)
 				
 		if (!UTransport::IsConnected(tpt))
 			Fail(errorType_Transport, transError_ConnectionClosed);
@@ -257,14 +257,14 @@ Uint16 UTransact::GetConnectStatus(TTransact inTrn)
 	}
 	else if (UTransport::GetConnectStatus(tpt) == kConnectionEstablished)
 	{
-#pragma options align=packed
+#pragma pack(push, 1)
 		struct {
 			Uint32 protocol;
 			Uint32 subProtocol;
 			Uint16 version;
 			Uint16 subVersion;
 		} sndData = { TB((Uint32)0x54525450), TB(TRN->protocolTag), TB((Uint16)1), TB(TRN->versionTag) };
-#pragma options align=reset
+#pragma pack(pop)
 		
 		TRN->estabTimer = UTimer::New(_TNEstabTimeoutHandler, TRN);
 		
@@ -355,14 +355,14 @@ Uint16 UTransact::ReceiveEstablish(TTransact inTrn, Uint32& outProtocol, Uint16&
 		return kIsTransactionClient;
 	}
 	
-#pragma options align=packed
+#pragma pack(push, 1)
 	struct {
 		Uint32 protocol;
 		Uint32 subProtocol;
 		Uint16 version;
 		Uint16 subVersion;
 	} rcvData;
-#pragma options align=reset
+#pragma pack(pop)
 	
 	if (UTransport::IsReadyToReceive(TRN->tpt, sizeof(rcvData)) && UTransport::Receive(TRN->tpt, &rcvData, sizeof(rcvData)) != 0)
 	{
@@ -389,12 +389,12 @@ void UTransact::AcceptEstablish(TTransact inTrn)
 	Require(inTrn);
 	if (!TRN->isEstablished)
 	{
-#pragma options align=packed
+#pragma pack(push, 1)
 		struct {
 			Uint32 protocol;
 			Uint32 error;
 		} sndData = { TB((Uint32)0x54525450), 0 };
-#pragma options align=reset
+#pragma pack(pop)
 		
 		UTransport::Send(TRN->tpt, &sndData, sizeof(sndData));
 		TRN->isEstablished = true;
@@ -407,12 +407,12 @@ void UTransact::RejectEstablish(TTransact inTrn, Uint32 inReason)
 	
 	if (inReason == 0) inReason = 1;
 	
-#pragma options align=packed
+#pragma pack(push, 1)
 	struct {
 		Uint32 protocol;
 		Uint32 error;
 	} sndData = { TB((Uint32)0x54525450), TB(inReason) };
-#pragma options align=reset
+#pragma pack(pop)
 	
 	UTransport::Send(TRN->tpt, &sndData, sizeof(sndData));
 }

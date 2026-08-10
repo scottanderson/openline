@@ -449,12 +449,12 @@ Uint32 CMyFileListView::GetItemCount() const
 
 bool CMyFileListView::AddListFromFields(TFieldData inData)
 {
-#pragma options align=packed
+#pragma pack(push, 1)
 	struct {
 		SMyFileInfo info;
 		Uint8 data[256];
 	} infoBuf;
-#pragma options align=reset
+#pragma pack(pop)
 	SMyFileInfo& info = infoBuf.info;
 
 	SMyFileItem *item;
@@ -942,12 +942,12 @@ void CMyFileTreeView::GetTabs(Uint8& outTabPercent1, Uint8& outTabPercent2)
 
 bool CMyFileTreeView::AddListFromFields(const void *inPathData, Uint32 inPathSize, TFieldData inData)
 {
-#pragma options align=packed
+#pragma pack(push, 1)
 	struct {
 		SMyFileInfo info;
 		Uint8 data[256];
 	} infoBuf;
-#pragma options align=reset
+#pragma pack(pop)
 	SMyFileInfo& info = infoBuf.info;
 
 	Uint32 nFolderIndex;
@@ -2234,12 +2234,12 @@ Uint32 CMyUserListView::GetItemCount() const
 
 void CMyUserListView::AddListFromFields(TFieldData inData)
 {
-#pragma options align=packed
+#pragma pack(push, 1)
 	struct {
 		SMyUserInfo info;
 		Uint8 data[256];
 	} infoBuf;
-#pragma options align=reset
+#pragma pack(pop)
 	SMyUserInfo& info = infoBuf.info;
 
 	SMyUserListItem *item;

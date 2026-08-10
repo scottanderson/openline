@@ -20,7 +20,7 @@ Also funcs for flattening/unflattening.
  */
 
 // begin structures that must be the same across platforms
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Int16 textStyle;
@@ -43,7 +43,7 @@ typedef struct {
 } STabbedView;
 
 // end structures that must be the same across platforms
-#pragma options align=reset
+#pragma pack(pop)
 
 struct STabInfo {
 	CView *view;

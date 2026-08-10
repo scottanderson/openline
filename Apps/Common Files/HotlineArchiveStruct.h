@@ -53,7 +53,7 @@ struct
 };
 */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 struct SMyArcHead
 {
@@ -72,9 +72,9 @@ struct SMyArcHead
 	Uint16 rsvd3size;
 	Uint8 rsvd3data[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyArcPathHead
 {
 	Uint32 type;
@@ -83,18 +83,18 @@ struct SMyArcPathHead
 	Uint16 pathSize;
 	Uint8 pathData[];		// contains pathcount + SMyArcPathItems
 };
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyArcPathItem
 {
 	Uint16 script;
 	Uint8 namelen;
 	Uint8 name[];	// name of folder/directory
 };
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyArcFileHead
 {
 		Uint32 compressionType;		// 'zlib' for now
@@ -102,7 +102,7 @@ struct SMyArcFileHead
 		Uint32 compressedSize;
 		Uint8 compressedFileFlatData[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 /*  So essentially, the archive looks like:
 struct

@@ -6,11 +6,11 @@
 HDC _ImageToDC(TImage inImage);
 #endif
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Int16 enabledIcon, disabledIcon, hilitedIcon;
 } SSimpleIconButtonView;
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

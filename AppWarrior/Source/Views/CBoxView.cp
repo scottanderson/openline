@@ -2,7 +2,7 @@
 
 #include "CBoxView.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Int16 rsvd;
@@ -14,7 +14,7 @@ typedef struct {
 	Uint8 titleData[];
 } SBoxView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

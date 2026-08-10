@@ -206,7 +206,7 @@ enum {
 #pragma mark Structures
 
 // SMySoundPrefs
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMySoundPrefs {
 	Uint8 magneticWindows	: 1;	// keep this here for prefs file compatibility
 	Uint8 rsvd[15];
@@ -221,17 +221,17 @@ struct SMySoundPrefs {
 	Uint32 error			: 1;
 	Uint32 chatInvite		: 1;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 //SMyColorInfo
 #pragma mark SMyColorInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyColorInfo{
 	SColor textColor;
 	SColor backColor;
 	Uint16 textSize;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyDefTrackerInfo
 #pragma mark SMyDefTrackerInfo
@@ -298,7 +298,7 @@ struct SMyOptions {
 
 // SMyPrefs
 #pragma mark SMyPrefs
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyPrefs {
 	Uint16 version;
 	struct {
@@ -382,11 +382,11 @@ struct SMyPrefs {
 	
 	Uint8 rsvd2[7];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyCustomInfo
 #pragma mark SMyCustomInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyCustomInfo {
 	Uint32 sig;		// 'htag'
 	Uint16 version;	// 1
@@ -402,11 +402,11 @@ struct SMyCustomInfo {
 	Uint8 autoconnectName[64];
 	Uint8 autoconnectAddr[64];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyUserInfo
 #pragma mark SMyUserInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyUserInfo {
 	Uint16 id;
 	Int16 iconID;
@@ -417,7 +417,7 @@ struct SMyUserInfo {
 	// instead (no sizeof(this struct) use depends on it staying a true 0-sized FAM).
 	Uint8 nameData[1];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyFileInfo
 #pragma mark SMyFileItem
@@ -441,18 +441,18 @@ struct SMyCacheListInfo {
 
 // SMyTrackServInfo
 #pragma mark SMyTrackServInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyTrackServInfo {
 	Uint32 addr;
 	Uint16 port;
 	Uint8 userCount[8];	// text
 	Uint8 data[];		// name, desc
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyToolbarItem
 #pragma mark SMyToolbarItem
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyToolbarItem {
 	Int16 top, left, bottom, right;
 	Int16 mouseDownPict, mouseWithinPict;
@@ -464,11 +464,11 @@ struct SMyToolbarItem {
 	Int16 dtop, dleft, dbottom, dright;
 	Int16 wtop, wleft, wbottom, wright;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyPictToolbarInfo
 #pragma mark SMyPictToolbarInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyPictToolbarInfo {
 	Uint32 format;
 	Uint16 version;
@@ -484,11 +484,11 @@ struct SMyPictToolbarInfo {
 	Uint16 itemCount;
 	SMyToolbarItem items[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyServerConfig
 #pragma mark SMyServerConfig
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyServerConfig {
 	Uint32 format;			// 'HTsc'
 	Uint16 version;			// currently 1
@@ -500,7 +500,7 @@ struct SMyServerConfig {
 	Uint16 addressSize;
 	Uint8 addressData[256];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMySaveConnect
 #pragma mark SMySaveConnect
@@ -524,7 +524,7 @@ struct SMyTaskNameInfo {
 
 // SMyNewsArticle
 #pragma mark SMyNewsArticle
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyNewsArticle
 {
 	Uint32 id;
@@ -538,7 +538,7 @@ struct SMyNewsArticle
 	Uint8 poster[32];	// pstring
 
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SNewsCatItm
 #pragma mark SNewsCatItm

@@ -10,7 +10,7 @@
 
 // SMyAdminUsersAccess
 #pragma mark SMyAdminUsersAccess
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyAdminUsersAccess {
 	Uint8 data[64];
 	
@@ -19,7 +19,7 @@ struct SMyAdminUsersAccess {
 	Uint8 HasPriv(Uint32 inPriv)	const				{	return data[inPriv];						}
 	void SetPriv(Uint32 inPriv, Uint8 inValue)			{	data[inPriv] = inValue;						}
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyAdminUserInfo
 #pragma mark SMyAdminUserInfo

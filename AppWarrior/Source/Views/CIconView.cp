@@ -2,13 +2,13 @@
 
 #include "CIconView.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Int16 iconID;
 } SIconView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

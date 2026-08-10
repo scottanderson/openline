@@ -19,7 +19,7 @@ enum {
 #pragma mark Structures
 
 #pragma mark SMyServerInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyServerInfo {
 	Uint32 nameCRC;
 	Uint32 timeStamp;
@@ -31,7 +31,7 @@ struct SMyServerInfo {
 	Uint8 data[];
 };
 
-#pragma options align=reset
+#pragma pack(pop)
 #pragma mark SMyServerPerIP
 struct SMyServerPerIP {
 	Uint32 address;

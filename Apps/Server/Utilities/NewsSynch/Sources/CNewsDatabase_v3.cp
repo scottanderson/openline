@@ -6,7 +6,7 @@
 // block size must be a power of 2 and greater or equal to 256
 // default is 256, although 512, 1024 also make sense for large articles
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct _NZ_SAllocTableInfo
 {
 //	Uint32 allocTableChecksum;		// ensure it's not corrupt
@@ -102,7 +102,7 @@ struct _NZ_SNewsItemBlock
 		Uint8 externId[64];
 	} body;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 
 #if 0

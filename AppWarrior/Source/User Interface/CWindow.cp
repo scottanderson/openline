@@ -9,7 +9,7 @@ CSnapWindows gSnapWindows;
 
 
 // begin structures that must be cross-platform
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	SRect bounds;
@@ -28,7 +28,7 @@ typedef struct {
 } SWindowObj;
 
 // end structures that must be cross-platform
-#pragma options align=reset
+#pragma pack(pop)
 
 
 /* -------------------------------------------------------------------------- */

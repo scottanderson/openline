@@ -3,7 +3,7 @@
 #include "CCheckBoxView.h"
 #include "UCheckBox.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Int16 titleStyle;
@@ -16,7 +16,7 @@ typedef struct {
 	Uint8 titleData[];
 } SCheckBoxView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

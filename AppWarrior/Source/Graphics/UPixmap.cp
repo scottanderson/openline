@@ -65,7 +65,7 @@ Uint8 data[];
 
 #include "UPixmap.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SPMFlatHdr {
 	Uint32 format;
 	Uint16 version;
@@ -74,9 +74,9 @@ struct SPMFlatHdr {
 	Uint16 rsvdC;
 	Uint16 layerCount;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SPMFlatLayerHdr {
 	Uint32 width;
 	Uint32 height;
@@ -99,7 +99,7 @@ struct SPMFlatLayerHdr {
 	Uint8 rsvdD;
 	Uint8 rsvdE;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // incredibly cool tables for converting 5bit to 8bit without floating point calculations
 Uint32 _gConv5to8TabR[32] = { 0x00000000, 0x08000000, 0x10000000, 0x19000000, 0x21000000, 0x29000000, 0x31000000, 0x3A000000, 0x42000000, 0x4A000000, 0x52000000, 0x5A000000, 0x63000000, 0x6B000000, 0x73000000, 0x7B000000, 0x84000000, 0x8C000000, 0x94000000, 0x9C000000, 0xA5000000, 0xAD000000, 0xB5000000, 0xBD000000, 0xC5000000, 0xCE000000, 0xD6000000, 0xDE000000, 0xE6000000, 0xEF000000, 0xF7000000, 0xFF000000 };

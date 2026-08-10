@@ -38,31 +38,31 @@ enum {
 
 // ------------------------------GIF---------------------------------------------------------- //
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Uint16 width, depth, bits;
 	Uint8 flags;
 	Uint16 background;
 	Uint8 palette[768];
 	} GifInfo;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Int8 sig[6];
 	Uint16 screenwidth,screendepth;
 	Uint8 flags,background,aspect;
 	} GIFHEADER;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Uint16 left,top,width,depth;
 	Uint8 flags;
 	} IMAGEBLOCK;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Uint8 blocksize;
 	Uint8 flags;
@@ -70,9 +70,9 @@ typedef struct {
 	Uint8 transparent_colour;
 	Uint8 terminator;
 	} CONTROLBLOCK;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Uint8 blocksize;
 	Uint16 left,top;
@@ -80,29 +80,29 @@ typedef struct {
 	Uint8 cellwidth,cellheight;
 	Int8 forecolour,backcolour;
 	} PLAINTEXT;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Uint8 blocksize;
 	Int8 applstring[8];
 	Int8 authentication[3];
 	} APPLICATION;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct{
 	TImage image;
 	TImage mask;
 	IMAGEBLOCK imgBlock;
 	CONTROLBLOCK ctrBlock;
 } SImageInfo;
-#pragma options align=reset
+#pragma pack(pop)
 
 
 // ------------------------------BITMAP---------------------------------------------------------- //
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct tagBITMAPFILEHEAD { 
 	Uint16 bfType; 
     Uint32 bfSize; 
@@ -110,9 +110,9 @@ typedef struct tagBITMAPFILEHEAD {
     Uint16 bfReserved2; 
     Uint32 bfOffBits; 
 } BITMAPFILEHEAD; 
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct tagBITMAPINFOHEAD{ 
    Uint32 biSize; 
    Uint32 biWidth; 
@@ -126,14 +126,14 @@ typedef struct tagBITMAPINFOHEAD{
    Uint32 biClrUsed; 
    Uint32 biClrImportant; 
 } BITMAPINFOHEAD; 
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct tagBITMAPRGB { 
     Uint8 rgbBlue; 
     Uint8 rgbGreen; 
     Uint8 rgbRed; 
     Uint8 rgbReserved; 
 } BITMAPRGB; 
-#pragma options align=reset
+#pragma pack(pop)
 

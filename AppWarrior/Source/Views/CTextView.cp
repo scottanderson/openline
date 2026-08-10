@@ -2,7 +2,7 @@
 
 #include "CTextView.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Int16 textStyleID;
@@ -16,7 +16,7 @@ typedef struct {
 	Uint8 textData[];
 } STextView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

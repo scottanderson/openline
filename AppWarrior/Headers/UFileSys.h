@@ -69,15 +69,15 @@ static TFSRefObj* const kDesktopFolder = (TFSRefObj*)(max_Uint32-4);
  * Structures
  */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SFSListItem {
 	Uint32 typeCode, creatorCode, size, flags, rsvd;
 	SDateTimeStamp createdDate, modifiedDate;
 	Uint8 name[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SFlattenRef {
     Uint32 sig;     // 'FSrf'
     Uint16 vers;    // 1
@@ -86,7 +86,7 @@ struct SFlattenRef {
     Uint32 dataSize;
     Uint8 data[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 
 /*

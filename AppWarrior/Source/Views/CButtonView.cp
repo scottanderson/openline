@@ -3,7 +3,7 @@
 #include "UButton.h"
 #include "UDateTime.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Int16 textStyle;
@@ -13,7 +13,7 @@ typedef struct {
 	Uint8 titleData[];
 } SButtonView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

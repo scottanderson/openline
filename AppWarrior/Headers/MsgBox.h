@@ -11,7 +11,7 @@ enum {
 	icon_Question	= 1003
 };
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMsgBox {
 	Int16 icon;
 	Int16 picture;
@@ -28,7 +28,7 @@ struct SMsgBox {
 	const Uint8 *button2;
 	const Uint8 *button3;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 Uint16 MsgBox(Int32 inID, ...);
 Uint16 MsgBox(const SMsgBox& inInfo);

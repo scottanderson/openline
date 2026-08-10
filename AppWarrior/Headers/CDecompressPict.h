@@ -9,16 +9,16 @@
 #define RGBA_BLUE   2
 #define RGBA_ALPHA  3
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
 	Uint16 top;
 	Uint16 left;
 	Uint16 bottom;
 	Uint16 right;
 } SMacRect;
-#pragma options align=reset
+#pragma pack(pop)
 
-#pragma options align=packed
+#pragma pack(push, 1)
 typedef struct {
   	SMacRect Bounds;
 	Uint16 version;
@@ -34,7 +34,7 @@ typedef struct {
 	Uint32 pmTable;
 	Uint32 pmReserved;
 } SMacPixMap;
-#pragma options align=reset
+#pragma pack(pop)
 
 
 // for reserved opcodes

@@ -70,7 +70,7 @@ CTextView : CView
 #include "CScrollerView.h"
 #include "UScrollBar.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Uint32 hScrollVal, vScrollVal;
@@ -80,7 +80,7 @@ typedef struct {
 	Uint32 rsvd[4];
 } SScrollerView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

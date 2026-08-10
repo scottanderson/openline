@@ -624,12 +624,12 @@ void CMyApplication::ProcessClients()
 		{
 			if (tpt->GetReceiveSize() >= 6)
 			{
-				#pragma options align=packed
+				#pragma pack(push, 1)
 				struct {
 					Uint32 type;
 					Uint16 version;
 				} estabData;
-				#pragma options align=reset
+				#pragma pack(pop)
 				
 				tpt->Receive(&estabData, sizeof(estabData));
 				

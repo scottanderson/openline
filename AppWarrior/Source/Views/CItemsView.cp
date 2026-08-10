@@ -374,14 +374,14 @@ void CItemsView::ItemsSwapped(Uint32, Uint32, Uint32) {}
 /* -------------------------------------------------------------------------- */
 #pragma mark -
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Uint16 behaviour;
 	Uint16 rsvd;
 } SSelectableItemsView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 CSelectableItemsView::CSelectableItemsView(CViewHandler *inHandler, const SRect& inBounds)
 	: CItemsView(inHandler, inBounds)

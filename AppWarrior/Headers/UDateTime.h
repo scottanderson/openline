@@ -50,7 +50,7 @@ enum {
 
 struct SDateTimeStamp;
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SCalendarDate {
 	Int16 year;			// eg, 1996, 2060
 	Int16 month;		// 1-12 (Jan-Dec)
@@ -102,7 +102,7 @@ struct SDateTimeStamp {
 	Uint32 Flatten(void *outData);
 	Uint32 Unflatten(const void *inData);		// requires minimum 8 bytes and returns 8
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 class UDateTime
 {

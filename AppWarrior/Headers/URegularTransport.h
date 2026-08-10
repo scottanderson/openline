@@ -7,7 +7,7 @@
  * Structures
  */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 struct SInternetAddress {
 	Uint16 type;		// always kInternetAddressType
@@ -54,7 +54,7 @@ struct SEthernetAddress {
 									eaddr[3] == 0 && eaddr[4] == 0 && eaddr[5] == 0);	}
 };
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /*
  * Types

@@ -24,13 +24,13 @@ enum
 };
 
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SData
 {
 	Uint32 nDataCode;
 	Uint32 nDataSize;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 struct SSendData
 {

@@ -3,7 +3,7 @@
 #include "CListView.h"
 
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Uint16 cellHeight;
@@ -13,7 +13,7 @@ typedef struct {
 	Uint8 selectData[];
 } SListView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

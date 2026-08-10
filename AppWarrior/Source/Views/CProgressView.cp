@@ -3,14 +3,14 @@
 #include "CProgressView.h"
 #include "UProgressBar.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Uint32 val, max;
 	Int16 rsvd;
 } SProgressView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

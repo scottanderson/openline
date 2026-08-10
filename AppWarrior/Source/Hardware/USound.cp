@@ -70,7 +70,7 @@ static int _adpcm_stepsizeTable[89] = {
     15289, 16818, 18500, 20350, 22385, 24623, 27086, 29794, 32767
 };
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SAWSoundHdr {
 	Uint32 format;				// always AWSN
 	Uint16 version;				// currently 1
@@ -84,7 +84,7 @@ struct SAWSoundHdr {
 	Uint32 dataSize;			// number of bytes in following array
 	Uint8 sampleData[];			// signed samples or compressed data
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 Uint8 _gDisableSound = false;
 

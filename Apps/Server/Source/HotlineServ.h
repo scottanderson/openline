@@ -187,7 +187,7 @@ struct SMyUploadFldrData
 
 // SMyUserInfo
 #pragma mark SMyUserInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyUserInfo 
 {
 	Uint16 id;
@@ -196,7 +196,7 @@ struct SMyUserInfo
 	Uint16 nameSize;
 	Uint8 nameData[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyChat
 #pragma mark SMyChat

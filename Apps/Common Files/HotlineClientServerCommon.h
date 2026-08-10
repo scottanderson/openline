@@ -209,7 +209,7 @@ enum
 #pragma mark ##Structs##
 // SMyFileInfo
 #pragma mark SMyFileInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyFileInfo {
 	Uint32 type, creator;
 	Uint32 fileSize;
@@ -221,11 +221,11 @@ struct SMyFileInfo {
 	// instead (no sizeof(this struct) use depends on it staying a true 0-sized FAM).
 	Uint8 nameData[1];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyUserAccess
 #pragma mark SMyUserAccess
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyUserAccess {
 	Uint32 data[2];
 	
@@ -259,14 +259,14 @@ struct SMyUserAccess {
 	bool operator == (const SMyUserAccess& inUserAccess) const	{ 	return (data[0] == inUserAccess.data[0] && data[1] == inUserAccess.data[1]);	}
 	bool operator != (const SMyUserAccess& inUserAccess) const	{ 	return (data[0] != inUserAccess.data[0] || data[1] != inUserAccess.data[1]); 	}
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // SMyUserDataFile
 #pragma mark SMyUserDataFile
 enum {
 	kMyUserDataFileVersion	= 1
 };
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyUserDataFile {
 	Uint16 version;
 	Int16 iconID;
@@ -286,5 +286,5 @@ struct SMyUserDataFile {
 	Uint16 passwordSize;
 	Uint8 passwordData[32];
 };
-#pragma options align=reset
+#pragma pack(pop)
 

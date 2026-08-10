@@ -60,7 +60,7 @@ struct SMyTrackerInfo {
 };
 
 #pragma mark SMyServerInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyServerInfo {
 	Uint32 nameCRC;
 	Uint32 timeStamp;
@@ -71,7 +71,7 @@ struct SMyServerInfo {
 	Uint16 flags;
 	Uint8 data[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 #pragma mark SMyServerPerIP
 struct SMyServerPerIP {
@@ -93,7 +93,7 @@ struct SMyLogin
 };
 
 #pragma mark SMyLoginInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyLoginInfo
 {
 	Uint8 nActive;
@@ -102,7 +102,7 @@ struct SMyLoginInfo
 	Uint8 psDateTime[33];
 	Uint8 nReserved[6];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 #pragma mark SMyPermBan
 struct SMyPermBan
@@ -111,7 +111,7 @@ struct SMyPermBan
 };
 
 #pragma mark SMyPermBanInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyPermBanInfo
 {
 	Uint8 nActive;
@@ -120,7 +120,7 @@ struct SMyPermBanInfo
 	Uint16 nReserved;
 	Uint8 psDescr[64];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 
 /* ————————————————————————————————————————————————————————————————————————— */

@@ -29,7 +29,7 @@ enum {
  * Structures
  */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SRezListItem {
 	Int32 id;
 	Uint32 size;
@@ -37,7 +37,7 @@ struct SRezListItem {
 	Uint16 nameSize;
 	Uint8 nameData[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 struct SRezStub {
 	TRez rez;

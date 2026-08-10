@@ -159,17 +159,17 @@ struct SPurgeInfo
 };
 
 #pragma mark SMyServerInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMyServerInfo 
 {
 	Uint8 psServerAddr[64];
 	Uint8 psUserLogin[32];
 	Uint8 psUserPassword[32];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 #pragma mark SMySynchInfo
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SMySynchInfo 
 {
 	Uint8 nActive;
@@ -183,7 +183,7 @@ struct SMySynchInfo
 	SCalendarDate stLastSynch;
 	TFSRefObj* pHotlineFile;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 #pragma mark SMyOffSynchInfo
 struct SMyOffSynchInfo {

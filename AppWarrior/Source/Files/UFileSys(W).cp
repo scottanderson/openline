@@ -2179,7 +2179,7 @@ It looks like this:
 	} forks[forkCount];
 */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SFlatFileHeader {
 	Uint32 format;
 	Uint16 version;
@@ -2229,7 +2229,7 @@ struct SFlatFileResumeData {
 	Uint16 count;
 	SFlatFileResumeEntry forkInfo[];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // returns size of outInfo
 static Uint32 _FSCreateFlatFileInfo(TFSRefObj* inRef, SFlatFileInfoFork& outInfo)

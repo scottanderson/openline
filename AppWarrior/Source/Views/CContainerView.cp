@@ -42,7 +42,7 @@ CContainerView.
 #include "CContainerView.h"
 
 // begin structures that must be the same across platforms
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Uint32 selectedView, defaultView, cancelView;
@@ -51,7 +51,7 @@ typedef struct {
 } SContainerView;
 
 // end structures that must be the same across platforms
-#pragma options align=reset
+#pragma pack(pop)
 
 typedef struct {
 	Int16 keyCode;

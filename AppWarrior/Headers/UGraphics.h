@@ -138,7 +138,7 @@ Uint8 *const kFixedFont = (Uint8 *)(max_Uint32-2);
 Uint8 *const kSansFont = (Uint8 *)(max_Uint32-3);
 Uint8 *const kSerifFont = (Uint8 *)(max_Uint32-4);
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SFontMetrics 
 {
 	Uint32 ascent;			// height above baseline including accent marks
@@ -163,7 +163,7 @@ struct SFontDesc
 	Uint32 customVal;		// used with UFontDesc, usually 0
 	Uint32 rsvd[5];			// must all be 0
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // forward declare
 class SColor;
@@ -179,13 +179,13 @@ typedef struct SPicture **TPicture;
 struct SPixmap;
 
 // simple pattern
-#pragma options align=mac68k
+#pragma pack(push, 2)
 struct SSimplePattern 
 {
 	Uint8 pat[8];
 };
 typedef struct SSimplePattern SSimplePattern;
-#pragma options align=reset
+#pragma pack(pop)
 
 // icon transform types
 enum 

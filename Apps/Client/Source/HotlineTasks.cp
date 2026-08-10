@@ -2497,14 +2497,14 @@ goFromStart:
 			if (mTpt->GetConnectStatus() == kConnectionEstablished)
 			{
 				// identify ourself to the server
-#pragma options align=packed
+#pragma pack(push, 1)
 				struct {
 					Uint32 protocol;	// HTXF
 					Uint32 refNum;
 					Uint32 dataSize;
 					Uint32 rsvd;
 				} sndData = { TB((Uint32)0x48545846), TB(mRefNum), 0, 0 };
-#pragma options align=reset
+#pragma pack(pop)
 				mTpt->Send(&sndData, sizeof(sndData));
 				
 				// need time at which we started to generate stats
@@ -2943,14 +2943,14 @@ goFromStart:
 				}
 
 				// identify ourself to the server
-#pragma options align=packed
+#pragma pack(push, 1)
 				struct {
 					Uint32 protocol;	// HTXF
 					Uint32 refNum;
 					Uint32 dataSize;
 					Uint32 rsvd;
 				} sndData = { TB((Uint32)0x48545846), TB(mRefNum), 0, 0 };
-#pragma options align=reset
+#pragma pack(pop)
 				mTpt->Send(&sndData, sizeof(sndData));
 				
 				// need time at which we started to generate stats
@@ -3312,7 +3312,7 @@ goFromStart:
 			if (mTpt->GetConnectStatus() == kConnectionEstablished)
 			{
 				// identify ourself to the server
-#pragma options align=packed
+#pragma pack(push, 1)
 				struct {
 					Uint32 protocol;	// HTXF
 					Uint32 refNum;
@@ -3322,7 +3322,7 @@ goFromStart:
 					
 					Uint16 nextMsg;		// this is the GetNextMsg (not part of the struct, but we want to send it all at once)
 				} sndData = { TB((Uint32)0x48545846), TB(mRefNum), 0, TB((Uint16)1), 0 , TB((Uint16)dlFldrAction_NextFile)};
-#pragma options align=reset
+#pragma pack(pop)
 				mTpt->Send(&sndData, sizeof(sndData));
 				
 				// need time at which we started to generate stats
@@ -3701,7 +3701,7 @@ void CMyDownloadBannerTask::Process()
 			if (mTpt->GetConnectStatus() == kConnectionEstablished)
 			{
 				// identify ourself to the server
-			#pragma options align=packed
+			#pragma pack(push, 1)
 				struct {
 					Uint32 protocol;	// HTXF
 					Uint32 refNum;
@@ -3709,7 +3709,7 @@ void CMyDownloadBannerTask::Process()
 					Uint16 type;
 					Uint16 rsvd;
 				} sndData = { TB((Uint32)0x48545846), TB(mRefNum), 0, TB((Uint16)2), 0 };
-			#pragma options align=reset
+			#pragma pack(pop)
 				mTpt->Send(&sndData, sizeof(sndData));
 									
 				mBanner = UMemory::New(mBannerSize);
@@ -4009,14 +4009,14 @@ goFromStart:
 			if (mTpt->GetConnectStatus() == kConnectionEstablished)
 			{
 				// identify ourself to the server
-#pragma options align=packed
+#pragma pack(push, 1)
 				struct {
 					Uint32 protocol;	// HTXF
 					Uint32 refNum;
 					Uint32 dataSize;
 					Uint32 rsvd;
 				} sndData = { TB((Uint32)0x48545846), TB(mRefNum), TB(mTotalSize), 0 };
-#pragma options align=reset
+#pragma pack(pop)
 				mTpt->Send(&sndData, sizeof(sndData));
 				
 				// need time at which we started to generate stats
@@ -4319,7 +4319,7 @@ goFromStart:
 			if (mTpt->GetConnectStatus() == kConnectionEstablished)
 			{					
 				// identify ourself to the server
-#pragma options align=packed
+#pragma pack(push, 1)
 				struct {
 					Uint32 protocol;	// HTXF
 					Uint32 refNum;
@@ -4327,7 +4327,7 @@ goFromStart:
 					Uint16 type;
 					Uint16 rsvd;
 				} sndData = { TB((Uint32)0x48545846), TB(mRefNum), 0, TB((Uint16)1), 0 };
-#pragma options align=reset
+#pragma pack(pop)
 				mTpt->Send(&sndData, sizeof(sndData));
 				
 				// need time at which we started to generate stats

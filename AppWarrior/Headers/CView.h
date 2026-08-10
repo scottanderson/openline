@@ -75,7 +75,7 @@ enum {
 };
 
 // view hit message data
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SHitMsgData {
 	CView *view;
 	Uint32 id;
@@ -91,7 +91,7 @@ struct SHitMsgData {
 	// keep byte counts identical to the true-flexible-array version.
 	Uint8 data[1];
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 // view class
 class CView

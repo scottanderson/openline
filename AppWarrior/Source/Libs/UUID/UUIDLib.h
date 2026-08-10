@@ -26,7 +26,7 @@
 /*																		*/
 /************************************************************************/
 
-#pragma options align=mac68k
+#pragma pack(push, 2)
 
 /*	uuid
  *
@@ -42,7 +42,7 @@ struct uuid_t {
     unsigned char		node[6];
 };
 
-#pragma options align=reset
+#pragma pack(pop)
 
 typedef struct uuid_t uuid_t;
 typedef struct uuid_t clsid_t;		/* class ID; refers to a particular thing	*/

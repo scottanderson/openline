@@ -25,7 +25,7 @@ can come in very handy.
  * Structures
  */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	Char16 markChar;
@@ -60,7 +60,7 @@ struct SMenuListView {
 	Uint8 itemData[];		// first item is menu title
 };
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 

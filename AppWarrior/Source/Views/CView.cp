@@ -39,7 +39,7 @@ Good for if the drawing is in a thread (eg, BeOS).
  * Structures
  */
 
-#pragma options align=packed
+#pragma pack(push, 1)
 
 typedef struct {
 	SRect bounds;
@@ -54,7 +54,7 @@ typedef struct {
 	Uint32 rsvd;
 } SView;
 
-#pragma options align=reset
+#pragma pack(pop)
 
 /* -------------------------------------------------------------------------- */
 
@@ -282,12 +282,12 @@ void CView::Hit(Uint32 inType, Uint32 inPart, Uint32 inParam, const void *inData
 {
 	if (mHandler)
 	{
-	#pragma options align=packed
+	#pragma pack(push, 1)
 		struct {
 			SHitMsgData hit;
 			Uint8 data[256];
 		} info;
-	#pragma options align=reset
+	#pragma pack(pop)
 	
 		if (inDataSize > sizeof(info.data))
 		{

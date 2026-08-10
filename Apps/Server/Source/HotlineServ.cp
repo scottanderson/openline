@@ -4505,7 +4505,7 @@ void CMyApplication::ProcessTransferEstab()
 	SInternetAddress ipaddr;
 	Uint32 size;
 
-#pragma options align=packed
+#pragma pack(push, 1)
 	struct {
 		Uint32 protocol;
 		Uint32 refNum;
@@ -4513,7 +4513,7 @@ void CMyApplication::ProcessTransferEstab()
 		Uint16 type;		// 0 file, 1 folder, 2 banner
 		Uint16 rsvd;
 	} rcvData;
-#pragma options align=reset
+#pragma pack(pop)
 		
 	// accept connections
 	for(;;)

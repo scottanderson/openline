@@ -27,12 +27,12 @@ ID 0 is not valid.
 
 #include "UIDVarArray.h"
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SIVAOffsetTabEntry {
 	Uint32 id;
 	Uint32 offset;
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 struct SIDVarArray {
 	Uint32 itemCount;

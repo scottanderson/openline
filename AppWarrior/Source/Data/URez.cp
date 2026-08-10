@@ -90,7 +90,7 @@ struct SRez {
 	bool isChanged;
 };
 
-#pragma options align=packed
+#pragma pack(push, 1)
 struct SRezItemEntry {
 	Uint32 id;
 	Uint32 attrib;
@@ -105,7 +105,7 @@ struct SRezTypeEntry
 	Uint32 type;
 	THdl data;						// SRezItemList
 };
-#pragma options align=reset
+#pragma pack(pop)
 
 struct SRezItemList 
 {
