@@ -2392,7 +2392,7 @@ class CMyBannerWin : public CWindow
 			eMaxHorizBannerImg	= 500,
 			eMaxVertBannerImg	= 150,
 			
-			eMinHorizBannerWin	= 430,
+			eMinHorizBannerWin	= 460,
 			eMaxVertBannerWin	= 400
 		};
 		

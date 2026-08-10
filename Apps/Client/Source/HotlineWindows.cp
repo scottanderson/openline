@@ -5279,10 +5279,6 @@ CMyBannerToolbarWin::CMyBannerToolbarWin()
 	
 	btnRect.right = btnRect.left - eButtonSpace;
 	btnRect.left = btnRect.right - eButtonWidth;
-	
-
-	btnRect.right = btnRect.left - eButtonSpace;
-	btnRect.left = btnRect.right - eButtonWidth;
 
 	// make disconnect button
 	btn = new CIconButtonView(mContainerView, btnRect);
