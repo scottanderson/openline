@@ -626,14 +626,52 @@ Uint16 UWindow::GetLayer(TWindow inRef)
 void UWindow::SetBounds(TWindow inRef, const SRect& inBounds)
 {
 	Require(inRef);
+
+	// Measure the window's *live* non-client margins (window rect vs.
+	// client rect, right now) instead of using frameSizeLeft/Top/Right/
+	// Bottom -- Uint8 fields captured once, via AdjustWindowRectEx, back
+	// at window-creation time. UWindow::GetBounds() derives content
+	// bounds from the live client rect (GetClientRect()) rather than
+	// those cached fields, precisely because for resizable (WS_THICKFRAME)
+	// windows the cached estimate doesn't reliably match the window's
+	// true non-client thickness. Using the stale cached values here, to
+	// go the other direction (content bounds -> window rect for
+	// MoveWindow), reintroduced that same mismatch: requesting a given
+	// content height could produce a window whose live client height --
+	// what GetBounds() would then report -- was a few pixels off from
+	// what was asked for. Anything that read bounds back and reapplied
+	// them relative to that reading (eg CMyBannerToolbarWin::
+	// CalculateNewBounds(), which is invoked on every activate/
+	// deactivate via StateChanged()) baked that few-pixel error into its
+	// next SetBounds() request, compounding a little further each time --
+	// visible as the window creeping down the screen on every window
+	// switch/focus change. Measuring the live margins here keeps
+	// SetBounds()/GetBounds() an exact round trip no matter what the
+	// window's true non-client size actually is.
+	RECT wr;
+	if (!::GetWindowRect(REF->hwnd, &wr))
+		FailLastWinError();
+
+	RECT cr;
+	if (!::GetClientRect(REF->hwnd, &cr))
+		FailLastWinError();
+
+	POINT clientOrigin = { 0, 0 };
+	::ClientToScreen(REF->hwnd, &clientOrigin);
+
+	Int32 leftMargin = clientOrigin.x - wr.left;
+	Int32 topMargin = clientOrigin.y - wr.top;
+	Int32 rightMargin = wr.right - (clientOrigin.x + (cr.right - cr.left));
+	Int32 bottomMargin = wr.bottom - (clientOrigin.y + (cr.bottom - cr.top));
+
 	_gAppPosChanging = true;
-	bool bRet = ::MoveWindow(REF->hwnd, 
-					inBounds.left - REF->frameSizeLeft, 
-					inBounds.top - REF->frameSizeTop, 
-					inBounds.GetWidth() + REF->frameSizeLeft + REF->frameSizeRight, 
-					inBounds.GetHeight() + REF->frameSizeTop + REF->frameSizeBottom, true);
+	bool bRet = ::MoveWindow(REF->hwnd,
+					inBounds.left - leftMargin,
+					inBounds.top - topMargin,
+					inBounds.GetWidth() + leftMargin + rightMargin,
+					inBounds.GetHeight() + topMargin + bottomMargin, true);
 	_gAppPosChanging = false;
-	
+
 	if (!bRet)
 		FailLastWinError();
 }
@@ -684,14 +722,59 @@ void UWindow::GetBounds(TWindow inRef, SRect& outBounds)
 		if (!::GetWindowRect(REF->hwnd, &r))
 			FailLastWinError();
 
+		// Get the content width/height from the live client rect instead of
+		// subtracting frameSizeRight/frameSizeBottom, which were captured
+		// once at window-creation time from AdjustWindowRectEx() and cached.
+		// For resizable (WS_THICKFRAME) windows -- in this app, just the
+		// main client/server windows -- that cached estimate doesn't
+		// reliably match the window's true non-client thickness, which
+		// left a few px of unaccounted-for space at the bottom-right of
+		// the window with the content view tucked into the top-left to
+		// compensate; fixed-size auxiliary windows (no WS_THICKFRAME) were
+		// unaffected. GetClientRect() is exactly right by definition, so
+		// use it for the size.
+		RECT rc;
+		if (!::GetClientRect(REF->hwnd, &rc))
+			FailLastWinError();
+
+		// Likewise measure the live left/top non-client margin instead of
+		// using cached frameSizeLeft/frameSizeTop. Those fields are set once
+		// at window-creation time (see UWindow::New()) from
+		// AdjustWindowRectEx(), but for windowLayer_Float, window creation
+		// deliberately special-cases that call to always use
+		// WS_OVERLAPPEDWINDOW / WS_EX_TOOLWINDOW ("work around bug (?) in
+		// windoze") regardless of the thinner WS_CAPTION / WS_EX_TOOLWINDOW
+		// | WS_EX_DLGMODALFRAME style actually passed to CreateWindowEx()
+		// for a non-sizeable float window (eg the server's toolbar window).
+		// That mismatch makes frameSizeLeft/frameSizeTop a couple of px off
+		// from the window's true left/top margin, and because SetBounds()
+		// (above) already derives its margins from the live window, a
+		// GetBounds() that still used the stale cached ones no longer
+		// round-tripped: reported content position drifted a little further
+		// down-and-right on every SetBounds() call built from a prior
+		// GetBounds() reading (eg CMyToolbarWin::ToggleState(), which only
+		// ever touches bounds.bottom, yet visibly moved the whole toolbar
+		// window down-right on every click). Measuring the live margin here,
+		// the same way SetBounds() does, keeps the pair an exact round trip
+		// regardless of any window-creation-time frame-size mismatch.
+		POINT clientOrigin = { 0, 0 };
+		::ClientToScreen(REF->hwnd, &clientOrigin);
+
+		Int32 leftMargin = clientOrigin.x - r.left;
+		Int32 topMargin = clientOrigin.y - r.top;
+
+		// GetWindowRect() returns screen coordinates, but MDI child
+		// positions in this app are relative to the MDI client, so map the
+		// window rect into the parent's coordinate space before applying
+		// the (translation-invariant) margin.
 		HWND parentWnd = ::GetParent(REF->hwnd);
 		if (parentWnd)
 			::MapWindowPoints(HWND_DESKTOP, parentWnd, (POINT *)&r, 2);
 
-		outBounds.left = r.left + REF->frameSizeLeft;
-		outBounds.top = r.top + REF->frameSizeTop;
-		outBounds.right = r.right - REF->frameSizeRight;
-		outBounds.bottom = r.bottom - REF->frameSizeBottom;
+		outBounds.left = r.left + leftMargin;
+		outBounds.top = r.top + topMargin;
+		outBounds.right = outBounds.left + (rc.right - rc.left);
+		outBounds.bottom = outBounds.top + (rc.bottom - rc.top);
 	}
 }
 
