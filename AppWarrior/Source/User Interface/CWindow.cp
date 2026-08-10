@@ -1350,45 +1350,64 @@ bool CSnapWindows::RectSnapTogether(SRect& inWindowBounds, SRect inWinBounds, bo
 
 bool CSnapWindows::RectSnapScreen(SRect& ioWindowBounds, bool inMoveSize)
 {
+#if WIN32
+	// Windows has owned "snap window to a screen edge" natively since Vista
+	// (Aero Snap), and much more aggressively since Snap Layouts on Win10/11
+	// -- including a live preview overlay of where the window will land.
+	// This app's own magnetic screen-edge snap (written in 2003, long before
+	// any of that existed) fires on the exact same gesture: dragging/resizing
+	// a window within WIN_SNAP_DIST_EXT of a screen edge. The two features
+	// fighting over the same drag is what causes the OS's snap-preview ghost
+	// to get stuck, the magnetic "snap" sound to play during what the user
+	// experiences as an OS-level snap (not an app-level one), and the
+	// window's child controls to stop being relaid-out (the app ends up
+	// overriding WM_SIZING/WM_WINDOWPOSCHANGING's proposed rect with its own,
+	// different one, out from under the OS's own resize sequence). Leave
+	// screen-edge snapping to Windows; window-to-window magnetic snapping
+	// (RectSnapTogether, above) is unaffected and still works as before.
+	(void)ioWindowBounds;
+	(void)inMoveSize;
+	return false;
+#else
 	bool bChanged = false;
-	
+
 	SRect rScreenBounds;
 	_GetScreenBounds(rScreenBounds);
 
 	if (::abs(ioWindowBounds.left - rScreenBounds.left) <= WIN_SNAP_DIST_EXT)
 	{
 		bChanged = true;
-		
+
 		if (inMoveSize)
 			ioWindowBounds.MoveBack(ioWindowBounds.left - rScreenBounds.left, 0);
 		else
 			ioWindowBounds.left = rScreenBounds.left;
 	}
-	
+
 	if (::abs(rScreenBounds.right - ioWindowBounds.right) <= WIN_SNAP_DIST_EXT)
 	{
 		bChanged = true;
-		
+
 		if (inMoveSize)
 			ioWindowBounds.Move(rScreenBounds.right - ioWindowBounds.right, 0);
 		else
 			ioWindowBounds.right = rScreenBounds.right;
 	}
-	
+
 	if (::abs(ioWindowBounds.top - rScreenBounds.top) <= WIN_SNAP_DIST_EXT)
 	{
 		bChanged = true;
-		
+
 		if (inMoveSize)
 			ioWindowBounds.MoveBack(0, ioWindowBounds.top - rScreenBounds.top);
 		else
 			ioWindowBounds.top = rScreenBounds.top;
 	}
-	
+
 	if (::abs(rScreenBounds.bottom - ioWindowBounds.bottom) <= WIN_SNAP_DIST_EXT)
 	{
 		bChanged = true;
-	
+
 		if (inMoveSize)
 			ioWindowBounds.Move(0, rScreenBounds.bottom - ioWindowBounds.bottom);
 		else
@@ -1396,6 +1415,7 @@ bool CSnapWindows::RectSnapScreen(SRect& ioWindowBounds, bool inMoveSize)
 	}
 
 	return bChanged;
+#endif
 }
 
 bool CSnapWindows::RectKeepOnScreen(SRect& ioWindowBounds)
