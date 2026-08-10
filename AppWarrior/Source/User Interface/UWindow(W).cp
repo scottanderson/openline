@@ -234,11 +234,34 @@ TWindow UWindow::New(const SRect& inBounds, Uint16 inLayer, Uint16 inOptions, Ui
 			}
 			else
 			{
-				dwWStyle = WS_CAPTION;
-				dwExStyle = WS_EX_DLGMODALFRAME;
+				// WS_SYSMENU adds the icon, system menu and close box to the caption.
+				// Without it, WS_CAPTION alone leaves the non-client caption area
+				// effectively undecorated on modern Windows -- it paints as a blank
+				// white bar. This applies uniformly to all non-sizeable modal windows,
+				// including the About/splash windows (MakeClickPicWin/NewPictureWindow,
+				// inStyle 1/2): their banner image has genuine blank headroom baked
+				// into the art (matches the same banner as displayed, correctly, below
+				// a real caption in the main client window), so going borderless here
+				// just left that headroom looking like dead space with nothing above
+				// it. A real caption is what the art was designed to sit under.
+				//
+				// WS_EX_DLGMODALFRAME is deliberately NOT used, even though these are
+				// conceptually "modal" windows: every window UWindow::New() creates
+				// (any layer) is actually a raw WS_CHILD | WS_EX_MDICHILD (see the
+				// "if (_gMDIClient)" branch below -- this app fakes modality with its
+				// own ProcessModal() message-pump loop, not real top-level windows).
+				// WS_EX_DLGMODALFRAME's "double border dialog frame" non-client theming
+				// appears to assume a genuine top-level window; paired with an actual
+				// WS_CHILD MDI child it produced the "whited out", non-hit-testable
+				// caption buttons reported for the About box (uxtheme presumably hits
+				// a code path it doesn't handle right for this combination). Dropping
+				// it costs only the double-border look; WS_CAPTION | WS_SYSMENU alone
+				// is enough for a normal, working caption/close box.
+				dwWStyle = WS_CAPTION | WS_SYSMENU;
+				dwExStyle = 0;
 			}
 			break;
-			
+
 		case windowLayer_Float:
 			if (inOptions & windowOption_Sizeable)
 			{
@@ -2057,21 +2080,24 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 
 		case WM_MOVING:
 		{
-			if (gSnapWindows.IsEnableSnapWindows())
-			{
-				// I should do this only if Windows don't show window contents while dragging
-				// but I didn't find the function which tell me this yet 
-				RECT *lprc = (RECT *)inLParam;				
-				::MoveWindow(inWnd, lprc->left, lprc->top, lprc->right - lprc->left, lprc->bottom - lprc->top, TRUE);
-				result = true;
-			}
+			// This used to unconditionally force ::MoveWindow(inWnd, lprc-> ...)
+			// here whenever magnetic window-snapping was enabled, re-applying the
+			// exact rect Windows had just proposed in lprc. It didn't do any snap
+			// computation of its own (that only happens in WM_SIZING, for edge
+			// resizes, and in WM_MOVE below, which drags along any magnetically
+			// attached windows once the move has actually happened) -- so it was a
+			// pure no-op reposition, but doing it synchronously on every WM_MOVING
+			// tick fights Windows' own full-window drag tracking. On modern
+			// Windows that tracking also drives the Snap Layouts / Aero Snap
+			// "release here to fill the screen" preview outline, and repeatedly
+			// overriding the window's position out from under it desyncs that
+			// preview from the window, leaving a stuck ghost outline behind. Just
+			// let Windows own the move like any other window; magnetic snapping to
+			// other app windows is still applied below in WM_MOVE.
+			if (_gMDIClient)
+				result = ::DefMDIChildProc(inWnd, inMsg, inWParam, inLParam);
 			else
-			{
-				if (_gMDIClient)
-					result = ::DefMDIChildProc(inWnd, inMsg, inWParam, inLParam);
-				else
-					result = ::DefWindowProc(inWnd, inMsg, inWParam, inLParam);
-			}
+				result = ::DefWindowProc(inWnd, inMsg, inWParam, inLParam);
 		}
 		break;
 
