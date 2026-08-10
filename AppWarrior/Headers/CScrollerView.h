@@ -63,6 +63,7 @@ class CScrollerView : public CView, public CSingleViewContainer
 		virtual void MouseEnter(const SMouseMsgData& inInfo);
 		virtual void MouseMove(const SMouseMsgData& inInfo);
 		virtual void MouseLeave(const SMouseMsgData& inInfo);
+		virtual bool ScrollWheel(const SPoint& inLoc, Int32 inDelta);
 		virtual bool KeyDown(const SKeyMsgData& inInfo);
 		virtual void KeyUp(const SKeyMsgData& inInfo);
 		virtual bool KeyRepeat(const SKeyMsgData& inInfo);

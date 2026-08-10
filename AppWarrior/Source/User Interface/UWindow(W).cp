@@ -1863,6 +1863,64 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 		break;
 
 		/*
+		 * Mouse Wheel
+		 *
+		 * WM_MOUSEWHEEL is sent to the window with keyboard focus, not necessarily the one
+		 * under the cursor.  To match the behavior users expect from browsers etc (scroll
+		 * whatever is under the mouse), we look up the actual window under the cursor via
+		 * WindowFromPoint and route the wheel event into its view hierarchy instead.
+		 */
+		case WM_MOUSEWHEEL:
+		{
+			POINT screenPt;
+			screenPt.x = (Int16)LOWORD(inLParam);
+			screenPt.y = (Int16)HIWORD(inLParam);
+
+			HWND targetWnd = ::WindowFromPoint(screenPt);
+
+			// walk up to find a window created by us (has our per-window data attached)
+			SWindow *targetRef = nil;
+			while (targetWnd != nil)
+			{
+				targetRef = (SWindow *)::GetWindowLong(targetWnd, GWL_USERDATA);
+				if (targetRef != nil)
+					break;
+				targetWnd = ::GetParent(targetWnd);
+			}
+
+			if (targetRef != nil && targetRef->userRef != nil &&
+				targetRef->state != windowState_Hidden && targetRef->state != windowState_Inactive)
+			{
+				POINT clientPt = screenPt;
+				::ScreenToClient(targetWnd, &clientPt);
+
+				SPoint loc;
+				loc.h = (Int32)clientPt.x;
+				loc.v = (Int32)clientPt.y;
+
+				// one notch (WHEEL_DELTA) scrolls a few lines' worth of pixels, matching the
+				// increment already used for a single scrollbar-arrow click (16px) times the
+				// number of "lines per notch" the user has configured in Windows
+				Uint32 linesPerNotch = 3;
+				::SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &linesPerNotch, 0);
+				if (linesPerNotch == 0 || linesPerNotch > 50)
+					linesPerNotch = 3;
+
+				Int32 notches = GET_WHEEL_DELTA_WPARAM(inWParam);
+				Int32 pixelDelta = -(notches * (Int32)linesPerNotch * 16) / WHEEL_DELTA;
+
+				if (pixelDelta != 0)
+				{
+					CWindow *pTargetWindow = (CWindow *)targetRef->userRef;
+					pTargetWindow->ScrollWheel(loc, pixelDelta);
+				}
+			}
+
+			result = 0;
+		}
+		break;
+
+		/*
 		 * Mouse Down
 		 */
 		case WM_NCLBUTTONDOWN:		// if a window has captured the mouse, this message is not posted

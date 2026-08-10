@@ -473,6 +473,23 @@ void CContainerView::MouseLeave(const SMouseMsgData& inInfo)
 	}
 }
 
+bool CContainerView::ScrollWheel(const SPoint& inLoc, Int32 inDelta)
+{
+	if (!mIsEnabled || !IsActive())
+		return false;
+
+	// bring point into local coords
+	SPoint localLoc = inLoc;
+	localLoc.v -= mBounds.top;
+	localLoc.h -= mBounds.left;
+
+	CView *foundView = PointToView(localLoc);
+	if (foundView)
+		return foundView->ScrollWheel(localLoc, inDelta);
+
+	return false;
+}
+
 bool CContainerView::KeyDown(const SKeyMsgData& inInfo)
 {
 	CView *targetView = nil;

@@ -735,6 +735,27 @@ void CTabbedView::MouseDown(const SMouseMsgData& inInfo)
 	}
 }
 
+bool CTabbedView::ScrollWheel(const SPoint& inLoc, Int32 inDelta)
+{
+	if (!mCurrentTab)
+		return false;
+
+	SRect r;
+	GetContentRect(r);
+	if (!r.Contains(inLoc))
+		return false;
+
+	CView *v = GetTabView(mCurrentTab);
+	if (!v)
+		return false;
+
+	SPoint localLoc = inLoc;
+	localLoc.v -= r.top;
+	localLoc.h -= r.left;
+
+	return v->ScrollWheel(localLoc, inDelta);
+}
+
 void CTabbedView::MouseUp(const SMouseMsgData& inInfo)
 {
 	CView::MouseUp(inInfo);

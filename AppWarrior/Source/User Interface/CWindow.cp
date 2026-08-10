@@ -137,6 +137,11 @@ void CWindow::MouseLeave(const SMouseMsgData& inInfo)
 	if (mView) mView->MouseLeave(inInfo);
 }
 
+bool CWindow::ScrollWheel(const SPoint& inLoc, Int32 inDelta)
+{
+	return mView ? mView->ScrollWheel(inLoc, inDelta) : false;
+}
+
 void CWindow::KeyDown(const SKeyMsgData& inInfo)
 {
 	if (mView) mView->KeyDown(inInfo);

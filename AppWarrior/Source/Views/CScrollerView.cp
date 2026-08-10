@@ -774,6 +774,44 @@ void CScrollerView::MouseLeave(const SMouseMsgData& inInfo)
 	}
 }
 
+// inLoc is in the same (unscrolled/absolute) coordinate space as MouseDown's inInfo.loc.
+// inDelta is a vertical scroll amount in pixels (positive = scroll down).
+bool CScrollerView::ScrollWheel(const SPoint& inLoc, Int32 inDelta)
+{
+	CalcRects();
+	CalcValues();
+
+	if (IsDisabled() || !IsActive())
+		return false;
+
+	// give a nested scrollable view first crack at the wheel event, so eg. a scroller
+	// nested inside another scroller scrolls itself before its parent does
+	if (mView && mContentRect.Contains(inLoc))
+	{
+		SPoint localLoc = inLoc;
+		localLoc.v -= mDestRect.top;
+		localLoc.h -= mDestRect.left;
+
+		if (mView->ScrollWheel(localLoc, inDelta))
+			return true;
+	}
+
+	if (mVScrollEnabled)
+	{
+		Scroll(0, inDelta);
+		return true;
+	}
+	else if (mHScrollEnabled)
+	{
+		// no vertical bar to scroll (eg. a horizontal-only list) -- fall back to scrolling
+		// horizontally, matching how some apps treat the wheel over horizontally-scrolled content
+		Scroll(inDelta, 0);
+		return true;
+	}
+
+	return false;
+}
+
 bool CScrollerView::KeyDown(const SKeyMsgData& inInfo)
 {
 	switch (inInfo.keyCode)

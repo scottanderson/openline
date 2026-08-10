@@ -142,6 +142,11 @@ class CView
 		virtual void MouseLeave(const SMouseMsgData& inInfo);
 		bool IsAnyMouseBtnDown() const						{	return mIsLeftMouseBtnDown || mIsRightMouseBtnDown || mIsMiddleMouseBtnDown;	}
 		bool IsMouseWithin() const							{	return mIsMouseWithin;						}
+
+		// mouse wheel scrolling; inLoc is in the same coordinate space as MouseDown's inInfo.loc,
+		// inDelta is a vertical scroll amount in pixels (positive = scroll down/toward end).
+		// Returns true if the wheel event was consumed (eg. by a scrollable view under inLoc).
+		virtual bool ScrollWheel(const SPoint& inLoc, Int32 inDelta);
 				
 		// mouse capturing
 		void CaptureMouse();

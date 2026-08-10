@@ -351,12 +351,19 @@ void CView::MouseUp(const SMouseMsgData& inInfo)
 	}
 	
 	Uint16 nTooltipState = UTooltip::GetState();
-	
+
 	if (nTooltipState == kTooltipState_ActiveVisible || nTooltipState == kTooltipState_Activating)
 	{
 		UTooltip::Hide();
-		ReleaseMouse();	
+		ReleaseMouse();
 	}
+}
+
+// base class has no children and doesn't know how to scroll itself; container/scroller
+// views override this to hit-test into their children and/or actually perform scrolling.
+bool CView::ScrollWheel(const SPoint& /* inLoc */, Int32 /* inDelta */)
+{
+	return false;
 }
 
 void CView::MouseEnter(const SMouseMsgData& inInfo)
