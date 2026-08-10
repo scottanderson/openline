@@ -655,12 +655,43 @@ void UWindow::GetBounds(TWindow inRef, SRect& outBounds)
 		::GetClientRect(REF->hwnd, (RECT *)&outBounds);
 		outBounds.Move(pm.ptMaxPosition.x + REF->frameSizeLeft, pm.ptMaxPosition.y + REF->frameSizeTop);
 	}
-	else
+	else if (pm.showCmd == SW_SHOWMINIMIZED)
 	{
+		// GetWindowRect() would return the minimized icon's position here, not
+		// anything usable, so fall back to the restored-size rect like before.
 		outBounds.left = pm.rcNormalPosition.left + REF->frameSizeLeft;
 		outBounds.top = pm.rcNormalPosition.top + REF->frameSizeTop;
 		outBounds.right = pm.rcNormalPosition.right - REF->frameSizeRight;
 		outBounds.bottom = pm.rcNormalPosition.bottom - REF->frameSizeBottom;
+	}
+	else
+	{
+		// rcNormalPosition is the window's *restored* rect -- what it would be
+		// if un-maximized/un-snapped -- not necessarily its current on-screen
+		// rect. That distinction is why SW_SHOWMAXIMIZED is special-cased
+		// above, but Windows' native Snap Layouts / "snap to fill available
+		// height" (dragging a window to a screen edge) is a similar pseudo-
+		// maximized state that does NOT get reported as SW_SHOWMAXIMIZED via
+		// showCmd, so it used to fall into this branch and read the stale
+		// pre-snap rcNormalPosition -- the window itself really did resize
+		// (Windows owns that), but CWindow::BoundsChanged()'s child-view
+		// relayout used this stale size, so child controls never moved to
+		// match. Read the live window rect instead. GetWindowRect() returns
+		// screen coordinates, but MDI child positions in this app (and
+		// rcNormalPosition, which is being replaced here) are relative to
+		// the MDI client, so map it into the parent's coordinate space.
+		RECT r;
+		if (!::GetWindowRect(REF->hwnd, &r))
+			FailLastWinError();
+
+		HWND parentWnd = ::GetParent(REF->hwnd);
+		if (parentWnd)
+			::MapWindowPoints(HWND_DESKTOP, parentWnd, (POINT *)&r, 2);
+
+		outBounds.left = r.left + REF->frameSizeLeft;
+		outBounds.top = r.top + REF->frameSizeTop;
+		outBounds.right = r.right - REF->frameSizeRight;
+		outBounds.bottom = r.bottom - REF->frameSizeBottom;
 	}
 }
 

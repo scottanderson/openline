@@ -1631,6 +1631,15 @@ void CSnapWindows::ComposeSnapSound(CWindow *inWindow, SRect inWindowBounds, boo
 		}
 	}	
 	
+#if !WIN32
+	// This is an independent screen-edge-flush check, separate from (and not
+	// gated behind) RectSnapScreen -- see the WIN32 early-out there. It plays
+	// the magnetic-snap sound purely based on whether the window's edge is
+	// flush with the screen edge, regardless of *why* -- which is exactly
+	// what happens once Windows' own native Snap (Aero Snap / Snap Layouts)
+	// finishes positioning a window flush against a screen edge. Disabling
+	// only RectSnapScreen wasn't enough to stop the snap sound from playing
+	// during a native OS snap; this check needs to be skipped too.
 	SRect rScreenBounds;
 	_GetScreenBounds(rScreenBounds);
 
@@ -1643,8 +1652,9 @@ void CSnapWindows::ComposeSnapSound(CWindow *inWindow, SRect inWindowBounds, boo
 		bScreenTop = true;
 	else if (rScreenBounds.bottom == inWindowBounds.bottom)
 		bScreenBottom = true;
-	
-	if (mScreenLeft != bScreenLeft)	
+#endif
+
+	if (mScreenLeft != bScreenLeft)
 	{
 		mScreenLeft = bScreenLeft;
 		if (mScreenLeft)
