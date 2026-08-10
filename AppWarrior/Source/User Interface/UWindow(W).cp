@@ -705,7 +705,7 @@ void UWindow::SetLocation(TWindow inRef, SPoint& inTopLeft)
 		FailLastWinError();
 	
 	_gAppPosChanging = true;
-	bool bRet = ::MoveWindow(REF->hwnd, inTopLeft.x - REF->frameSizeTop, inTopLeft.y - REF->frameSizeLeft, r.right - r.left, r.bottom - r.top, true);
+	bool bRet = ::MoveWindow(REF->hwnd, inTopLeft.x - REF->frameSizeLeft, inTopLeft.y - REF->frameSizeTop, r.right - r.left, r.bottom - r.top, true);
 	_gAppPosChanging = false;
 
 	if (!bRet)
