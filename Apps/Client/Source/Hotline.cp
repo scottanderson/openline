@@ -18,6 +18,7 @@ extern Uint8 _gMDIWindowMenu;
 
 bool _ActivateNextWindow();
 bool _IsTopVisibleModalWindow();
+void _SetWinOwner(TWindow inRef, TWindow inOwner);
 #endif
 
 #if MACINTOSH
@@ -5644,7 +5645,15 @@ void CMyApplication::DoCreateToolbar(SRect& ioBounds)
 	CMyBannerToolbarWin *pBannerToolbarWin = new CMyBannerToolbarWin();
 	UWindow::SetMainWindow(*pBannerToolbarWin);
 	mToolbarWin = pBannerToolbarWin;
-		
+
+#if WIN32
+	// mAuxParentWin owns the document windows but is itself invisible, so
+	// each got its own Alt-Tab entry. Point it at the toolbar window
+	// instead, so Explorer groups them together.
+	if (mAuxParentWin)
+		_SetWinOwner(*mAuxParentWin, *pBannerToolbarWin);
+#endif
+
 	if (!GetResourceBanner(true))	// if QuickTime fails to display the MOV banner
 		GetResourceBanner();		// load the GIF banner
 

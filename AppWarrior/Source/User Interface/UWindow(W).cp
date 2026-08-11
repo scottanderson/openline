@@ -1034,6 +1034,12 @@ bool UWindow::GetAutoBounds(TWindow inRef, Uint16 inPos, Uint16 /* inPosOn */, S
 void UWindow::SetMainWindow(TWindow inRef)
 {
 	_gMainWindow = (SWindow *)inRef;
+
+	// _gModalParent owns every modal dialog but is itself invisible, so
+	// Explorer gave each dialog its own Alt-Tab entry. Point its owner
+	// at the real main window instead, so Explorer groups them together.
+	if (_gModalParent && _gMainWindow)
+		::SetWindowLongPtr(_gModalParent, GWLP_HWNDPARENT, (LONG_PTR)_gMainWindow->hwnd);
 }
 
 TWindow UWindow::GetMainWindow()
@@ -2693,6 +2699,16 @@ void _SetWinIcon(TWindow inRef, Int16 inID)
 	
 	HICON icon = ::LoadIcon(_gProgramInstance, MAKEINTRESOURCE(inID));	
 	if (icon) ::SendMessageA(REF->hwnd, WM_SETICON, false, (LPARAM)icon);
+}
+
+// Sets a top-level window's owner (inRef must not be WS_CHILD). Used to
+// re-point windows created before the real main window existed.
+void _SetWinOwner(TWindow inRef, TWindow inOwner)
+{
+	Require(inRef);
+
+	HWND ownerHwnd = inOwner ? ((SWindow *)inOwner)->hwnd : NULL;
+	::SetWindowLongPtr(REF->hwnd, GWLP_HWNDPARENT, (LONG_PTR)ownerHwnd);
 }
 
 void _RemoveFromLayer(SWindow *inRef)
