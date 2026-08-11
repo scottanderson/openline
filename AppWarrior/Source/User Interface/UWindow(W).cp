@@ -71,6 +71,7 @@ HWND _GetBottomWindow(SWindow *inRef);
 bool _IsTopVisibleModalWindow();
 bool _IsInWindowList(HWND inHwnd);
 void _CheckWindowStates();
+void _RestackAppWindowsToFront();
 bool _StandardDialogBox(Uint8 inActive = 0);
 
 void _DDRegisterWinForDrop(HWND inWin, void *inRef);
@@ -2456,7 +2457,14 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 				result = ::DefMDIChildProc(inWnd, inMsg, inWParam, inLParam);
 			else
 				result = ::DefWindowProc(inWnd, inMsg, inWParam, inLParam);
-		}	
+
+			// On reactivation, explicitly restack our windows above other apps'.
+			if (inWParam && _gAppDeactivated)
+			{
+				_gAppDeactivated = false;
+				_RestackAppWindowsToFront();
+			}
+		}
 		break;
 
 		// WM_WINDOWPOSCHANGING - window layers
@@ -2766,34 +2774,16 @@ HWND _AddToLayerAndGetInsertAfter(SWindow *inRef, HWND inInsertAfterWin)
 	SWindow *win = _gTopWin;
 	SWindow *prevWin = nil;
 	
-	if (_gAppDeactivated)	// if the app was just activated, we need to reposition all windows above this one too
+	// _gAppDeactivated used to also be cleared here, as a partial, buggy
+	// stand-in for a real restack-on-reactivation. It's now solely owned by
+	// the WM_ACTIVATEAPP handler / _RestackAppWindowsToFront().
+	while (win)
 	{
-		_gAppDeactivated = false;
+		if (win->layer >= inRef->layer)
+			break;
 
-		while (win)
-		{
-			if (win->layer >= inRef->layer)
-				break;
-			
-			if (prevWin)
-				::SetWindowPos(win->hwnd, prevWin->hwnd, nil, nil, nil, nil, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-			else
-				::SetWindowPos(win->hwnd, inInsertAfterWin, nil, nil, nil, nil, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
-			
-			prevWin = win;
-			win = win->next;
-		}
-	}
-	else
-	{
-		while (win)
-		{
-			if (win->layer >= inRef->layer)
-				break;
-			
-			prevWin = win;
-			win = win->next;
-		}
+		prevWin = win;
+		win = win->next;
 	}
 	
 	inRef->next = win;
