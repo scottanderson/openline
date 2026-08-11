@@ -7,6 +7,7 @@
 #include "UWindow.h"
 #include "UMemory.h"
 #include "Resource.h"
+#include <dwmapi.h>
 
 
 #define DRAW_OFFSCREEN		1
@@ -38,6 +39,12 @@ struct SWindow {
 	Uint8 needsRedraw;
 	Uint8 isMyMaximized;
 	Uint8 isQuickTimeView;
+
+	// Cache for _GetDwmFrameInset() below: this window's DWM border
+	// thickness per edge. Re-measuring it live on every drag message caused
+	// tiny inconsistencies that compounded into visible jiggle/drift.
+	Int8 dwmInsetLeft, dwmInsetTop, dwmInsetRight, dwmInsetBottom;
+	Uint8 dwmInsetKnown;
 };
 
 #define REF		((SWindow *)inRef)
@@ -68,6 +75,7 @@ bool _StandardDialogBox(Uint8 inActive = 0);
 
 void _DDRegisterWinForDrop(HWND inWin, void *inRef);
 static void _WNCalcUnobstructedBounds(TWindow inRef, SRect& rBounds);
+static void _GetDwmFrameInset(HWND inHwnd, RECT& outInset);
 
 static bool _SendToQuickTime(TWindow inRef, UINT inMsg, WPARAM inWParam, LPARAM inLParam);
 static void _UnregisterWithQuickTime(TWindow inRef);
@@ -2242,14 +2250,19 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 				if (gWindowList.IsInList(pWindow))
 				{
 					RECT *lprc = (RECT *)inLParam;
-				
-					SRect rSnapWinBounds(lprc->left, lprc->top, lprc->right, lprc->bottom);
+
+					// lprc is raw window-rect space; convert to painted space
+					// before snap-testing, then convert back.
+					RECT inset;
+					_GetDwmFrameInset(inWnd, inset);
+
+					SRect rSnapWinBounds(lprc->left + inset.left, lprc->top + inset.top, lprc->right - inset.right, lprc->bottom - inset.bottom);
 					if (gSnapWindows.WinSnapTogether(pWindow, rSnapWinBounds, false))
 					{
-						lprc->left = rSnapWinBounds.left;
-						lprc->top = rSnapWinBounds.top;
-						lprc->right = rSnapWinBounds.right;
-						lprc->bottom = rSnapWinBounds.bottom;
+						lprc->left = rSnapWinBounds.left - inset.left;
+						lprc->top = rSnapWinBounds.top - inset.top;
+						lprc->right = rSnapWinBounds.right + inset.right;
+						lprc->bottom = rSnapWinBounds.bottom + inset.bottom;
 					}
 				}			
 			}
@@ -2459,15 +2472,27 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 								
 				if (gWindowList.IsInList(pWindow))
 				{
-					if (gSnapWindows.IsEnableSnapWindows() && !_gAppPosChanging)
-					{				
-						SRect rSnapWinBounds(lpwp->x, lpwp->y, lpwp->x + lpwp->cx, lpwp->y + lpwp->cy);
+					// SWP_NOMOVE|SWP_NOSIZE together mean this is a pure z-order/
+					// activation change, not a real move/resize. ComposeSnapSound()
+					// inside the snap logic below plays a sound whenever windows are
+					// already flush, so without this guard it fired on every focus
+					// switch instead of just on an actual drag-into-contact.
+					bool bIsRealMoveOrSize = (lpwp->flags & (SWP_NOMOVE | SWP_NOSIZE)) != (SWP_NOMOVE | SWP_NOSIZE);
+
+					if (gSnapWindows.IsEnableSnapWindows() && !_gAppPosChanging && bIsRealMoveOrSize)
+					{
+						// lpwp is raw window-rect space; convert to painted space
+						// before snap-testing, then convert back.
+						RECT inset;
+						_GetDwmFrameInset(inWnd, inset);
+
+						SRect rSnapWinBounds(lpwp->x + inset.left, lpwp->y + inset.top, lpwp->x + lpwp->cx - inset.right, lpwp->y + lpwp->cy - inset.bottom);
 						if (gSnapWindows.WinSnapTogether(pWindow, rSnapWinBounds, true))
 						{
-							lpwp->x = rSnapWinBounds.left;
-							lpwp->y = rSnapWinBounds.top;
-							lpwp->cx = rSnapWinBounds.right - rSnapWinBounds.left;
-							lpwp->cy = rSnapWinBounds.bottom - rSnapWinBounds.top;
+							lpwp->x = rSnapWinBounds.left - inset.left;
+							lpwp->y = rSnapWinBounds.top - inset.top;
+							lpwp->cx = (rSnapWinBounds.right + inset.right) - lpwp->x;
+							lpwp->cy = (rSnapWinBounds.bottom + inset.bottom) - lpwp->y;
 						}
 					}
 			
@@ -2782,6 +2807,29 @@ HWND _AddToLayerAndGetInsertAfter(SWindow *inRef, HWND inInsertAfterWin)
 	{
 		_gTopWin = inRef;
 		return inInsertAfterWin;
+	}
+}
+
+// Re-raise all of this app's windows above other apps' windows when we
+// regain the foreground (see WM_ACTIVATEAPP below). Win32's owned-window
+// z-order guarantee doesn't reliably carry through a multi-level owner
+// chain, so some windows could stay buried after Alt-Tabbing back in.
+// Walks _gTopWin (this app's own z-order list) top to bottom, restacking
+// each visible, non-minimized window above the previous one.
+void _RestackAppWindowsToFront()
+{
+	HWND prevHwnd = HWND_TOP;
+	SWindow *win = _gTopWin;
+
+	while (win)
+	{
+		if (win->hwnd && ::IsWindowVisible(win->hwnd) && !::IsIconic(win->hwnd))
+		{
+			::SetWindowPos(win->hwnd, prevHwnd, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+			prevHwnd = win->hwnd;
+		}
+
+		win = win->next;
 	}
 }
 
@@ -3332,15 +3380,162 @@ void _WNPostMouseUp()
 
 #pragma mark -
 
+// DWM adds an invisible resize border around resizable (WS_THICKFRAME)
+// windows: left, right, bottom, but not top. GetWindowRect() etc. include
+// this border, but it isn't painted, so windows "flush" in raw window-rect
+// space still show a gap on screen -- double-wide on a horizontal snap
+// (two side borders) versus a vertical one (one bottom border). The
+// toolbar isn't WS_THICKFRAME, so it has no border, which is why snapping
+// against it looked fine while everything else didn't.
+//
+// DwmGetWindowAttribute(DWMWA_EXTENDED_FRAME_BOUNDS) reports the real
+// painted bounds; diffing it against GetWindowRect() gives the border
+// thickness per edge. dwmapi.dll doesn't exist before Vista (this app's
+// floor is Windows 2000), so resolve it dynamically -- degrades to a zero
+// inset (today's behavior) where it's unavailable.
+typedef HRESULT (WINAPI *PtrDwmGetWindowAttribute)(HWND, DWORD, PVOID, DWORD);
+
+static PtrDwmGetWindowAttribute _GetDwmGetWindowAttributeProc()
+{
+	static PtrDwmGetWindowAttribute sProc = nil;
+	static bool sTried = false;
+
+	if (!sTried)
+	{
+		sTried = true;
+
+		HMODULE dwmapi = ::LoadLibraryA("dwmapi.dll");
+		if (dwmapi)
+			sProc = (PtrDwmGetWindowAttribute)::GetProcAddress(dwmapi, "DwmGetWindowAttribute");
+	}
+
+	return sProc;
+}
+
+// This app has no DPI-awareness manifest, so Windows virtualizes it:
+// GetWindowRect() and friends report scaled-down 96-DPI logical pixels.
+// DwmGetWindowAttribute(DWMWA_EXTENDED_FRAME_BOUNDS) doesn't get this
+// treatment -- it always reports real physical pixels. Diffing the two
+// directly only lines up at 100% display scaling; at any other scale the
+// computed inset is nonsense (the toolbar's near-zero real inset made it
+// far less sensitive to this, which is why it looked fine).
+// PhysicalToLogicalPointForPerMonitorDPI() (Windows 8.1+, resolved
+// dynamically like dwmapi.dll above) converts the DWM rect into
+// GetWindowRect()'s logical space before diffing. Where it's unavailable
+// (Windows 8 and earlier), DWM has no invisible border to correct for
+// anyway, so using the physical rect unconverted is harmless.
+typedef BOOL (WINAPI *PtrPhysicalToLogicalPointForPerMonitorDPI)(HWND, LPPOINT);
+
+static PtrPhysicalToLogicalPointForPerMonitorDPI _GetPhysicalToLogicalPointProc()
+{
+	static PtrPhysicalToLogicalPointForPerMonitorDPI sProc = nil;
+	static bool sTried = false;
+
+	if (!sTried)
+	{
+		sTried = true;
+
+		HMODULE user32 = ::GetModuleHandleA("user32.dll");
+		if (user32)
+			sProc = (PtrPhysicalToLogicalPointForPerMonitorDPI)::GetProcAddress(user32, "PhysicalToLogicalPointForPerMonitorDPI");
+	}
+
+	return sProc;
+}
+
+// Per-edge thickness of hwnd's invisible DWM resize border (0 on any edge/
+// system where it doesn't apply). outInset is in the same left/top/right/
+// bottom sense as a RECT, but each value is the number of pixels to strip
+// off that edge of a raw window rect to get the painted rect.
+static void _GetDwmFrameInset(HWND inHwnd, RECT& outInset)
+{
+	// Cache hit: reuse the value from this window's first call instead of
+	// re-measuring live (see the SWindow::dwmInset* comment).
+	SWindow *ref = (SWindow *)::GetWindowLong(inHwnd, GWL_USERDATA);
+	if (ref && ref->dwmInsetKnown)
+	{
+		outInset.left = ref->dwmInsetLeft;
+		outInset.top = ref->dwmInsetTop;
+		outInset.right = ref->dwmInsetRight;
+		outInset.bottom = ref->dwmInsetBottom;
+		return;
+	}
+
+	outInset.left = outInset.top = outInset.right = outInset.bottom = 0;
+
+	PtrDwmGetWindowAttribute dwmGetWindowAttribute = _GetDwmGetWindowAttributeProc();
+	if (dwmGetWindowAttribute)
+	{
+		RECT wr;
+		RECT er;
+		if (::GetWindowRect(inHwnd, &wr) && SUCCEEDED(dwmGetWindowAttribute(inHwnd, DWMWA_EXTENDED_FRAME_BOUNDS, &er, sizeof(er))))
+		{
+			// er is in real physical pixels; wr is DPI-virtualized logical
+			// pixels (see the comment above _GetPhysicalToLogicalPointProc()).
+			// Bring er into wr's space before diffing them.
+			PtrPhysicalToLogicalPointForPerMonitorDPI physToLogical = _GetPhysicalToLogicalPointProc();
+			if (physToLogical)
+			{
+				POINT topLeft = { er.left, er.top };
+				POINT bottomRight = { er.right, er.bottom };
+				if (physToLogical(inHwnd, &topLeft) && physToLogical(inHwnd, &bottomRight))
+				{
+					er.left = topLeft.x;
+					er.top = topLeft.y;
+					er.right = bottomRight.x;
+					er.bottom = bottomRight.y;
+				}
+			}
+
+			outInset.left = er.left - wr.left;
+			outInset.top = er.top - wr.top;
+			outInset.right = wr.right - er.right;
+			outInset.bottom = wr.bottom - er.bottom;
+		}
+	}
+
+	// Only cache once the window has a real placed rect (a brand-new window
+	// can still be at its zero CreateWindowEx() rect here). Every caller
+	// already filters on IsVisible(), so this is naturally satisfied by
+	// the time it matters.
+	//
+	// Also skip caching while maximized/minimized: a maximized window's raw
+	// GetWindowRect() legitimately extends past the monitor (Windows hangs
+	// the border off-screen), while the extended frame bounds stay at the
+	// work area -- so the "inset" measured while zoomed is bogus and, if
+	// cached, corrupts every later drag in the window's normal state.
+	// IsZoomed() alone misses it, though: this app fakes maximize via
+	// MoveWindow() rather than real WS_MAXIMIZE (see _WNMyMaximize()), so
+	// also check the app's own isMyMaximized flag.
+	if (ref && ::IsWindowVisible(inHwnd) && !::IsZoomed(inHwnd) && !::IsIconic(inHwnd) && !ref->isMyMaximized)
+	{
+		ref->dwmInsetLeft = (Int8)outInset.left;
+		ref->dwmInsetTop = (Int8)outInset.top;
+		ref->dwmInsetRight = (Int8)outInset.right;
+		ref->dwmInsetBottom = (Int8)outInset.bottom;
+		ref->dwmInsetKnown = true;
+	}
+}
+
 void _GetRealWinBounds(TWindow inWindow, SRect& outWindowBounds)
 {
+	HWND hwnd = ((SWindow *)inWindow)->hwnd;
+
 	WINDOWPLACEMENT pm;
 	pm.length = sizeof(pm);
 
-	if (!::GetWindowPlacement(((SWindow *)inWindow)->hwnd, &pm))
+	if (!::GetWindowPlacement(hwnd, &pm))
 		FailLastWinError();
 
 	outWindowBounds.Set(pm.rcNormalPosition.left, pm.rcNormalPosition.top, pm.rcNormalPosition.right, pm.rcNormalPosition.bottom);
+
+	// Correct to painted space -- see _GetDwmFrameInset() above.
+	RECT inset;
+	_GetDwmFrameInset(hwnd, inset);
+	outWindowBounds.left += inset.left;
+	outWindowBounds.top += inset.top;
+	outWindowBounds.right -= inset.right;
+	outWindowBounds.bottom -= inset.bottom;
 }
 
 void _GetRealWinBounds(CWindow *inWindow, SRect& outWindowBounds)
@@ -3350,11 +3545,24 @@ void _GetRealWinBounds(CWindow *inWindow, SRect& outWindowBounds)
 
 void _SetRealWinBounds(CWindow *inWindow, SRect inWindowBounds)
 {
-	::SetWindowPos(((SWindow *)(TWindow)*inWindow)->hwnd, NULL, inWindowBounds.left, inWindowBounds.top, inWindowBounds.GetWidth(), inWindowBounds.GetHeight(), SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+	HWND hwnd = ((SWindow *)(TWindow)*inWindow)->hwnd;
+
+	// inWindowBounds is painted space; expand back to raw window-rect space.
+	RECT inset;
+	_GetDwmFrameInset(hwnd, inset);
+
+	::SetWindowPos(hwnd, NULL,
+		inWindowBounds.left - inset.left,
+		inWindowBounds.top - inset.top,
+		inWindowBounds.GetWidth() + inset.left + inset.right,
+		inWindowBounds.GetHeight() + inset.top + inset.bottom,
+		SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
 }
 
 void _SetRealWinLocation(CWindow *inWindow, SPoint inWindowLocation, CWindow *inInsertAfter)
 {
+	HWND hwnd = ((SWindow *)(TWindow)*inWindow)->hwnd;
+
 	Uint32 nNoZOrder;
 	HWND hWndInsertAfter;
 	
@@ -3368,8 +3576,13 @@ void _SetRealWinLocation(CWindow *inWindow, SPoint inWindowLocation, CWindow *in
 		nNoZOrder = SWP_NOZORDER;
 		hWndInsertAfter = NULL;
 	}
-	
-	::SetWindowPos(((SWindow *)(TWindow)*inWindow)->hwnd, hWndInsertAfter, inWindowLocation.x, inWindowLocation.y, 0, 0, SWP_NOSIZE | nNoZOrder | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
+
+	// inWindowLocation is a painted-space top-left; expand back to raw
+	// window-rect space.
+	RECT inset;
+	_GetDwmFrameInset(hwnd, inset);
+
+	::SetWindowPos(hwnd, hWndInsertAfter, inWindowLocation.x - inset.left, inWindowLocation.y - inset.top, 0, 0, SWP_NOSIZE | nNoZOrder | SWP_NOACTIVATE | SWP_NOSENDCHANGING);
 }
 
 void _GetScreenBounds(SRect& outScreenBounds)

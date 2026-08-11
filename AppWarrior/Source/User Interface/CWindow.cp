@@ -894,13 +894,20 @@ bool CSnapWindows::WinSnapTogether(CWindow *inWindow, SRect& ioWindowBounds, boo
 		return false;
 	
 	bool bChangeScreen = false;
-	if (mNoSnapWinList.IsInList(inWindow) || (inWindow == mAnchorSnapWin && mTempSnapWinList.GetItemCount() > 1))
+	if (mNoSnapWinList.IsInList(inWindow))
 	{
 		bChangeScreen = RectSnapScreen(ioWindowBounds, inMoveSize);
 		ComposeSnapSound(inWindow, ioWindowBounds, true, false);
 	
 		return bChangeScreen;
 	}
+
+	// Skip re-testing inWindow's own cluster-mates (their position already
+	// tracks the anchor via WinMoveTogether). Previously this skipped the
+	// whole comparison loop once a cluster had 2+ members, so a cluster
+	// could never detect and snap to a new, third window. Skipping just
+	// the cluster-mates keeps clusters able to grow past two.
+	bool bSkipClusterMates = (inWindow == mAnchorSnapWin && mTempSnapWinList.GetItemCount() > 1);
 
 	Int32 nWindowWidth = ioWindowBounds.GetWidth();
 	Int32 nWindowHeight = ioWindowBounds.GetHeight();
@@ -913,7 +920,10 @@ bool CSnapWindows::WinSnapTogether(CWindow *inWindow, SRect& ioWindowBounds, boo
 	{
 		if (win == inWindow || win->GetLayer() == windowLayer_Modal || !win->IsVisible() || win->IsCollapsed() || win->IsZoomed())
 			continue;
-		
+
+		if (bSkipClusterMates && mTempSnapWinList.IsInList(win))
+			continue;
+
 		SRect rWinBounds;
 		_GetRealWinBounds(win, rWinBounds);
 		
@@ -1523,6 +1533,12 @@ void CSnapWindows::ComposeSnapSound(CWindow *inWindow, SRect inWindowBounds, boo
 
 	if (inCheckWin)
 	{
+		// Mirror WinSnapTogether()'s cluster-mate skip. Without it, a
+		// cluster-mate's position (updated one message later, via
+		// WinMoveTogether on WM_MOVE) reads as stale here and looks like a
+		// detach every tick, spamming the snap sound during a drag.
+		bool bSkipClusterMates = (inWindow == mAnchorSnapWin && mTempSnapWinList.GetItemCount() > 1);
+
 		CWindow *win = nil;
 		Uint32 i = 0;
 	
@@ -1530,7 +1546,10 @@ void CSnapWindows::ComposeSnapSound(CWindow *inWindow, SRect inWindowBounds, boo
 		{
 			if (win == inWindow || win->GetLayer() == windowLayer_Modal || !win->IsVisible() || win->IsCollapsed() || win->IsZoomed())
 				continue;
-		
+
+			if (bSkipClusterMates && mTempSnapWinList.IsInList(win))
+				continue;
+
 			SRect rWinBounds;
 			_GetRealWinBounds(win, rWinBounds);
 		
