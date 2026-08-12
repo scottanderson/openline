@@ -2606,7 +2606,10 @@ void CMyApplication::DoFileMove(CMyItemsWin *inWin, Uint16 inMods, const Uint8 *
 	
 	Uint32 nTestPathSize;
 	void *pTestPathData = UFileSys::MakePathData(inPathData, inPathSize, inFileName, nTestPathSize);
+	if (!pTestPathData)
+		return;
 
+	// nTestPathSize is always >= 5 here, so the -2 below can't underflow.
 	bool bRet = inDestPathSize >= nTestPathSize && !UMemory::Compare((Uint8 *)inDestPathData + 2, (Uint8 *)pTestPathData + 2, nTestPathSize - 2);
 	UMemory::Dispose((TPtr)pTestPathData);
 	if (bRet) return;

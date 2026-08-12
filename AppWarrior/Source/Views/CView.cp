@@ -303,8 +303,9 @@ void CView::Hit(Uint32 inType, Uint32 inPart, Uint32 inParam, const void *inData
 		info.hit.param = inParam;
 		info.hit.dataSize = inDataSize;
 		
+		// inInfo.data aliases info.hit.data, not info.data (one byte later) -- copy there.
 		if (inData && inDataSize)
-			UMemory::Copy(info.data, inData, inDataSize);
+			UMemory::Copy(info.hit.data, inData, inDataSize);
 		
 		mHandler->HandleHit(this, info.hit);
 	}
