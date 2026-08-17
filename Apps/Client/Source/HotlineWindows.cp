@@ -1084,16 +1084,21 @@ void CMyFileWin::SearchCacheFileList(const void *inPathData, Uint32 inPathSize)
 
 void CMyFileWin::SetFileAccess(const Uint8 *inItemName, const void *inPathData, Uint32 inPathSize, Uint32 inTypeCode, bool inIsFolder)
 {
+	// a selected item can legitimately have inTypeCode == 0 (e.g. any file with no classic-Mac
+	// type/creator info, which is the common case for non-Mac-native files); whether anything
+	// is selected at all has to be judged from the item name, not the type code.
+	bool bHasSelection = inItemName && inItemName[0];
+
 	const Uint8 *pFolderName = nil;
 	if (!inPathData || !inPathSize)
 	{
-		if (inTypeCode)
+		if (bHasSelection)
 			pFolderName = inItemName;
 	}
 	else
 		pFolderName = (Uint8 *)inPathData + 4;
 		
-	if (!inTypeCode) 
+	if (!bHasSelection)
 		mViews.downloadBtn->Disable();
 	else if (inIsFolder && inTypeCode == TB((Uint32)'fldr') && gApp->mServerVers >= 182)
 	{
@@ -1120,7 +1125,7 @@ void CMyFileWin::SetFileAccess(const Uint8 *inItemName, const void *inPathData, 
 		mViews.newfolderBtn->Disable();
 	
 	bool bSetDefaultViewIcon = true;
-	if (!inTypeCode)
+	if (!bHasSelection)
 	{
 		mViews.viewBtn->Disable();
 		mViews.infoBtn->Disable();
