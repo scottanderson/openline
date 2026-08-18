@@ -471,12 +471,16 @@ void UWindow::Dispose(TWindow inRef)
 void UWindow::SetTitle(TWindow inRef, const Uint8 *inTitle)
 {
 	Int8 str[256];
+	Uint32 len = inTitle[0];
 	
 	Require(inRef);
 	
-	// convert to C-string
-	::CopyMemory(str, inTitle+1, inTitle[0]);
-	str[inTitle[0]] = 0;
+	// convert Mac Roman (this app's internal encoding) to CP1252, what SetWindowText expects
+	extern const char _UTCharMap_AWToPC[];
+	const Uint8 *src = inTitle + 1;
+	for (Uint32 i = 0; i < len; i++)
+		str[i] = _UTCharMap_AWToPC[src[i]];
+	str[len] = 0;
 	
 	if (!SetWindowText(REF->hwnd, str))
 		FailLastWinError();
@@ -493,7 +497,16 @@ void UWindow::SetNoTitle(TWindow inRef)
 Uint32 UWindow::GetTitle(TWindow inRef, void *outText, Uint32 inMaxSize)
 {
 	Require(inRef);
-	return GetWindowText(REF->hwnd, (LPTSTR)outText, inMaxSize);
+
+	Uint32 len = GetWindowText(REF->hwnd, (LPTSTR)outText, inMaxSize);
+
+	// convert CP1252 (what SetWindowText/GetWindowText use) back to Mac Roman
+	extern const char _UTCharMap_PCToAW[];
+	Uint8 *p = (Uint8 *)outText;
+	for (Uint32 i = 0; i < len; i++)
+		p[i] = (Uint8)_UTCharMap_PCToAW[p[i]];
+
+	return len;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -2172,7 +2185,11 @@ static LRESULT CALLBACK _WNWndProc(HWND inWnd, UINT inMsg, WPARAM inWParam, LPAR
 					}
 
 					if (::ToAscii(inWParam, inLParam, kbState, &ascii, 0))
-						kinfo.keyChar = (Uint8)ascii;
+					{
+						// ToAscii() yields CP1252; convert to Mac Roman, this app's internal encoding.
+						extern const char _UTCharMap_PCToAW[];
+						kinfo.keyChar = (Uint8)_UTCharMap_PCToAW[(Uint8)ascii];
+					}
 					else
 						kinfo.keyChar = 0;
 					

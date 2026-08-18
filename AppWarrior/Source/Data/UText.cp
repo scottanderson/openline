@@ -671,7 +671,7 @@ unsigned char UText::__ctype_map[256] = {
 	uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, punc, punc, punc, punc, punc,
 	punc, lhex, lhex, lhex, lhex, lhex, lhex, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc,
 	lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, punc, punc, punc, punc, ctrl,
-#if MACINTOSH
+#if MACINTOSH || WIN32
 	// mac extended characters (127-255)
 	uppc, uppc, uppc, uppc, uppc, uppc, uppc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc,
 	lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc, lowc,
@@ -703,7 +703,7 @@ unsigned char UText::__lower_map[256] = {
 	'p',  'q',  'r',  's',  't',  'u',  'v',  'w',  'x',  'y',  'z',  '[',  '\\', ']',  '^',  '_',
 	'`',  'a',  'b',  'c',  'd',  'e',  'f',  'g',  'h',  'i',  'j',  'k',  'l',  'm',  'n',  'o',
 	'p',  'q',  'r',  's',  't',  'u',  'v',  'w',  'x',  'y',  'z',  '{',  '|',  '}',  '~',  0x7F,
-#if MACINTOSH
+#if MACINTOSH || WIN32
 	'ä',  'å',  'ç',  'é',  'ñ',  'ö',  'ü',  'á',  'à',  'â',  'ä',  'ã',  'å',  'ç',  'é',  'è',
 	'ê',  'ë',  'í',  'ì',  'î',  'ï',  'ñ',  'ó',  'ò',  'ô',  'ö',  'õ',  'ú',  'ù',  'û',  'ü',
 	'†',  '°',  '¢',  '£',  '§',  '•',  '¶',  'ß',  '®',  '©',  '™',  '´',  '¨',  '≠',  'æ',  'ø',
@@ -733,7 +733,7 @@ unsigned char UText::__upper_map[256] = {
 	'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z',  '[',  '\\', ']',  '^',  '_',
 	'`',  'A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',
 	'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z',  '{',  '|',  '}',  '~',  0x7F,
-#if MACINTOSH
+#if MACINTOSH || WIN32
 	'Ä',  'Å',  'Ç',  'É',  'Ñ',  'Ö',  'Ü',  'Á',  'À',  'Â',  'Ä',  'Ã',  'Å',  'Ç',  'É',  'È',
 	'Ê',  'Ë',  'Í',  'Ì',  'Î',  'Ï',  'Ñ',  'Ó',  'Ò',  'Ô',  'Ö',  'Õ',  'Ú',  'Ù',  'Û',  'Ü',
 	'†',  '°',  '¢',  '£',  '§',  '•',  '¶',  'ß',  '®',  '©',  '™',  '´',  '¨',  '≠',  'Æ',  'Ø',

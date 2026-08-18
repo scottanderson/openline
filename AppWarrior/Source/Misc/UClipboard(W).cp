@@ -44,6 +44,16 @@ THdl UClipboard::GetData(const Int8 *inType)
 				
 				hdl = UMemory::NewHandle(p, s);
 				
+				if (format == CF_TEXT)
+				{
+					// CF_TEXT is CP1252; convert to Mac Roman, this app's internal encoding.
+					extern const char _UTCharMap_PCToAW[];
+					Uint8 *q = (Uint8 *)UMemory::Lock(hdl);
+					for (Uint32 i = 0; i < s; i++)
+						q[i] = (Uint8)_UTCharMap_PCToAW[q[i]];
+					UMemory::Unlock(hdl);
+				}
+
 				// strip linefeed chars
 				UMemory::SearchAndReplaceAll(hdl, 0, "\x0A", 1, nil, 0);
 			}
@@ -81,6 +91,14 @@ void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSi
 		*(*(Uint32 **)&p)++ = inDataSize+1;
 		::CopyMemory(p, inData, inDataSize);
 		p[inDataSize] = 0;		// must be null-terminated
+
+		// mirror of GetData()'s conversion: Mac Roman -> CP1252 going out to the clipboard.
+		{
+			extern const char _UTCharMap_AWToPC[];
+			for (Uint32 i = 0; i < inDataSize; i++)
+				p[i] = (Uint8)_UTCharMap_AWToPC[p[i]];
+		}
+
 		::GlobalUnlock(h);
 
 		// need to convert CR (AW) to CRLF (DOS/windoze)

@@ -69,6 +69,11 @@ void UError::Alert(const SError& inError)
 	
 	str[s] = 0;
 	
+	// convert Mac Roman (this app's internal encoding) to CP1252, what MessageBox expects
+	extern const char _UTCharMap_AWToPC[];
+	for (Uint32 i = 0; i < s; i++)
+		str[i] = _UTCharMap_AWToPC[(Uint8)str[i]];
+
 	::MessageBox(NULL, str, "ERROR", MB_TASKMODAL | MB_ICONWARNING);
 }
 
