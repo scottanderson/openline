@@ -1179,14 +1179,28 @@ Uint32 UGraphics::GetFontLineHeight(TImage inImage)
 	return tm.tmAscent + tm.tmDescent + tm.tmExternalLeading;
 }
 
+// AppWarrior text buffers carry Mac-Roman high bytes; GDI measurement calls need the
+// same CP1252 mapping the Draw* functions already apply, or high-byte chars (eg the
+// Mac-Roman TM sign) measure as the wrong CP1252 glyph and cursor placement is off.
+static void _GRMapTextToPC(Uint8 *outMapped, const void *inText, Uint32 inTextSize)
+{
+	const Uint8 *q = (const Uint8 *)inText;
+	Uint32 s = inTextSize;
+
+	while (s--)
+		*outMapped++ = _UTCharMap_AWToPC[*q++];
+}
+
 Uint32 UGraphics::GetCharWidth(TImage inImage, Uint16 inChar, Uint32 /* inEncoding */)
 {
 	int buf[2];
 	
 	ASSERT(inImage);
 	
+	Uint16 mappedChar = (inChar <= 0xFF) ? (Uint8)_UTCharMap_AWToPC[(Uint8)inChar] : inChar;
+
 	// the second call to GetCharWidth() is necessary because GetCharWidth32() can return RROR_CALL_NOT_IMPLEMENTED
-	if (!::GetCharWidth32((((SImage *)inImage)->dc), inChar, inChar, buf) && !::GetCharWidth((((SImage *)inImage)->dc), inChar, inChar, buf))
+	if (!::GetCharWidth32((((SImage *)inImage)->dc), mappedChar, mappedChar, buf) && !::GetCharWidth((((SImage *)inImage)->dc), mappedChar, mappedChar, buf))
 		buf[0] = 0;
 	
 	return buf[0];
@@ -1197,7 +1211,11 @@ Uint32 UGraphics::GetTextWidth(TImage inImage, const void *inText, Uint32 inText
 	SIZE s;
 	
 	ASSERT(inImage);
-	::GetTextExtentPoint32((((SImage *)inImage)->dc), (char *)inText, inTextSize, &s);
+
+	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToPC(mapped, inText, inTextSize);
+
+	::GetTextExtentPoint32((((SImage *)inImage)->dc), (char *)(Uint8 *)mapped, inTextSize, &s);
 
 	return s.cx;
 }
@@ -1230,6 +1248,10 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 	SIZE siz;
 	Uint32 count;
 	
+	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToPC(mapped, inText, inTextSize);
+	char *pMappedText = (char *)(Uint8 *)mapped;
+
 	// get metrics of the current font
 	::GetTextMetrics(inDC, &tm);
 
@@ -1238,7 +1260,7 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 	if (count > inTextSize) count = inTextSize;
 	
 	// see how wide our guess is
-	GetTextExtentPoint32(inDC, (char *)inText, count, &siz);
+	GetTextExtentPoint32(inDC, pMappedText, count, &siz);
 	
 	if (siz.cx == inMaxWidth)
 	{
@@ -1253,7 +1275,7 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 			if (count == 0) return 0;
 			count--;
 			
-			GetTextExtentPoint32(inDC, (char *)inText, count, &siz);
+			GetTextExtentPoint32(inDC, pMappedText, count, &siz);
 			
 			if (siz.cx <= inMaxWidth) return count;
 		}
@@ -1266,7 +1288,7 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 			count++;
 			if (count > inTextSize) return inTextSize;
 			
-			GetTextExtentPoint32(inDC, (char *)inText, count, &siz);
+			GetTextExtentPoint32(inDC, pMappedText, count, &siz);
 			
 			if (siz.cx > inMaxWidth) return count-1;
 		}
@@ -1335,8 +1357,12 @@ Uint32 UGraphics::WidthToChar(TImage inImage, const void *inText, Uint32 inTextS
 	ASSERT(inImage);
 	HDC dc = (((SImage *)inImage)->dc);
 	
+	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToPC(mapped, inText, inTextSize);
+	char *pMappedText = (char *)(Uint8 *)mapped;
+
 	// special case for less than 1 char widths (GetCharacterPlacement stuffs)
-	c = ((Uint8 *)inText)[0];
+	c = ((Uint8 *)pMappedText)[0];
 	if (!::GetCharWidth32(dc, c, c, charWidth) && !::GetCharWidth(dc, c, c, charWidth))	// the second call to GetCharWidth() is necessary to work around bug in win95
 	{
 #if DEBUG
@@ -1360,7 +1386,7 @@ Uint32 UGraphics::WidthToChar(TImage inImage, const void *inText, Uint32 inTextS
 	}
 
 	// determine max chars that will fit in the width
-	::GetCharacterPlacement(dc, (char *)inText, inTextSize, inWidth, &info, GCP_MAXEXTENT);
+	::GetCharacterPlacement(dc, pMappedText, inTextSize, inWidth, &info, GCP_MAXEXTENT);
 	
 	// if all chars fit, then position must be at end
 	if (info.nMaxFit >= inTextSize)
@@ -1370,8 +1396,8 @@ Uint32 UGraphics::WidthToChar(TImage inImage, const void *inText, Uint32 inTextS
 	}
 	
 	// get width of text that fits, and width of character that inWidth is in
-	::GetTextExtentPoint32(dc, (char *)inText, info.nMaxFit, &extent);
-	c = ((Uint8 *)inText)[info.nMaxFit];
+	::GetTextExtentPoint32(dc, pMappedText, info.nMaxFit, &extent);
+	c = ((Uint8 *)pMappedText)[info.nMaxFit];
 	if (!::GetCharWidth32(dc, c, c, charWidth) && !::GetCharWidth(dc, c, c, charWidth))	// the second call to GetCharWidth() is necessary to work around bug in win95
 		charWidth[0] = 0;
 		
