@@ -161,15 +161,16 @@ void UGraphics::Init()
 		_MAC_PALETTE = ::CreatePalette(logPal);
 		if (_MAC_PALETTE == NULL) Fail(errorType_Memory, memError_NotEnough);		
 		
-		// default font is 'MS Sans Serif' Bold 8
+		// default font is 'MS Shell Dlg' Bold 11 -- 11 matches MS Sans Serif's rendered size at 8
 		ClearStruct(_gDefaultFontDesc);
-		_gDefaultFontDesc.lf.lfHeight = -8;
+		_gDefaultFontDesc.lf.lfHeight = -11;
 		_gDefaultFontDesc.lf.lfWeight = FW_NORMAL;
-		_gDefaultFontDesc.size = 8;
+		_gDefaultFontDesc.lf.lfQuality = NONANTIALIASED_QUALITY;
+		_gDefaultFontDesc.size = 11;
 		_gDefaultFontDesc.effect = fontEffect_Bold;
 		_gDefaultFontDesc.align = textAlign_Left;
 		_gDefaultFontDesc.locked = true;
-		::CopyMemory(_gDefaultFontDesc.lf.lfFaceName, "MS Sans Serif", 13);
+		::CopyMemory(_gDefaultFontDesc.lf.lfFaceName, "MS Shell Dlg", 12);
 	}
 }
 
@@ -1026,7 +1027,8 @@ void UGraphics::SetFontSize(TImage inImage, Uint32 inSize)
 	lf.lfItalic = (effect & fontEffect_Italic) ? TRUE : FALSE;
 	lf.lfUnderline = (effect & fontEffect_Underline) ? TRUE : FALSE;
 	lf.lfStrikeOut = (effect & fontEffect_StrikeOut) ? TRUE : FALSE;
-	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfQuality = lf.lfPitchAndFamily = 0;
+	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfPitchAndFamily = 0;
+	lf.lfQuality = NONANTIALIASED_QUALITY;	// avoid ClearType fringing on this app's palette-based rendering
 	
 	::DeleteObject(::SelectObject(dc, ::CreateFontIndirect(&lf)));
 
@@ -1053,7 +1055,8 @@ void UGraphics::SetFontEffect(TImage inImage, Uint32 inFlags)
 	lf.lfItalic = (inFlags & fontEffect_Italic) ? TRUE : FALSE;
 	lf.lfUnderline = (inFlags & fontEffect_Underline) ? TRUE : FALSE;
 	lf.lfStrikeOut = (inFlags & fontEffect_StrikeOut) ? TRUE : FALSE;
-	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfQuality = lf.lfPitchAndFamily = 0;
+	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfPitchAndFamily = 0;
+	lf.lfQuality = NONANTIALIASED_QUALITY;	// avoid ClearType fringing on this app's palette-based rendering
 	
 	::DeleteObject(::SelectObject(dc, ::CreateFontIndirect(&lf)));
 
@@ -1080,7 +1083,8 @@ void UGraphics::SetFont(TImage inImage, const Uint8 *inName, const Uint8 */* inS
 	lf.lfItalic = (inEffect & fontEffect_Italic) ? TRUE : FALSE;
 	lf.lfUnderline = (inEffect & fontEffect_Underline) ? TRUE : FALSE;
 	lf.lfStrikeOut = (inEffect & fontEffect_StrikeOut) ? TRUE : FALSE;
-	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfQuality = lf.lfPitchAndFamily = 0;
+	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfPitchAndFamily = 0;
+	lf.lfQuality = NONANTIALIASED_QUALITY;	// avoid ClearType fringing on this app's palette-based rendering
 	
 	_FontNameToWinName(inName, lf.lfFaceName, LF_FACESIZE);
 		
@@ -1106,7 +1110,8 @@ void UGraphics::SetFont(TImage inImage, const SFontDesc& inInfo)
 	lf.lfItalic = (effect & fontEffect_Italic) ? TRUE : FALSE;
 	lf.lfUnderline = (effect & fontEffect_Underline) ? TRUE : FALSE;
 	lf.lfStrikeOut = (effect & fontEffect_StrikeOut) ? TRUE : FALSE;
-	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfQuality = lf.lfPitchAndFamily = 0;
+	lf.lfCharSet = lf.lfOutPrecision = lf.lfClipPrecision = lf.lfPitchAndFamily = 0;
+	lf.lfQuality = NONANTIALIASED_QUALITY;	// avoid ClearType fringing on this app's palette-based rendering
 
 	_FontNameToWinName(inInfo.name, lf.lfFaceName, LF_FACESIZE);
 	
@@ -2953,9 +2958,9 @@ bool _FontExists(LPCTSTR inFamily)
 static Uint32 _FontNameToWinName(const Uint8 *inName, Int8 *outName, Uint32 inBufferSize)
 {
 	if (inName == kDefaultFont || inName == nil)
-		inName = "\x0d" "MS Sans Serif";
+		inName = "\x0c" "MS Shell Dlg";
 	else if (inName == kSystemFont)
-		inName = "\x0d" "MS Sans Serif";
+		inName = "\x0c" "MS Shell Dlg";
 	else if (inName == kFixedFont)
 		//inName = _FontExists("Monaco") ? "\x06" "Monaco" : "\x08" "Fixedsys";
 		//inName = "\x08" "Fixedsys";
@@ -2979,6 +2984,7 @@ TFontDesc UFontDesc::New(const SFontDesc& inInfo)
 	SFontDescObj *fd = (SFontDescObj *)UMemory::NewClear(sizeof(SFontDescObj));
 	
 	fd->lf.lfHeight = -inInfo.size;
+	fd->lf.lfQuality = NONANTIALIASED_QUALITY;
 	
 	Uint32 effect = inInfo.effect;
 	if (effect & fontEffect_Bold) fd->lf.lfWeight = FW_BOLD;
@@ -3004,6 +3010,7 @@ TFontDesc UFontDesc::New(const Uint8 *inName, const Uint8 */* inStyle */, Uint32
 	SFontDescObj *fd = (SFontDescObj *)UMemory::NewClear(sizeof(SFontDescObj));
 	
 	fd->lf.lfHeight = -inSize;
+	fd->lf.lfQuality = NONANTIALIASED_QUALITY;
 	
 	if (inEffect & fontEffect_Bold) fd->lf.lfWeight = FW_BOLD;
 	if (inEffect & fontEffect_Italic) fd->lf.lfItalic = TRUE;
@@ -3199,6 +3206,7 @@ TFontDesc UFontDesc::Unflatten(const void *inData, Uint32 inDataSize)
 		}
 		
 		fd->lf.lfHeight = -fd->size;
+		fd->lf.lfQuality = NONANTIALIASED_QUALITY;
 		
 		if (effect & fontEffect_Bold) fd->lf.lfWeight = FW_BOLD;
 		if (effect & fontEffect_Italic) fd->lf.lfItalic = TRUE;
