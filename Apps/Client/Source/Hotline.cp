@@ -4858,12 +4858,17 @@ bool CMyApplication::DoCheckServerBanner()
 
 bool CMyApplication::DoShowServerBannerToolbar()
 {
-	if (mServerBanner)
-	{		
+	if (!mServerBanner)
+		return false;
+
+	CMyBannerToolbarWin *pBannerToolbar = dynamic_cast<CMyBannerToolbarWin *>(mToolbarWin);
+	if (!pBannerToolbar || !pBannerToolbar->SetBannerHdl(mServerBanner, mServerBannerType, mServerBannerURL, mServerBannerComment))
+	{
 		ClearServerBanner();
+		return false;
 	}
 	
-	return false;
+	return true;
 }
 
 
@@ -7842,6 +7847,8 @@ void CMyApplication::KillTasksAndDisconnect()
 	mIsAgreed = false;
 	
 	ClearServerBanner();
+	if (!GetResourceBanner(true))	// if QuickTime fails to display the MOV banner
+		GetResourceBanner();		// load the GIF banner
 	mMyAccess.Clear();
 	
 	// show not connected in GUI

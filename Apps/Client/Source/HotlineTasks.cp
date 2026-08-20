@@ -3728,15 +3728,10 @@ void CMyDownloadBannerTask::Process()
 		// manage the xfer connection (process incoming data etc)
 		case 3:
 		{
-			// check if connection closed
-			if (!mTpt->IsConnected())
-			{
-				gApp->ClearServerBanner();
-				
-				Finish();
-				return;
-			}
-									
+			// the transport can still have data queued even after the connection
+			// is signaled closed, so drain it before treating a close as fatal
+			bool bWasConnected = mTpt->IsConnected();
+
 			// receive and process data
 			Uint32 nSize;
 			void *rcvBuf;
@@ -3763,6 +3758,15 @@ void CMyDownloadBannerTask::Process()
 				// set the banner
 				gApp->SetServerBanner(mBanner, mBannerSize, mBannerType, mBannerURL, nil);
 				UApplication::PostMessage(1114);
+				return;
+			}
+
+			if (!bWasConnected)
+			{
+				gApp->ClearServerBanner();
+
+				Finish();
+				return;
 			}
 			
 			if (mDownloadedSize)
