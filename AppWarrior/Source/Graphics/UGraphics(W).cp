@@ -91,7 +91,7 @@ static const char *_MAC_LOGPALETTE_DATA = "\x00\x03\x00\x01"     /* "\x00\x03\xE
 
 // character mapping table
 
-extern const char _UTCharMap_AWToPC[];
+extern const Uint16 _UTCharMap_AWToUnicode[256];
 
 void _GRTrans32ToMask(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 inSrcRowBytes, Uint32 inWid, Uint32 inRowCount);
 void _GRTrans8ToMask(Uint32 inTransCol, void *inDst, Uint32 inDstRowBytes, const void *inSrc, Uint32 inSrcRowBytes, Uint32 inWid, Uint32 inRowCount, const Uint32 *inSrcColors, Uint32 inSrcColorCount);
@@ -1179,16 +1179,18 @@ Uint32 UGraphics::GetFontLineHeight(TImage inImage)
 	return tm.tmAscent + tm.tmDescent + tm.tmExternalLeading;
 }
 
-// AppWarrior text buffers carry Mac-Roman high bytes; GDI measurement calls need the
-// same CP1252 mapping the Draw* functions already apply, or high-byte chars (eg the
-// Mac-Roman TM sign) measure as the wrong CP1252 glyph and cursor placement is off.
-static void _GRMapTextToPC(Uint8 *outMapped, const void *inText, Uint32 inTextSize)
+// AppWarrior text buffers carry Mac-Roman high bytes; GDI calls need the real Unicode
+// code point (not the lossy CP1252 detour -- eg the Mac Roman TM sign has one, but
+// infinity/root/Greek pi/etc. don't) both to draw the correct glyph and to measure it,
+// or the cursor ends up positioned using the width of a different character than the
+// one actually drawn.
+static void _GRMapTextToUnicode(Uint16 *outMapped, const void *inText, Uint32 inTextSize)
 {
 	const Uint8 *q = (const Uint8 *)inText;
 	Uint32 s = inTextSize;
 
 	while (s--)
-		*outMapped++ = _UTCharMap_AWToPC[*q++];
+		*outMapped++ = _UTCharMap_AWToUnicode[*q++];
 }
 
 Uint32 UGraphics::GetCharWidth(TImage inImage, Uint16 inChar, Uint32 /* inEncoding */)
@@ -1196,11 +1198,11 @@ Uint32 UGraphics::GetCharWidth(TImage inImage, Uint16 inChar, Uint32 /* inEncodi
 	int buf[2];
 	
 	ASSERT(inImage);
-	
-	Uint16 mappedChar = (inChar <= 0xFF) ? (Uint8)_UTCharMap_AWToPC[(Uint8)inChar] : inChar;
 
-	// the second call to GetCharWidth() is necessary because GetCharWidth32() can return RROR_CALL_NOT_IMPLEMENTED
-	if (!::GetCharWidth32((((SImage *)inImage)->dc), mappedChar, mappedChar, buf) && !::GetCharWidth((((SImage *)inImage)->dc), mappedChar, mappedChar, buf))
+	Uint16 mappedChar = (inChar <= 0xFF) ? _UTCharMap_AWToUnicode[(Uint8)inChar] : inChar;
+
+	// the second call to GetCharWidthW() is necessary because GetCharWidth32W() can return RROR_CALL_NOT_IMPLEMENTED
+	if (!::GetCharWidth32W((((SImage *)inImage)->dc), mappedChar, mappedChar, buf) && !::GetCharWidthW((((SImage *)inImage)->dc), mappedChar, mappedChar, buf))
 		buf[0] = 0;
 	
 	return buf[0];
@@ -1212,10 +1214,10 @@ Uint32 UGraphics::GetTextWidth(TImage inImage, const void *inText, Uint32 inText
 	
 	ASSERT(inImage);
 
-	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
-	_GRMapTextToPC(mapped, inText, inTextSize);
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
 
-	::GetTextExtentPoint32((((SImage *)inImage)->dc), (char *)(Uint8 *)mapped, inTextSize, &s);
+	::GetTextExtentPoint32W((((SImage *)inImage)->dc), (Uint16 *)mapped, inTextSize, &s);
 
 	return s.cx;
 }
@@ -1248,9 +1250,9 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 	SIZE siz;
 	Uint32 count;
 	
-	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
-	_GRMapTextToPC(mapped, inText, inTextSize);
-	char *pMappedText = (char *)(Uint8 *)mapped;
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
+	Uint16 *pMappedText = (Uint16 *)mapped;
 
 	// get metrics of the current font
 	::GetTextMetrics(inDC, &tm);
@@ -1260,7 +1262,7 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 	if (count > inTextSize) count = inTextSize;
 	
 	// see how wide our guess is
-	GetTextExtentPoint32(inDC, pMappedText, count, &siz);
+	GetTextExtentPoint32W(inDC, pMappedText, count, &siz);
 	
 	if (siz.cx == inMaxWidth)
 	{
@@ -1275,7 +1277,7 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 			if (count == 0) return 0;
 			count--;
 			
-			GetTextExtentPoint32(inDC, pMappedText, count, &siz);
+			GetTextExtentPoint32W(inDC, pMappedText, count, &siz);
 			
 			if (siz.cx <= inMaxWidth) return count;
 		}
@@ -1288,7 +1290,7 @@ static Uint32 _GRCalcMaxFit(HDC inDC, const void *inText, Uint32 inTextSize, Uin
 			count++;
 			if (count > inTextSize) return inTextSize;
 			
-			GetTextExtentPoint32(inDC, pMappedText, count, &siz);
+			GetTextExtentPoint32W(inDC, pMappedText, count, &siz);
 			
 			if (siz.cx > inMaxWidth) return count-1;
 		}
@@ -1349,21 +1351,21 @@ Uint32 UGraphics::WidthToChar(TImage inImage, const void *inText, Uint32 inTextS
 		return 0;
 	}
 	
-	GCP_RESULTS info = { sizeof(GCP_RESULTS),0,0,0,0,0,0,inTextSize,0 };
+	GCP_RESULTSW info = { sizeof(GCP_RESULTSW),0,0,0,0,0,0,inTextSize,0 };
 	SIZE extent;
 	int charWidth[2];
-	Uint8 c;
+	Uint16 c;
 	
 	ASSERT(inImage);
 	HDC dc = (((SImage *)inImage)->dc);
 	
-	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
-	_GRMapTextToPC(mapped, inText, inTextSize);
-	char *pMappedText = (char *)(Uint8 *)mapped;
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
+	Uint16 *pMappedText = (Uint16 *)mapped;
 
 	// special case for less than 1 char widths (GetCharacterPlacement stuffs)
-	c = ((Uint8 *)pMappedText)[0];
-	if (!::GetCharWidth32(dc, c, c, charWidth) && !::GetCharWidth(dc, c, c, charWidth))	// the second call to GetCharWidth() is necessary to work around bug in win95
+	c = pMappedText[0];
+	if (!::GetCharWidth32W(dc, c, c, charWidth) && !::GetCharWidthW(dc, c, c, charWidth))	// the second call to GetCharWidthW() is necessary to work around bug in win95
 	{
 #if DEBUG
 		DWORD err = ::GetLastError();
@@ -1386,7 +1388,7 @@ Uint32 UGraphics::WidthToChar(TImage inImage, const void *inText, Uint32 inTextS
 	}
 
 	// determine max chars that will fit in the width
-	::GetCharacterPlacement(dc, pMappedText, inTextSize, inWidth, &info, GCP_MAXEXTENT);
+	::GetCharacterPlacementW(dc, pMappedText, inTextSize, inWidth, &info, GCP_MAXEXTENT);
 	
 	// if all chars fit, then position must be at end
 	if (info.nMaxFit >= inTextSize)
@@ -1396,9 +1398,9 @@ Uint32 UGraphics::WidthToChar(TImage inImage, const void *inText, Uint32 inTextS
 	}
 	
 	// get width of text that fits, and width of character that inWidth is in
-	::GetTextExtentPoint32(dc, pMappedText, info.nMaxFit, &extent);
-	c = ((Uint8 *)pMappedText)[info.nMaxFit];
-	if (!::GetCharWidth32(dc, c, c, charWidth) && !::GetCharWidth(dc, c, c, charWidth))	// the second call to GetCharWidth() is necessary to work around bug in win95
+	::GetTextExtentPoint32W(dc, pMappedText, info.nMaxFit, &extent);
+	c = pMappedText[info.nMaxFit];
+	if (!::GetCharWidth32W(dc, c, c, charWidth) && !::GetCharWidthW(dc, c, c, charWidth))	// the second call to GetCharWidthW() is necessary to work around bug in win95
 		charWidth[0] = 0;
 		
 	// if inWidth is past the half-way mark, then position should be on the right
@@ -1439,18 +1441,10 @@ void UGraphics_DrawText(TImage inImage, const SRect& inBounds, const void *inTex
 	else
 		flags |= DT_TOP;
 	
-	StPtr mapped(inTextSize + 1);	// +1 only so if we have size = 0 we have no errors
-	
-	char *p = mapped;
-	Uint8 *q = (Uint8 *)inText;
-	Uint32 s = inTextSize;
-	
-	while (s--)
-	{
-		*p++ = _UTCharMap_AWToPC[*q++];
-	}
-		
-	::DrawTextA((((SImage *)inImage)->dc), (char *)mapped, inTextSize, (LPRECT)&inBounds, flags);
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));	// +1 only so if we have size = 0 we have no errors
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
+
+	::DrawTextW((((SImage *)inImage)->dc), (Uint16 *)mapped, inTextSize, (LPRECT)&inBounds, flags);
 }
 
 void UGraphics_DrawTruncText(TImage inImage, const SRect& inBounds, const void *inText, Uint32 inTextSize, Uint32 /* inEncoding */, Uint32 inAlignFlags)
@@ -1476,18 +1470,10 @@ void UGraphics_DrawTruncText(TImage inImage, const SRect& inBounds, const void *
 	else
 		flags |= DT_TOP;
 	
-	StPtr mapped(inTextSize + 1);
-	
-	char *p = mapped;
-	Uint8 *q = (Uint8 *)inText;
-	Uint32 s = inTextSize;
-	
-	while (s--)
-	{
-		*p++ = _UTCharMap_AWToPC[*q++];
-	}
-	
-	::DrawTextEx((((SImage *)inImage)->dc), (char *)mapped, inTextSize, (LPRECT)&inBounds, flags, NULL);
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
+
+	::DrawTextExW((((SImage *)inImage)->dc), (Uint16 *)mapped, inTextSize, (LPRECT)&inBounds, flags, NULL);
 }
 
 void UGraphics_DrawTextBox(TImage inImage, const SRect& inBounds, const SRect& /* inUpdateRect */, const void *inText, Uint32 inTextSize, Uint32 /* inEncoding */, Uint32 inAlign)
@@ -1506,18 +1492,10 @@ void UGraphics_DrawTextBox(TImage inImage, const SRect& inBounds, const SRect& /
 	else
 		flags |= DT_LEFT;
 	
-	StPtr mapped(inTextSize + 1);
-	
-	char *p = mapped;
-	Uint8 *q = (Uint8 *)inText;
-	Uint32 s = inTextSize;
-	
-	while (s--)
-	{
-		*p++ = _UTCharMap_AWToPC[*q++];
-	}
-	
-	::DrawTextA((((SImage *)inImage)->dc), (char *)mapped, inTextSize, (LPRECT)&inBounds, flags);
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
+
+	::DrawTextW((((SImage *)inImage)->dc), (Uint16 *)mapped, inTextSize, (LPRECT)&inBounds, flags);
 }
 
 Uint32 UGraphics_GetTextBoxHeight(TImage inImage, const SRect& inBounds, const void *inText, Uint32 inTextSize, Uint32 /* inEncoding */, Uint32 inAlign)
@@ -1537,7 +1515,10 @@ Uint32 UGraphics_GetTextBoxHeight(TImage inImage, const SRect& inBounds, const v
 	else
 		flags |= DT_LEFT;
 	
-	return ::DrawTextA((((SImage *)inImage)->dc), (char *)inText, inTextSize, &r, flags);
+	StPtr mapped((inTextSize + 1) * sizeof(Uint16));
+	_GRMapTextToUnicode(mapped, inText, inTextSize);
+
+	return ::DrawTextW((((SImage *)inImage)->dc), (Uint16 *)mapped, inTextSize, &r, flags);
 }
 
 // drawing includes inStartLine (0-based), does NOT include inEndLine
@@ -1548,7 +1529,7 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 
 	ASSERT(inImage);
 
-	char convTxt[4096];	// won't have more than 4k per line
+	Uint16 convTxt[4096];	// won't have more than 4k chars per line
 	HDC dc = (((SImage *)inImage)->dc);
 	Int32 curY, boundsLeft, boundsRight, boundsMiddle;
 	Uint8 *linePtr;
@@ -1574,15 +1555,8 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 			linePtr = (Uint8 *)inText + inLineOffsets[i];
 			lineBytes = inLineOffsets[i+1] - inLineOffsets[i];
 			
-			char *p = convTxt;
-			Uint8 *q = (Uint8 *)linePtr;
-			Uint32 s = lineBytes;
-			
-			while (s--)
-			{
-				*p++ = _UTCharMap_AWToPC[*q++];
-			}
-			::TextOut(dc, boundsRight, curY, convTxt, UText::GetVisibleLength(linePtr, lineBytes));
+			_GRMapTextToUnicode(convTxt, linePtr, lineBytes);
+			::TextOutW(dc, boundsRight, curY, convTxt, UText::GetVisibleLength(linePtr, lineBytes));
 			
 			curY += inLineHeight;
 			i++;
@@ -1597,15 +1571,8 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 			linePtr = (Uint8 *)inText + inLineOffsets[i];
 			lineBytes = inLineOffsets[i+1] - inLineOffsets[i];
 			
-			char *p = convTxt;
-			Uint8 *q = (Uint8 *)linePtr;
-			Uint32 s = lineBytes;
-			
-			while (s--)
-			{
-				*p++ = _UTCharMap_AWToPC[*q++];
-			}
-			::TextOut(dc, boundsMiddle, curY, convTxt, UText::GetVisibleLength(linePtr, lineBytes));
+			_GRMapTextToUnicode(convTxt, linePtr, lineBytes);
+			::TextOutW(dc, boundsMiddle, curY, convTxt, UText::GetVisibleLength(linePtr, lineBytes));
 
 			curY += inLineHeight;
 			i++;
@@ -1624,15 +1591,8 @@ void UGraphics_DrawTextLines(TImage inImage, const SRect& inBounds, const void *
 			if (lineBytes && linePtr[lineBytes-1] == '\r')
 				lineBytes--;
 			
-			char *p = convTxt;
-			Uint8 *q = (Uint8 *)linePtr;
-			Uint32 s = lineBytes;
-			
-			while (s--)
-			{
-				*p++ = _UTCharMap_AWToPC[*q++];
-			}
-			::TextOut(dc, boundsLeft, curY, convTxt, lineBytes);
+			_GRMapTextToUnicode(convTxt, linePtr, lineBytes);
+			::TextOutW(dc, boundsLeft, curY, convTxt, lineBytes);
 
 			curY += inLineHeight;
 			i++;
