@@ -680,7 +680,7 @@ unsigned char UText::__ctype_map[256] = {
 	punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, uppc, uppc, uppc, uppc, lowc,
 	punc, punc, punc, punc, punc, punc, punc, punc, lowc, uppc, punc, punc, punc, punc, lowc, lowc,
 	punc, punc, punc, punc, punc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc, uppc,
-	punc, uppc, uppc, uppc, uppc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, 000,
+	punc, uppc, uppc, uppc, uppc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc,
 #elif BEOS
 	// BeOS extended characters (127-255)
 	punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc, punc,
