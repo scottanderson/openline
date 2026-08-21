@@ -32,6 +32,45 @@ THdl UClipboard::GetData(const Int8 *inType)
 
 	if (format && ::OpenClipboard(NULL))
 	{
+		// CF_TEXT alone loses characters like the Mac Roman versions of the trademark
+		// sign, infinity, root, etc: Windows only stores CF_UNICODETEXT for Unicode
+		// clipboard sources and synthesizes CF_TEXT from it on demand using its own
+		// lossy "best fit" substitution (eg turning them into unrelated ASCII
+		// look-alikes) before we ever see the data. Read CF_UNICODETEXT directly and
+		// map straight to Mac Roman by code point to avoid that lossy detour.
+		if (format == CF_TEXT && ::IsClipboardFormatAvailable(CF_UNICODETEXT))
+		{
+			HANDLE hUni = ::GetClipboardData(CF_UNICODETEXT);
+			if (hUni)
+			{
+				extern Uint8 _UTUnicodeCharToMacRoman(Uint16 inChar);
+				Uint16 *pUni = (Uint16 *)::GlobalLock(hUni);
+				try
+				{
+					Uint32 sUni = 0;
+					while (pUni[sUni]) sUni++;
+
+					hdl = UMemory::NewHandle(sUni);
+					Uint8 *q = (Uint8 *)UMemory::Lock(hdl);
+					for (Uint32 i = 0; i < sUni; i++)
+						q[i] = _UTUnicodeCharToMacRoman(pUni[i]);
+					UMemory::Unlock(hdl);
+				}
+				catch(...)
+				{
+					::GlobalUnlock(hUni);
+					::CloseClipboard();
+					UMemory::Dispose(hdl);
+					throw;
+				}
+				::GlobalUnlock(hUni);
+
+				UMemory::SearchAndReplaceAll(hdl, 0, "\x0A", 1, nil, 0);
+				::CloseClipboard();
+				return hdl;
+			}
+		}
+
 		HANDLE h = ::GetClipboardData(format);
 		if (h)
 		{
@@ -72,12 +111,46 @@ THdl UClipboard::GetData(const Int8 *inType)
 	return hdl;
 }
 
+// builds a CF_UNICODETEXT handle from Mac Roman <inData>, expanding CR to CRLF like the
+// CF_TEXT path does, so text with characters outside CP1252 (eg the Mac Roman trademark,
+// infinity, root, etc.) round-trips losslessly to any Unicode-aware paste target instead
+// of degrading to '?'. Returns NULL on empty input.
+static HANDLE _CLMakeUnicodeHandle(const void *inData, Uint32 inDataSize)
+{
+	extern const Uint16 _UTCharMap_AWToUnicode[256];
+	const Uint8 *p = (const Uint8 *)inData;
+
+	Uint32 nChars = 0;
+	for (Uint32 i = 0; i < inDataSize; i++)
+		nChars += (p[i] == 0x0D) ? 2 : 1;
+
+	HANDLE h = ::GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, (nChars+1) * sizeof(Uint16));
+	if (h == NULL) Fail(errorType_Memory, memError_NotEnough);
+
+	Uint16 *q = (Uint16 *)::GlobalLock(h);
+	for (Uint32 i = 0; i < inDataSize; i++)
+	{
+		if (p[i] == 0x0D)
+		{
+			*q++ = 0x0D;
+			*q++ = 0x0A;
+		}
+		else
+			*q++ = _UTCharMap_AWToUnicode[p[i]];
+	}
+	*q = 0;
+	::GlobalUnlock(h);
+
+	return h;
+}
+
 // if you just want one item on the clipboard, you don't have to call BeginSet/EndSet
 void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSize)
 {
 	Uint32 err, format;
 	Uint8 *p;
 	HANDLE h;
+	HANDLE hUni = NULL;
 
 	format = _MIMEToWinClipFormat(inType, strlen(inType));
 	if (format == 0) return;
@@ -112,6 +185,18 @@ void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSi
 			::GlobalFree(h);
 			throw;
 		}
+
+		// also offer CF_UNICODETEXT so Unicode-aware paste targets get every Mac Roman
+		// character losslessly, not just the ones that also exist in CP1252.
+		try
+		{
+			hUni = _CLMakeUnicodeHandle(inData, inDataSize);
+		}
+		catch(...)
+		{
+			::GlobalFree(h);
+			throw;
+		}
 	}
 	else
 	{
@@ -127,6 +212,7 @@ void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSi
 	{
 		err = ::GetLastError();
 		::GlobalFree(h);
+		if (hUni) ::GlobalFree(hUni);
 		FailWinError(err);
 	}
 	
@@ -134,6 +220,7 @@ void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSi
 	{
 		err = ::GetLastError();
 		::GlobalFree(h);
+		if (hUni) ::GlobalFree(hUni);
 		FailWinError(err);
 	}
 	
@@ -145,6 +232,12 @@ void UClipboard::SetData(const Int8 *inType, const void *inData, Uint32 inDataSi
 	else
 		err = 0;
 	
+	if (hUni)
+	{
+		if (::SetClipboardData(CF_UNICODETEXT, hUni) == NULL)
+			::GlobalFree(hUni);
+	}
+
 	if (!_CLIsOpen) ::CloseClipboard();
 	
 	if (err) FailWinError(err);
